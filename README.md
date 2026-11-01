@@ -6,10 +6,11 @@ Carrera online de autitos en 3D, con física de choques en tiempo real y control
 
 Abrí el enlace de GitHub Pages y compartilo. No hace falta cuenta ni instalar nada.
 
-- **Celular:** se juega acostado. Elegí volante o flechas en la pestaña Controles y tocá «Ajustar controles» para mover, agrandar o achicar cada botón y cambiar la sensibilidad.
-- **Teclado:** flechas o WASD. Espacio es el freno de mano, C mira atrás y R te devuelve a la pista.
+- **Cómo se juega:** entrás a un barrio que recorrés manejando. Cada arco de neón es un local: tu garaje, concesionaria, mecánico, chapería, pintura, accesorios, puesta a punto, picadas y online. El botón Mapa te lleva directo.
+- **Teclado:** flechas o WASD. Espacio es el freno de mano, N el nitro, C mira atrás, R te devuelve a la pista y Enter entra a un local.
 - **Partidas:** al entrar ves las partidas abiertas y te unís con un toque. También podés crear la tuya o entrar con un código o un enlace.
-- **Plata:** arrancás con tres autos. Cada carrera paga según tu posición (1º $1.000, 2º $700, 3º $500, 4º $350, 5º o peor $200; contra la máquina, la mitad). Con esa plata comprás autos en la pestaña Auto y los mejorás en el Taller. Queda guardada en cada dispositivo.
+- **Progreso:** arrancás con tres autos. Las picadas y los puntos de derrape dan plata y reputación; la reputación sube tu nivel y desbloquea autos, y el estilo de tu auto suma un bono a los premios. Todo se guarda en cada dispositivo.
+- **Controles:** elegí volante o flechas con el botón ⚙ y movelos o cambiales el tamaño en «Ajustar controles».
 
 Hay diecisiete pistas sobre pasto, desierto, hielo, noche y ciudad. Quien crea la partida elige la pista y larga la carrera; si se va, pasa al que lleva más tiempo.
 
