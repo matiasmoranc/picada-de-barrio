@@ -10,7 +10,7 @@ Abrí el enlace de GitHub Pages y compartilo. No hace falta cuenta ni instalar n
 - **Teclado:** flechas o WASD. La tecla R te devuelve a la pista.
 - **Salas:** todos entran a la misma sala. Para una privada, agregá `?sala=amigos` al enlace.
 
-Hay once pistas sobre pasto, desierto, hielo, noche y ciudad. Las elige quien creó la partida; si se va, pasa al que lleva más tiempo en pista.
+Hay diecisiete pistas sobre pasto, desierto, hielo, noche y ciudad. Las elige quien creó la partida; si se va, pasa al que lleva más tiempo en pista.
 
 También hay diez autos con física propia: Rural, Flecha, Picudo, Crucero, Pegote, Bólido, Tanque, Pluma, Clavado y Deriva. Cada uno cambia velocidad, pique, frenos, agarre y peso, y el peso también influye en los choques.
 
