@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvx6ca37"></script>
+<script src="room.js?v=mvx6dtme"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -714,6 +714,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     room.presence(patch).catch(()=>{});
   }
+  // La antigüedad sigue al día aunque la pantalla esté bloqueada o la pestaña en segundo plano
+  setInterval(()=>{if(room)room.presence({an:Math.round(performance.now()-entroT)}).catch(()=>{})},1000);
   let listaVista='';
   function salon(){
     const el=$('salon');
