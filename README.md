@@ -27,3 +27,9 @@ Algunas redes, sobre todo datos móviles o redes corporativas, pueden bloquear l
 En **Settings → Pages**, elegí la rama `main` y la carpeta `/ (root)`.
 
 Para regenerar `index.html` desde el juego: `node armar-pagina.js ruta/a/picada.html`.
+
+## Circuitos
+
+Las 24 pistas siguen los trazados del calendario 2026 de Fórmula 1, adaptados a escala y al ancho de pista del juego. No es un producto oficial ni tiene relación con Formula 1.
+
+Datos de trazados: [bacinger/f1-circuits](https://github.com/bacinger/f1-circuits), licencia MIT, Copyright (c) 2019-2025 Tomislav Bacinger.
