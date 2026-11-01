@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvx6dtme"></script>
+<script src="room.js?v=mvxlnesp"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -52,14 +52,16 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
   display:grid;place-items:center;font-weight:700;letter-spacing:.05em;border:3px solid rgba(251,246,234,.8);color:var(--crema);pointer-events:none;text-shadow:0 1px 2px var(--tinta)}
 #pedal-gas{right:max(14px,env(safe-area-inset-right,0px));background:rgba(46,125,70,.55)}
 #pedal-freno{right:calc(max(14px,env(safe-area-inset-right,0px)) + clamp(94px,27vmin,124px));background:rgba(216,65,47,.5)}
+#pedal-mano{right:max(14px,env(safe-area-inset-right,0px));bottom:calc(max(16px,env(safe-area-inset-bottom,0px)) + clamp(94px,27vmin,124px));width:clamp(178px,51vmin,236px);height:clamp(46px,13vmin,60px);border-radius:12px;background:rgba(242,168,29,.55)}
 .pedal.on{filter:brightness(1.5);transform:scale(.95)}
 .flecha{position:absolute;bottom:max(16px,env(safe-area-inset-bottom,0px));width:clamp(84px,24vmin,112px);height:clamp(84px,24vmin,112px);border-radius:12px;display:grid;place-items:center;font-size:2rem;color:var(--crema);border:3px solid rgba(251,246,234,.8);background:rgba(14,34,53,.45);pointer-events:none}
 #flecha-izq{left:max(14px,env(safe-area-inset-left,0px))}
 #flecha-der{left:calc(max(14px,env(safe-area-inset-left,0px)) + clamp(94px,27vmin,124px))}
 .flecha.on{filter:brightness(1.6);transform:scale(.95)}
-#volante{position:absolute;width:150px;height:44px;margin:-22px 0 0 -75px;border-radius:22px;background:rgba(14,34,53,.35);border:2px solid rgba(251,246,234,.65);pointer-events:none}
-#perilla{position:absolute;top:3px;left:54px;width:34px;height:34px;border-radius:50%;background:var(--crema)}
-#ayuda-volante{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:max(30px,env(safe-area-inset-bottom,0px));width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
+#volante{position:absolute;left:max(14px,env(safe-area-inset-left,0px));bottom:max(14px,env(safe-area-inset-bottom,0px));width:clamp(132px,40vmin,178px);height:clamp(132px,40vmin,178px);pointer-events:none;will-change:transform}
+#volante svg{display:block;width:100%;height:100%}
+#volante.on{filter:brightness(1.25)}
+#ayuda-volante{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + clamp(140px,42vmin,188px));width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
 
 /* Portada */
 #portada{position:absolute;inset:0;display:flex;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));overflow:auto;touch-action:pan-y;background:rgba(14,34,53,.28)}
@@ -141,12 +143,13 @@ label{font-weight:700;display:block;margin-bottom:3px}
   <canvas id="tres" aria-label="Pista de carreras vista desde atrás y arriba"></canvas>
   <canvas id="lienzo" aria-hidden="true"></canvas>
   <div id="tactil" hidden>
-    <div id="ayuda-volante">Apoyá el dedo acá y deslizalo para doblar</div>
-    <div id="volante" hidden><div id="perilla"></div></div>
+    <div id="ayuda-volante">Agarrá el volante y giralo con el dedo</div>
+    <div id="volante" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" fill="rgba(14,34,53,.28)" stroke="rgba(251,246,234,.85)" stroke-width="10"/><path d="M8 50H92M50 50V92" stroke="rgba(251,246,234,.75)" stroke-width="8"/><circle cx="50" cy="50" r="13" fill="rgba(251,246,234,.9)"/><path d="M50 3v10" stroke="#d8412f" stroke-width="7"/></svg></div>
     <div class="flecha" id="flecha-izq" hidden>◀</div>
     <div class="flecha" id="flecha-der" hidden>▶</div>
     <div class="pedal" id="pedal-freno">FRENO</div>
     <div class="pedal" id="pedal-gas">ACEL.</div>
+    <div class="pedal" id="pedal-mano">FRENO DE MANO</div>
   </div>
   <div id="hud" hidden>
     <div id="tablero">
@@ -198,7 +201,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
       <div>
         <label>Cómo doblás en el celular</label>
         <div id="tipo-control" role="group" aria-label="Controles">
-          <button type="button" id="ctrl-deslizar">Deslizar el dedo</button>
+          <button type="button" id="ctrl-volante">Volante</button>
           <button type="button" id="ctrl-flechas">Flechas</button>
         </div>
       </div>
@@ -214,7 +217,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
       <div class="titulo-eleccion" style="grid-column:1/-1;margin-bottom:-6px">Pista <span id="quien-pista"></span></div>
       <div id="circuitos" role="group" aria-label="Pista"></div>
       <button id="entrar" type="submit">Salir a pista</button>
-      <p id="teclas">Con teclado: flechas o WASD, y R para volver a la pista.</p>
+      <p id="teclas">Con teclado: flechas o WASD, Espacio para el freno de mano y R para volver a la pista.</p>
     </form>
   </div>
   <div id="final" hidden>
@@ -233,9 +236,10 @@ const Sim=(()=>{
   const clamp=(v,a,b)=>v<a?a:v>b?b:v;
   const wrap=a=>{while(a>Math.PI)a-=Math.PI*2;while(a<-Math.PI)a+=Math.PI*2;return a};
   const G=9.81;
-  const CAR={m:1050,len:4.4,wid:2,A:1.25,B:1.35,h:.5,I:0,mu:1.55,power:112000,fmax:7000,brake:15000,rev:3800,drag:2};
+  const CAR={m:1050,len:4.4,wid:2,A:1.25,B:1.35,h:.5,I:0,mu:1.55,power:112000,fmax:7000,brake:15000,rev:3800,drag:2,track:1.6,slide:.82,awd:0,tcs:.17,tcsSuelto:.4,tiempoSuelto:.9,avance:.85,betaMax:.72,aguante:14};
   CAR.L=CAR.A+CAR.B;CAR.I=CAR.m*(CAR.len*CAR.len+CAR.wid*CAR.wid)/12*1.1;
-  const modelo=o=>{const m={...CAR,rear:1,...o};m.I=m.m*(m.len*m.len+m.wid*m.wid)/12*1.1;return m};
+  const DMAX=.65;
+  const modelo=o=>{const m={...CAR,rear:1.14,...o};m.I=m.m*(m.len*m.len+m.wid*m.wid)/12*1.1;return m};
   const MODELOS=[
     {nombre:'Rural',tag:'Equilibrado',txt:'Hace todo bien y nada de más. Ideal para empezar.',forma:{cl:1.45,cx:-.55,ch:1.05,tipo:'sedan'}},
     {nombre:'Flecha',tag:'Rápido, frena poco',txt:'Vuela en las rectas, pero hay que frenar mucho antes.',power:176000,brake:9000,mu:1.48,fmax:6500,forma:{h:.85,ala:1,franja:1,tipo:'cuna'}},
@@ -246,11 +250,14 @@ const Sim=(()=>{
     {nombre:'Tanque',tag:'Pesado, gana los choques',txt:'Empuja a todos. Le cuesta acelerar y frenar.',m:1750,power:165000,fmax:7600,brake:17000,forma:{h:1.2,caja:1,rueda:1.25,tipo:'pick'}},
     {nombre:'Pluma',tag:'Liviano y nervioso',txt:'Acelera y frena enseguida. Un toque y sale volando.',m:720,power:92000,drag:2.5,fmax:6200,brake:13000,forma:{h:.8,cl:.55,cx:-.1,ch:1.2,tipo:'mini'}},
     {nombre:'Clavado',tag:'Los mejores frenos',txt:'Entra última en la curva y frena donde nadie se anima.',brake:24000,mu:1.74,power:98000,forma:{h:.88,cl:.9,franja:1,tipo:'sedan'}},
-    {nombre:'Deriva',tag:'Cola suelta',txt:'Atrás patina a propósito. Hay que manejarlo de costado.',rear:.92,mu:1.6,power:128000,fmax:7200,forma:{h:.82,ala:1,rueda:1.1,tipo:'cuna'}},
+    {nombre:'Deriva',tag:'Cola suelta',txt:'Atrás patina a propósito. Hay que manejarlo de costado.',rear:1.05,mu:1.65,slide:.9,tcsSuelto:.8,betaMax:.85,power:150000,fmax:8500,forma:{h:.82,ala:1,rueda:1.1,tipo:'cuna'}},
     {nombre:'Puma',tag:'Rápido y dobla mucho',txt:'Veloz, con mucho agarre y frenos fuertes.',power:205000,fmax:10500,brake:21000,mu:1.95,forma:{tipo:'cuna',h:.82,cl:.75,cx:-.35,ch:.9,franja:1}},
     {nombre:'Rayo',tag:'Veloz y frena fuerte',txt:'Muy rápido y frena casi donde quiere.',power:255000,fmax:9800,brake:24000,mu:1.85,forma:{tipo:'cuna',h:.76,ala:1,cl:.7,cx:-.3,ch:.82}},
     {nombre:'Cóndor',tag:'Punta enorme y buen freno',txt:'Se traga las rectas sin perder frenos.',power:320000,fmax:9000,brake:25000,mu:1.78,drag:1.8,forma:{tipo:'cuna',h:.72,ala:1,franja:1,cl:.72,cx:-.25,ch:.78}},
-    {nombre:'Cometa',tag:'El mejor en todo',txt:'El tope de gama: velocidad, frenos y agarre.',power:380000,fmax:11500,brake:28000,mu:2.05,drag:1.75,forma:{tipo:'cuna',h:.68,ala:1,franja:1,cl:.62,cx:-.2,ch:.76,rueda:1.08}}
+    {nombre:'Cometa',tag:'El mejor en todo',txt:'El tope de gama: velocidad, frenos y agarre.',power:380000,fmax:11500,brake:28000,mu:2.05,drag:1.75,forma:{tipo:'cuna',h:.68,ala:1,franja:1,cl:.62,cx:-.2,ch:.76,rueda:1.08}},
+    {nombre:'Zorro',tag:'4x4, dobla de costado',txt:'Tira de las cuatro ruedas: sale de la curva derrapando y acelerando.',awd:.5,slide:.93,tcsSuelto:.6,betaMax:.8,mu:1.72,power:175000,fmax:10500,brake:20000,forma:{h:1.02,cl:.95,cx:-.45,ch:1.05,rueda:1.15,franja:1,tipo:'sedan'}},
+    {nombre:'Lince',tag:'4x4 con mucha tracción',txt:'El mejor para derrapar rápido: agarra aun yendo de costado.',awd:.45,slide:.96,tcsSuelto:.7,betaMax:.85,mu:1.9,power:265000,fmax:12000,brake:24000,drag:1.9,forma:{h:.86,ala:1,cl:.72,cx:-.3,ch:.9,rueda:1.1,tipo:'cuna'}},
+    {nombre:'Patrón',tag:'Trasero, puro derrape',txt:'Mucha fuerza atrás. Con el acelerador lo llevás cruzado toda la curva.',rear:1.06,slide:.92,tcsSuelto:1,betaMax:.95,tiempoSuelto:1.3,mu:1.78,power:240000,fmax:11500,brake:21000,forma:{h:.8,ala:1,franja:1,cl:.68,cx:-.25,ch:.84,tipo:'cuna'}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE;
 
@@ -314,65 +321,117 @@ const Sim=(()=>{
   }
 
   function newCar(o){
-    return Object.assign({kind:'bot',x:0,y:0,vx:0,vy:0,a:0,w:0,steer:0,gas:0,brk:0,idx:-1,off:0,ghost:0,frozen:false,hitT:0,
+    return Object.assign({kind:'bot',x:0,y:0,vx:0,vy:0,a:0,w:0,steer:0,delta:0,uf:0,ur:0,lax:0,lay:0,suelto:0,gas:0,brk:0,mano:0,idx:-1,off:0,ghost:0,frozen:false,hitT:0,
       spec:MODELOS[0],v:0,vf:0,vr:0,slip:0,grass:0,laps:-1,sector:3,finT:null,lapStart:0,lastLap:null,bestLap:null,net:null,stale:false,stuck:0},o);
   }
   function place(c,idx,off){
     const t=track,i=(idx+t.N*2)%t.N;
     c.x=t.x[i]+t.nx[i]*off;c.y=t.y[i]+t.ny[i]*off;c.a=Math.atan2(t.ty[i],t.tx[i]);
-    c.vx=c.vy=c.w=c.steer=0;c.idx=i;
+    c.vx=c.vy=c.w=c.steer=c.delta=c.uf=c.ur=c.lax=c.lay=c.suelto=0;c.idx=i;
   }
   function gridSpot(slot){
     const row=slot>>1,side=slot&1?1:-1;
     return {idx:track.N-Math.round((7+row*8+(slot&1)*3)/track.sp),off:side*4.2};
   }
-  const tire=a=>Math.sin(1.45*Math.atan(9*a));
+  // Goma: el agarre crece con el deslizamiento hasta un pico y baja al valor de patinada
+  const PICO=.15;
+  const goma=(s,slide)=>s<PICO?Math.sin(1.6*Math.atan(10*s)):slide+(1-slide)*Math.exp((PICO-s)*5);
+  const RVX=new Float64Array(4),RVY=new Float64Array(4),RZ=new Float64Array(4);
+  let gx=0,gy=0,gk=0;
+  // Fuerza de una rueda según cuánto patina: el vector sale del deslizamiento, así una rueda
+  // trabada empuja contra el movimiento y una que gira en falso casi no sostiene de costado
+  function contacto(j,u,mu,slide){
+    const vx=RVX[j],vy=RVY[j],D=Math.max(Math.hypot(vx,vy),Math.abs(u),3);
+    const sx=(u-vx)/D,sy=-vy/D,q=Math.max(Math.hypot(sx,sy),1e-4),m=mu*RZ[j]*goma(q,slide)/q;
+    gx=m*sx;gy=m*sy;gk=m/D;
+  }
+  // Velocidad de la rueda (implícita, porque la goma es muy rígida frente a la inercia del eje)
+  function girarEje(u,a,mu,slide,F,M,dt){
+    contacto(a,u,mu,slide);let k=gk,kv=gk*RVX[a];
+    contacto(a+1,u,mu,slide);k+=gk;kv+=gk*RVX[a+1];
+    return (u+dt/M*(F+kv))/(1+dt/M*k);
+  }
+  const frenarEje=(u,d)=>Math.abs(u)<=d?0:u-Math.sign(u)*d;
 
   function stepCar(c,inp,dt){
-    if(c.frozen){c.vx=c.vy=c.w=0;c.steer=0;c.gas=c.brk=0;return}
+    if(c.frozen){c.vx=c.vy=c.w=c.uf=c.ur=c.lax=c.lay=0;c.steer=c.delta=0;c.gas=c.brk=c.mano=0;return}
     const P=c.spec,cs=Math.cos(c.a),sn=Math.sin(c.a);
     const vf=c.vx*cs+c.vy*sn,vr=-c.vx*sn+c.vy*cs,speed=Math.hypot(vf,vr);
     locate(c.x,c.y,c.idx);c.idx=locI;c.off=locD;
     const out=clamp((Math.abs(locD)-HALF)/1.2,0,1);c.grass=out;
-    const mu=P.mu*track.grip*(1-out*.55);
+    const mu=P.mu*track.grip*(1-out*.55),muT=mu*P.rear,mano=inp.mano>0;
 
     const rate=Math.abs(inp.steer)>Math.abs(c.steer)?5.5:9;
     c.steer+=clamp(inp.steer-c.steer,-rate*dt,rate*dt);
-    // El giro máximo baja con la velocidad para quedarse cerca del pico de agarre de la goma
-    const lim=clamp(.15+P.L*mu*G/Math.max(speed*speed,1),.15,.6);
-    const delta=c.steer*lim*(vf<0?-1:1)*Math.min(1,Math.abs(vf)/3);
+    // El giro baja con la velocidad para quedar cerca del pico de agarre. Al irse de cola,
+    // la dirección busca sola el sentido de marcha, como pasa con el avance de un auto real.
+    const lim=clamp(.1+P.L*mu*G/Math.max(speed*speed,1),.1,.6);
+    const bf=Math.atan2(vr+P.A*c.w,Math.max(Math.abs(vf),3));
+    const avance=vf>2?P.avance*clamp((Math.abs(bf)-.06)/.14,0,1):0;
+    const delta=clamp(c.steer*lim*(vf<0?-1:1)*Math.min(1,Math.abs(vf)/3)+bf*avance,-DMAX,DMAX);
+    const cd=Math.cos(delta),sd=Math.sin(delta);
 
-    let Fx=0;
+    // Peso de cada rueda con la transferencia de la aceleración, el frenado y la curva
+    const tr=P.track/2,sxz=P.m*c.lax*P.h/P.L/2,syz=P.m*c.lay*P.h/P.track;
+    for(let j=0;j<4;j++){
+      const tras=j>1,lado=j&1?1:-1,rx=tras?-P.B:P.A,ry=lado*tr;
+      const ux=vf-c.w*ry,uy=vr+c.w*rx;
+      RVX[j]=tras?ux:ux*cd+uy*sd;RVY[j]=tras?uy:-ux*sd+uy*cd;
+      RZ[j]=Math.max(150,P.m*G*(tras?P.A:P.B)/P.L/2+(tras?sxz:-sxz)-lado*syz*(tras?.45:.55));
+    }
+
+    let motor=0,freno=0;
+    const un=c.uf*P.awd+c.ur*(1-P.awd);
     if(inp.gas>0){
-      if(vf<-.5)Fx=P.brake*inp.gas;
-      else Fx=Math.min(P.fmax,P.power/Math.max(Math.abs(vf),1))*inp.gas;
+      if(vf<-.5)freno=P.brake*inp.gas;
+      else motor=Math.min(P.fmax,P.power/Math.max(Math.abs(un),1))*inp.gas;
     }
     if(inp.brake>0){
-      if(vf>.5)Fx=-P.brake*inp.brake;
-      else if(vf>-9)Fx=-P.rev*inp.brake;
+      if(vf>.5)freno=P.brake*inp.brake;
+      else if(vf>-9)motor=-P.rev*inp.brake;
     }
-    const Fload=Math.abs(Fx)/P.m*P.h/P.L*P.m*Math.sign(Fx);
-    const Fzf=Math.max(P.m*G*P.B/P.L-Fload,300),Fzr=Math.max(P.m*G*P.A/P.L+Fload,300);
-    const limitX=mu*(Fzf+Fzr)*.95;Fx=clamp(Fx,-limitX,limitX);
-    if(Fx>0&&track.grip<1)Fx=Math.min(Fx,mu*Fzr*.62);
+    if(motor===0)motor=-clamp(un*45,-500,500);
+    const Mf=P.awd>0?60:40,Mr=70;
+    let uf=girarEje(c.uf,0,mu,P.slide,motor*P.awd,Mf,dt);
+    let ur=girarEje(c.ur,2,muT,P.slide,mano?0:motor*(1-P.awd),Mr,dt);
+    // Control de tracción: se afloja después del freno de mano para que el auto siga de costado
+    const beta=speed>4?Math.abs(Math.atan2(vr,Math.abs(vf))):0;
+    c.suelto=mano?P.tiempoSuelto:beta>.16?Math.max(c.suelto,.35):Math.max(0,c.suelto-dt);
+    if(inp.gas>0&&vf>-.5){
+      const sy=Math.abs(vr)/Math.max(speed,3),tx=c.suelto>0?P.tcsSuelto:Math.sqrt(Math.max(.0009,P.tcs*P.tcs-sy*sy));
+      const top=Math.max(vf,0)*(1+tx)+Math.max(3,speed)*tx*.3;
+      if(P.awd>0)uf=Math.min(uf,top);
+      ur=Math.min(ur,top);
+    }
+    // Frenos con antibloqueo: buscan el pico de la goma, sin trabar las ruedas
+    if(freno>0){
+      const sy=Math.abs(vr)/Math.max(speed,3),tx=Math.sqrt(Math.max(.0016,.0169-sy*sy));
+      uf=frenarEje(uf,dt*freno*.62/Mf);ur=frenarEje(ur,dt*freno*.38/Mr);
+      if(vf>1){uf=Math.max(uf,vf*(1-tx));if(!mano)ur=Math.max(ur,vf*(1-tx))}
+    }
+    if(mano)ur=frenarEje(ur,dt*P.m*G*2.5/Mr);
+    c.uf=uf;c.ur=ur;
 
-    const denom=Math.max(Math.abs(vf),3);
-    const af=Math.atan2(vr+P.A*c.w,denom)-delta,ar=Math.atan2(vr-P.B*c.w,denom);
-    const rearUse=inp.brake>0?Math.abs(Fx)*.45:Math.abs(Fx);
-    const useR=Math.sqrt(Math.max(.1,1-Math.pow(rearUse/(mu*Fzr*1.05),2)));
-    const Fyf=-mu*Fzf*tire(af),Fyr=-mu*P.rear*Fzr*tire(ar)*useR;
-
-    const roll=vf*(30+out*1400);
-    const drag=P.drag*vf*Math.abs(vf);
-    const Fxb=Fx-Fyf*Math.sin(delta)-roll-drag;
-    const Fyb=Fyf*Math.cos(delta)-vr*(12+out*700);
-    const T=P.A*Fyf*Math.cos(delta)-P.B*Fyr;
-    const ax=(Fxb)/P.m,ay=(Fyb+Fyr)/P.m;
+    let Fxb=0,Fyb=0,T=0;
+    for(let j=0;j<4;j++){
+      const tras=j>1,rx=tras?-P.B:P.A,ry=(j&1?1:-1)*tr;
+      contacto(j,tras?ur:uf,tras?muT:mu,P.slide);
+      const fx=tras?gx:gx*cd-gy*sd,fy=tras?gy:gx*sd+gy*cd;
+      Fxb+=fx;Fyb+=fy;T+=rx*fy-ry*fx;
+    }
+    Fxb-=vf*(30+out*1400)+P.drag*vf*Math.abs(vf);
+    Fyb-=vr*(12+out*700);
+    const ax=Fxb/P.m,ay=Fyb/P.m,lp=1-Math.exp(-dt*12);
+    c.lax+=(ax-c.lax)*lp;c.lay+=(ay-c.lay)*lp;
     c.vx+=(ax*cs-ay*sn)*dt;c.vy+=(ax*sn+ay*cs)*dt;
+    // Más allá del ángulo máximo la cola deja de abrirse: sostiene el derrape sin llegar al trompo
+    const sobra=beta-P.betaMax;
+    if(sobra>0&&vf>0&&speed>5)T+=P.I*P.aguante*sobra*(vr>0?1:-1)-P.I*.8*c.w*sobra;
     c.w+=T/P.I*dt;
     c.w*=1-Math.min(1,.35*dt);
     c.x+=c.vx*dt;c.y+=c.vy*dt;c.a+=c.w*dt;
-    c.gas=inp.gas;c.brk=inp.brake;c.vf=vf;c.vr=vr;c.slip=Math.abs(vr-P.B*c.w);
+    c.gas=inp.gas;c.brk=inp.brake;c.mano=mano?1:0;c.delta=delta;c.vf=vf;c.vr=vr;
+    c.slip=Math.max(Math.abs(vr-P.B*c.w),speed>3?Math.abs(ur-vf):0);
   }
 
   function impulseAt(c,px,py,jx,jy){
@@ -458,6 +517,7 @@ const Sim=(()=>{
     c.hitT=Math.max(0,c.hitT-dt);
     c.steer=s.steer;
     const cs=Math.cos(c.a),sn=Math.sin(c.a);c.vf=c.vx*cs+c.vy*sn;c.vr=-c.vx*sn+c.vy*cs;c.slip=Math.abs(c.vr-CAR.B*c.w);
+    c.delta=clamp(c.steer*.2+Math.atan2(c.vr+CAR.A*c.w,Math.max(Math.abs(c.vf),3))*.7,-DMAX,DMAX);
   }
 
   function step(cars,inputs,dt,now,leadOf,ev){
@@ -527,6 +587,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const leer=()=>{try{return JSON.parse(localStorage.getItem(LS))||{}}catch{return {}}};
   const guardar=v=>{try{localStorage.setItem(LS,JSON.stringify(v))}catch{}};
   const pref=leer();
+  if(pref.control==='deslizar')pref.control='volante';
   let color=Number.isInteger(pref.color)&&pref.color>=0&&pref.color<COLORES.length?pref.color:Math.floor(Math.random()*COLORES.length);
   let modelo=Number.isInteger(pref.modelo)&&pref.modelo>=0&&pref.modelo<MODELOS.length?pref.modelo:0;
   if(typeof pref.nombre==='string')$('nombre').value=pref.nombre.slice(0,12);
@@ -552,10 +613,10 @@ if(typeof module!=='undefined')module.exports=Sim;
 
   // --- Entradas ---
   const keys={};
-  const touch={steer:0,gas:0,brake:0};
+  const touch={steer:0,gas:0,brake:0,mano:0};
   const inp=()=>{
     const k=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0);
-    return {steer:k||touch.steer,gas:(keys.ArrowUp||keys.KeyW||touch.gas)?1:0,brake:(keys.ArrowDown||keys.KeyS||keys.Space||touch.brake)?1:0};
+    return {steer:k||touch.steer,gas:(keys.ArrowUp||keys.KeyW||touch.gas)?1:0,brake:(keys.ArrowDown||keys.KeyS||touch.brake)?1:0,mano:(keys.Space||touch.mano)?1:0};
   };
   addEventListener('keydown',e=>{
     if(e.target.tagName==='INPUT')return;
@@ -564,28 +625,34 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(entered&&/^Arrow|Space/.test(e.code))e.preventDefault();
   });
   addEventListener('keyup',e=>{keys[e.code]=false});
-  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=0;pads.clear();renderPedals()});
+  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=touch.mano=0;pads.clear();renderPedals()});
 
   const pads=new Map(),tactil=$('tactil');
   function renderPedals(){
-    let g=0,b=0,st=null;
+    let g=0,b=0,h=0,st=null;
     let iz=0,de=0;
-    for(const p of pads.values()){if(p.z==='gas')g=1;else if(p.z==='brake')b=1;else if(p.z==='izq')iz=1;else if(p.z==='der')de=1;else st=p}
-    touch.gas=g;touch.brake=b;touch.steer=st?clamp((st.x-st.ox)/58,-1,1):de-iz;
+    for(const p of pads.values()){if(p.z==='gas')g=1;else if(p.z==='brake')b=1;else if(p.z==='mano')h=1;else if(p.z==='izq')iz=1;else if(p.z==='der')de=1;else st=p}
+    touch.gas=g;touch.brake=b;touch.mano=h;touch.steer=st?clamp(st.giro/GIRO,-1,1):de-iz;
     $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);
-    $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);
-    const v=$('volante');v.hidden=!st;
-    if(st){v.style.left=st.ox+'px';v.style.top=st.oy+'px';$('perilla').style.left=(54+touch.steer*54)+'px'}
+    $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);$('pedal-mano').classList.toggle('on',!!h);
+    const v=$('volante');v.classList.toggle('on',!!st);v.style.transform='rotate('+(touch.steer*GIRO*57.3).toFixed(1)+'deg)';
+  }
+  // Volante fijo: dobla según cuánto rota el dedo alrededor del centro, y vuelve solo al soltarlo
+  const GIRO=1.75;
+  function anguloVolante(x,y){
+    const r=$('volante').getBoundingClientRect(),dx=x-(r.left+r.right)/2,dy=y-(r.top+r.bottom)/2;
+    return dx*dx+dy*dy<196?null:Math.atan2(dy,dx);
   }
   const zona=(x,w)=>x>=w*.45?null:pref.control==='flechas'?(x<w*.225?'izq':'der'):'steer';
   function pintarControl(){
     const fl=pref.control==='flechas';
-    $('flecha-izq').hidden=$('flecha-der').hidden=!fl;$('ayuda-volante').hidden=fl||pref.ayudaVista;
-    $('ctrl-deslizar').setAttribute('aria-pressed',!fl);$('ctrl-flechas').setAttribute('aria-pressed',fl);
+    $('flecha-izq').hidden=$('flecha-der').hidden=!fl;$('volante').hidden=fl;$('ayuda-volante').hidden=fl||pref.ayudaVista;
+    $('ctrl-volante').setAttribute('aria-pressed',!fl);$('ctrl-flechas').setAttribute('aria-pressed',fl);
     pads.clear();renderPedals();
   }
   function pedalZone(x,y){
-    const a=$('pedal-gas').getBoundingClientRect(),b=$('pedal-freno').getBoundingClientRect();
+    const a=$('pedal-gas').getBoundingClientRect(),b=$('pedal-freno').getBoundingClientRect(),h=$('pedal-mano').getBoundingClientRect();
+    if(y<=h.bottom+3)return 'mano';
     const mid=(a.left+b.right)/2;
     return x>=mid?'gas':'brake';
   }
@@ -593,20 +660,22 @@ if(typeof module!=='undefined')module.exports=Sim;
     e.preventDefault();tactil.setPointerCapture(e.pointerId);
     const w=tactil.clientWidth;
     const z=zona(e.clientX,w)||pedalZone(e.clientX,e.clientY);
-    pads.set(e.pointerId,{z,x:e.clientX,ox:e.clientX,oy:e.clientY});
+    pads.set(e.pointerId,{z,giro:0,ang:z==='steer'?anguloVolante(e.clientX,e.clientY):null});
     if(z==='steer'){$('ayuda-volante').hidden=true;pref.ayudaVista=true}
     renderPedals();
   });
   tactil.addEventListener('pointermove',e=>{
     const p=pads.get(e.pointerId);if(!p)return;
-    p.x=e.clientX;
-    if(p.z!=='steer')p.z=zona(e.clientX,tactil.clientWidth)||pedalZone(e.clientX,e.clientY);
+    if(p.z==='steer'){
+      const ang=anguloVolante(e.clientX,e.clientY);
+      if(ang!==null){if(p.ang!==null)p.giro=clamp(p.giro+wrap(ang-p.ang),-GIRO,GIRO);p.ang=ang}
+    }else p.z=zona(e.clientX,tactil.clientWidth)||pedalZone(e.clientX,e.clientY);
     renderPedals();
   });
   const soltar=e=>{pads.delete(e.pointerId);renderPedals()};
   tactil.addEventListener('pointerup',soltar);tactil.addEventListener('pointercancel',soltar);
   addEventListener('contextmenu',e=>e.preventDefault());
-  $('ctrl-deslizar').onclick=()=>{pref.control='deslizar';guardar(pref);pintarControl()};
+  $('ctrl-volante').onclick=()=>{pref.control='volante';guardar(pref);pintarControl()};
   $('ctrl-flechas').onclick=()=>{pref.control='flechas';guardar(pref);pintarControl()};
   pintarControl();
 
@@ -621,7 +690,12 @@ if(typeof module!=='undefined')module.exports=Sim;
       o.connect(f);f.connect(g);g.connect(m);m.connect(a.destination);m.gain.value=mute?0:1;o.start();
       const len=a.sampleRate*.3|0,buf=a.createBuffer(1,len,a.sampleRate),d=buf.getChannelData(0);
       for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.4);
-      au={a,o,f,g,m,buf};
+      const lg=a.sampleRate*1.2|0,ruido=a.createBuffer(1,lg,a.sampleRate),q=ruido.getChannelData(0);
+      for(let i=0;i<lg;i++)q[i]=Math.random()*2-1;
+      const r=a.createBufferSource(),rf=a.createBiquadFilter(),rg=a.createGain();
+      r.buffer=ruido;r.loop=true;rf.type='bandpass';rf.frequency.value=1500;rf.Q.value=7;rg.gain.value=0;
+      r.connect(rf);rf.connect(rg);rg.connect(m);r.start();
+      au={a,o,f,g,m,buf,rf,rg};
     }catch{}
   }
   function golpe(fuerza){
@@ -643,6 +717,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
   }
   const SK=420,skid=new Float32Array(SK*4);let skidN=0;
+  // Humo de gomas: sale de la cola mientras el auto patina fuerte
+  function humo(c){
+    if(c.slip<6||c.grass||Math.hypot(c.vx,c.vy)<4||Math.random()>.45)return;
+    const a=Math.random()<.5?-.8:.8,sn=Math.sin(c.a),cs=Math.cos(c.a);
+    chispas(c.x-cs*1.5-sn*a,c.y-sn*1.5+cs*a,1,'#e6e1d6',.12);
+  }
   function marca(c){
     const cs=Math.cos(c.a),sn=Math.sin(c.a);
     for(const s of [-.85,.85]){
@@ -675,7 +755,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     c.color=Number.isInteger(pr.c)?clamp(pr.c,0,COLORES.length-1):0;
     const v=Number.isInteger(pr.v)&&pr.v>=0&&pr.v<MODELOS.length?pr.v:0;
     if(c.v!==v){c.v=v;c.spec=MODELOS[v]}
-    const k=pr.k|0;c.gas=k&1;c.brk=(k&2)>>1;c.ghost=k&4?.2:0;
+    const k=pr.k|0;c.gas=k&1;c.brk=(k&2)>>1;c.mano=(k&8)>>3;c.ghost=k&4?.2:0;
     c.p=typeof pr.p==='number'?pr.p/1000:0;c.f=typeof pr.f==='number'?pr.f:null;c.rid=Array.isArray(pr.r)?String(pr.r[0]):null;
     const e=pr.e&&myShort?pr.e[myShort]:null;
     if(Array.isArray(e)&&e[0]!==r.echo&&typeof e[0]==='number'&&typeof e[1]==='number'){
@@ -705,7 +785,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!room)return;
     const patch={n:me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto',c:me?me.color:color,v:me?me.v:modelo,t:Math.round(now),
       m:trackIdx,an:Math.round(now-entroT),r:race?[race.id,Math.round(race.t0-now)]:null};
-    if(me&&entered)Object.assign(patch,{s:Sim.snapshot(me),k:(me.gas?1:0)|(me.brk?2:0)|(me.ghost>0?4:0),p:Math.round(Sim.progressValue(me)*1000),
+    if(me&&entered)Object.assign(patch,{s:Sim.snapshot(me),k:(me.gas?1:0)|(me.brk?2:0)|(me.ghost>0?4:0)|(me.mano?8:0),p:Math.round(Sim.progressValue(me)*1000),
       f:me.finT==null?null:Math.round(me.finT),h:myHit&&now-myHit.at<500?myHit.d:null});
     if(now-lastEcho>400){
       lastEcho=now;const e={};let n=0;
@@ -932,7 +1012,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const G=9.81;
   const fotosMod=[];
   const punta=m=>{let v=20;for(let i=0;i<40;i++)v=Math.cbrt(Math.max(1,(m.power-30*v*v)/m.drag));return v};
-  const datos=m=>({Velocidad:punta(m),Pique:Math.min(m.fmax,m.mu*m.m*G*.95)/m.m,Frenos:Math.min(m.brake,m.mu*m.m*G*.95)/m.m,Agarre:m.mu*m.rear,Peso:m.m});
+  const datos=m=>({Velocidad:punta(m),Pique:Math.min(m.fmax,m.mu*m.m*G*.95)/m.m,Frenos:Math.min(m.brake,m.mu*m.m*G*.95)/m.m,Agarre:m.mu*m.rear,Derrape:m.slide*(1+m.awd*.6)*m.betaMax,Peso:m.m});
   const rangos={};
   for(const k of Object.keys(datos(MODELOS[0]))){const q=MODELOS.map(m=>datos(m)[k]);rangos[k]=[Math.min(...q),Math.max(...q)]}
   function pintarFicha(){
@@ -1152,13 +1232,13 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(m&&m.v!==c.v){quitarAuto(c,m);m=null}
     if(!m){m=armarAuto(c);autos.set(c,m)}
     m.g.position.set(c.x,0,c.y);m.g.rotation.y=-c.a;
-    for(const r of m.ruedas)r.rotation.y=-c.steer*.42;
+    for(const r of m.ruedas)r.rotation.y=-c.delta;
     if(m.color!==c.color){m.color=c.color;m.pint.color.set(COLORES[c.color])}
     const k=1-Math.exp(-dt*7);
     m.roll+=(-clamp(c.w*c.vf*.011,-.1,.1)-m.roll)*k;
     m.pitch+=(((c.gas?.018:0)-(c.brk&&c.vf>1?.04:0))-m.pitch)*k;
     m.caja.rotation.x=m.roll;m.caja.rotation.z=m.pitch;
-    m.frenoMat.color.set(c.brk?'#ff3a24':'#7a1b12');
+    m.frenoMat.color.set(c.brk||c.mano?'#ff3a24':'#7a1b12');
     m.g.visible=!(c.ghost>0&&Math.floor(performance.now()/120)%2);
     m.g.scale.setScalar(c.stale?.92:1);
   }
@@ -1275,7 +1355,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
     }
     if(!mapa)armarMapa();
-    const mw=Math.min(W*.3,170),mh=mw*.56,mx=W-mw-14,my=10,ms=Math.min((mw-14)/mapa.w,(mh-14)/mapa.h);
+    const mw=Math.min(W*.3,170),mh=mw*.56,mx=W-mw-14,my=10,ms=Math.max(.02,Math.min((mw-14)/mapa.w,(mh-14)/mapa.h));
     ctx.fillStyle='rgba(14,34,53,.6)';ctx.fillRect(mx,my,mw+4,mh);
     ctx.save();ctx.translate(mx+mw/2+2,my+mh/2);ctx.scale(ms,ms);ctx.translate(-mapa.cx,-mapa.cy);
     ctx.strokeStyle='#fbf6ea';ctx.lineWidth=2.2/ms;ctx.stroke(mapa.p);
@@ -1345,10 +1425,11 @@ if(typeof module!=='undefined')module.exports=Sim;
         c.lapStart=now;
         if(c===me&&c.lastLap&&c.laps>0&&!race)aviso('Vuelta '+tiempo(c.lastLap));
       }
-      if(!c.frozen&&(c.slip>3||(c.brk&&Math.hypot(c.vx,c.vy)>10))&&!c.grass)marca(c);else c.l=c.r=null;
+      if(!c.frozen&&(c.slip>3||((c.brk||c.mano)&&Math.hypot(c.vx,c.vy)>6))&&!c.grass)marca(c);else c.l=c.r=null;
+      humo(c);
       if(c.grass>.5&&Math.hypot(c.vx,c.vy)>6&&Math.random()<.4)chispas(c.x,c.y,1,'#a68f5e',.25);
     }
-    for(const c of cars)if(c.kind==='net'){if(c.slip>3&&!c.stale)marca(c);else c.l=c.r=null}
+    for(const c of cars)if(c.kind==='net'){if(c.slip>3&&!c.stale){marca(c);humo(c)}else c.l=c.r=null}
     while(ev.length){
       const e=ev.pop(),f=Math.min(1,e.j/16000);
       chispas(e.x,e.y,Math.round(5+f*22),e.b?'#ffd23f':'#ffb25a',.45+f*.8);
@@ -1373,6 +1454,8 @@ if(typeof module!=='undefined')module.exports=Sim;
       const s=me?Math.hypot(me.vx,me.vy):0,gear=(s%13)/13;
       au.o.frequency.setTargetAtTime(55+s*2.1+gear*34,au.a.currentTime,.03);
       au.g.gain.setTargetAtTime(me&&me.gas?.07:.035,au.a.currentTime,.05);
+      const pat=me&&!me.grass&&s>4?clamp((me.slip-2.5)/9,0,1):0;
+      au.rg.gain.setTargetAtTime(pat*.16,au.a.currentTime,.04);au.rf.frequency.setTargetAtTime(1150+pat*650,au.a.currentTime,.06);
     }
     draw(now,dt);hud(now);
     requestAnimationFrame(frame);

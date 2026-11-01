@@ -6,13 +6,13 @@ Carrera online de autitos en 3D, con física de choques en tiempo real y control
 
 Abrí el enlace de GitHub Pages y compartilo. No hace falta cuenta ni instalar nada.
 
-- **Celular:** elegí deslizar el dedo o usar flechas para doblar; los botones de la derecha aceleran y frenan.
-- **Teclado:** flechas o WASD. La tecla R te devuelve a la pista.
+- **Celular:** elegí volante fijo o flechas para doblar. A la derecha tenés acelerador, freno para bajar la velocidad y freno de mano para derrapar.
+- **Teclado:** flechas o WASD. Espacio es el freno de mano y la tecla R te devuelve a la pista.
 - **Partidas:** tocá «Crear partida» y pasá el código o el enlace. Los demás entran con «Unirme».
 
 Hay diecisiete pistas sobre pasto, desierto, hielo, noche y ciudad. Quien crea la partida elige la pista y larga la carrera; si se va, pasa al que lleva más tiempo.
 
-También hay catorce autos con física propia, entre ellos Puma, Rayo, Cóndor y Cometa, los más veloces y con mejores frenos. Cada uno cambia velocidad, pique, frenos, agarre y peso, y el peso también influye en los choques.
+También hay diecisiete autos con física propia: Puma, Rayo, Cóndor y Cometa son los más veloces, y Zorro, Lince y Patrón están hechos para doblar de costado. Cada uno cambia velocidad, pique, frenos, agarre, derrape y peso, y el peso también influye en los choques.
 
 ## Cómo funciona
 
