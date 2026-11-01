@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvy9xbhu"></script>
+<script src="room.js?v=mvyb2jsp"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -638,6 +638,7 @@ html,body{background:#000;touch-action:manipulation}
       <div class="grupo-op"><h3>Manejo</h3>
         <label class="opcion"><span>Acelerar solo<small>Vos solo doblás y frenás.</small></span><input type="checkbox" id="gas-solo"></label>
         <label class="opcion"><span>Cámara fija<small>La pista no gira con el auto.</small></span><input type="checkbox" id="cam-fija"></label>
+        <label class="opcion"><span>Gráficos livianos<small>Menos detalle, más fluido. Sin esto se ajusta solo.</small></span><input type="checkbox" id="liviano"></label>
       </div>
       <div class="grupo-op"><h3>Sonido</h3><button type="button" id="sonido2" class="boton-p"></button></div>
     </div></div>
@@ -975,6 +976,8 @@ const Sim=(()=>{
     }
   }
   function botInput(c,dt,cars){
+    if((c.iaN=(c.iaN||0)+1)%3&&c.ia)return c.ia;
+    dt*=3;
     const t=track,N=t.N,speed=Math.hypot(c.vx,c.vy);
     if(speed<1.2)c.stuck+=dt;else c.stuck=0;
     if(c.stuck>2.5){place(c,c.idx,0);c.ghost=1.5;c.stuck=0}
@@ -1015,7 +1018,7 @@ const Sim=(()=>{
     c.prox-=dt*c.torpe;c.fallo=Math.max(0,c.fallo-dt);
     if(c.prox<=0&&vmax<speed+2){c.fallo=.9+Math.random()*.7;c.prox=18+Math.random()*30}
     vmax*=c.skill*c.goma*(c.fallo>0?1.12:1);
-    return {steer:clamp(err*2.6,-1,1),gas:gasOk&&speed<vmax?1:0,brake:speed>vmax+1.5?1:0};
+    return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&speed<vmax?1:0,brake:speed>vmax+1.5?1:0};
   }
   function progress(c){
     const s=c.idx/track.N,q=Math.floor(s*4);
@@ -1039,7 +1042,7 @@ if(typeof module!=='undefined')module.exports=Sim;
 (()=>{
   const {clamp,wrap,HALF,WALL,TRACKS,MODELOS,track,newCar,place,gridSpot}=Sim;
   const $=id=>document.getElementById(id);
-  const cv=$('lienzo'),ctx=cv.getContext('2d');
+  const cv=$('lienzo'),ctx=cv.getContext('2d',{alpha:false});
   const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34','#dde1e6'];
   const LAPS=3,LS='picada-piloto';
   const TEMAS={
@@ -1310,6 +1313,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('ctrl-volante').onclick=()=>{pref.control='volante';guardar(pref);pintarControl()};
   $('ctrl-flechas').onclick=()=>{pref.control='flechas';guardar(pref);pintarControl()};
   $('gas-solo').onchange=e=>{pref.gasSolo=e.target.checked;guardar(pref);pintarControl()};
+  $('liviano').checked=!!pref.liviano;$('liviano').onchange=e=>{pref.liviano=e.target.checked;guardar(pref);cambiarCalidad(pref.liviano?2:0)};
   $('cam-fija').checked=!!pref.camFija;$('cam-fija').onchange=e=>{pref.camFija=e.target.checked;guardar(pref)};
 
   // --- Celular acostado ---
@@ -1408,7 +1412,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const SK=420,skid=new Float32Array(SK*4);let skidN=0;
   // Humo de gomas: sale de la cola mientras el auto patina fuerte
   function humo(c){
-    if(c.slip<5||c.grass||Math.hypot(c.vx,c.vy)<4||Math.random()>.6)return;
+    if(c.slip<5||c.grass||Math.hypot(c.vx,c.vy)<4||Math.random()>(calidad?.3:.6))return;
     const a=Math.random()<.5?-.8:.8,sn=Math.sin(c.a),cs=Math.cos(c.a);
     if(parts.length<150)parts.push({x:c.x-cs*1.6-sn*a,y:c.y-sn*1.6+cs*a,vx:c.vx*.12+(Math.random()-.5)*2,vy:c.vy*.12+(Math.random()-.5)*2,t:.9,t0:.9,col:'#e6e1d6',humo:1});
   }
@@ -2637,31 +2641,23 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // --- Dibujo desde arriba: la pista son trazos y los autos, figuras simples ---
   let W=0,H=0,dpr=1;
+  // Calidad: 0 completa, 1 sin extras y 2 liviana. Si los cuadros tardan, baja sola.
+  let calidad=pref.liviano?2:0,medida=.016,medidaT=0;
+  function cambiarCalidad(n){calidad=n;size()}
+  function vigilarFluidez(dt,now){
+    if(salaVista||tapado||dt>=.05)return;
+    medida+=(dt-medida)*.04;
+    if(now<medidaT||calidad>=2)return;
+    medidaT=now+1500;
+    if(medida>.0235){cambiarCalidad(calidad+1);medida=.016;medidaT=now+3000}
+  }
   function size(){
-    dpr=Math.min(devicePixelRatio||1,navigator.maxTouchPoints>0?1.75:2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr|0;cv.height=H*dpr|0;
+    dpr=Math.min(devicePixelRatio||1,navigator.maxTouchPoints>0?[1.6,1.3,1][calidad]:2);W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr|0;cv.height=H*dpr|0;
     if(gl){gl.setPixelRatio(Math.min(dpr,navigator.maxTouchPoints>0?1.6:2));gl.setSize(W,H,false)}
   }
   addEventListener('resize',size);size();
   const CON_LLANTAS=new Set(['El Poroto','La Serpentina','La Herradura','El Rulo','El Médano','La Nocturna','La Víbora','El Trébol','Las Sierras','La Montaña Rusa']);
   let pista=null;
-  // Texturas: se repiten sobre el mundo, así el piso acompaña el giro de la cámara
-  const cacheTex=new Map();
-  function texturas(T){
-    if(cacheTex.has(T))return cacheTex.get(T);
-    const hoja=(pintar)=>{const c=document.createElement('canvas');c.width=c.height=256;pintar(c.getContext('2d'));const p=ctx.createPattern(c,'repeat');try{p.setTransform(new DOMMatrix().scale(.14))}catch{}return p};
-    let sem=91;const rnd=()=>(sem=(sem*16807)%2147483647)/2147483647;
-    const tex={
-      suelo:hoja(x=>{
-        x.fillStyle=T.s1;x.fillRect(0,0,256,256);x.fillStyle=T.s2;x.fillRect(0,0,256,64);x.fillRect(0,128,256,64);
-        for(let i=0;i<900;i++){x.fillStyle=rnd()<.5?'rgba(255,255,255,.04)':'rgba(0,0,0,.05)';x.fillRect(rnd()*256,rnd()*256,1+rnd()*3,1+rnd()*3)}
-      }),
-      asfalto:hoja(x=>{
-        x.fillStyle=T.asf;x.fillRect(0,0,256,256);
-        for(let i=0;i<2600;i++){x.fillStyle=rnd()<.5?'rgba(255,255,255,.05)':'rgba(0,0,0,.07)';x.fillRect(rnd()*256,rnd()*256,1.5,1.5)}
-      })
-    };
-    cacheTex.set(T,tex);return tex;
-  }
   // Figuras del escenario vistas de arriba
   const PROPS={};
   function figura(k){
@@ -2697,17 +2693,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     const curva=new Float64Array(N);
     for(let i=0;i<N;i++){const a=(i+N-4)%N,b=(i+4)%N;curva[i]=(t.tx[a]*t.ty[b]-t.ty[a]*t.tx[b])/(8*t.sp)}
     const l=track.linea;
-    // Llantas contra el muro de afuera de las curvas
-    let llantas=null,grava=null;
+    // Llantas y arena afuera de las curvas
+    let llantas=null;
     if(CON_LLANTAS.has(TRACKS[trackIdx].name)){
-      llantas=new Path2D();grava=new Path2D();const zona=new Int8Array(N),a=Math.round(20/t.sp);
-      for(let i=0;i<N;i++)if(Math.abs(curva[i])>.011)for(let o=-a;o<=a;o++)zona[(i+o+N)%N]=curva[i]>0?1:-1;
-      for(let i=0;i<N;i++){
-        if(!zona[i])continue;
-        const b=(i+1)%N,o=-zona[i]*(WALL+.5);
-        llantas.moveTo(t.x[i]+t.nx[i]*o,t.y[i]+t.ny[i]*o);llantas.lineTo(t.x[b]+t.nx[b]*o,t.y[b]+t.ny[b]*o);
-        const og=-zona[i]*(WALL-2.1);grava.moveTo(t.x[i]+t.nx[i]*og,t.y[i]+t.ny[i]*og);grava.lineTo(t.x[b]+t.nx[b]*og,t.y[b]+t.ny[b]*og);
-      }
+      llantas=new Int8Array(N);const a=Math.round(20/t.sp);
+      for(let i=0;i<N;i++)if(Math.abs(curva[i])>.011)for(let o=-a;o<=a;o++)llantas[(i+o+N)%N]=curva[i]>0?1:-1;
     }
     // Escenario: se arma una vez por pista y solo se dibuja lo que está cerca de la cámara
     let sem=7+trackIdx*31;const rnd=()=>(sem=(sem*16807)%2147483647)/2147483647,props=[];
@@ -2723,39 +2713,56 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
     }
     const lado=curva[N-10]>0?-1:1,k0=N-Math.round(16/t.sp),tribuna={x:t.x[k0]+t.nx[k0]*lado*(WALL+7),y:t.y[k0]+t.ny[k0]*lado*(WALL+7),a:Math.atan2(t.ty[k0],t.tx[k0])};
-    pista={T,curva,props,carteles,tribuna,tex:texturas(T),bordeI:lazo(()=>-HALF+.55),bordeD:lazo(()=>HALF-.55),centro:lazo(()=>0),kerbI:lazo(()=>-HALF),kerbD:lazo(()=>HALF),muroI:lazo(()=>-WALL-.4),muroD:lazo(()=>WALL+.4),goma:lazo(i=>l[i]),gomaA:lazo(i=>l[i]-.92),gomaB:lazo(i=>l[i]+.92),llantas,grava};
+    // La pista se corta en tramos: en cada cuadro solo se dibujan los que están a la vista
+    const PASO=24,tramos=[];
+    for(let a=0;a<N;a+=PASO){
+      const b=Math.min(N,a+PASO);
+      const trozo=(f,extra)=>{const p=new Path2D(),fin=Math.min(N,b+extra);for(let i=a;i<=fin;i++){const k=i%N,o=f(k),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o;i===a?p.moveTo(px,py):p.lineTo(px,py)}return p};
+      let cx=0,cy=0;for(let i=a;i<b;i++){cx+=t.x[i];cy+=t.y[i]}cx/=b-a;cy/=b-a;
+      let r=0;for(let i=a;i<=b;i++){const k=i%N;r=Math.max(r,Math.hypot(t.x[k]-cx,t.y[k]-cy))}
+      const q={cx,cy,r:r+WALL+3,d:a*t.sp,centro:trozo(()=>0,1),raya:trozo(()=>0,0),kerbI:trozo(()=>-HALF,0),kerbD:trozo(()=>HALF,0),muroI:trozo(()=>-WALL-.4,0),muroD:trozo(()=>WALL+.4,0),goma:trozo(i=>l[i],0),gomaA:trozo(i=>l[i]-.92,0),gomaB:trozo(i=>l[i]+.92,0),bordeI:trozo(()=>-HALF+.55,0),bordeD:trozo(()=>HALF-.55,0),llantas:null,grava:null};
+      for(let i=a;i<b&&llantas;i++){
+        if(!llantas[i])continue;
+        const c=(i+1)%N,o=-llantas[i]*(WALL+.5),og=-llantas[i]*(WALL-2.1);
+        (q.llantas||(q.llantas=new Path2D())).moveTo(t.x[i]+t.nx[i]*o,t.y[i]+t.ny[i]*o);q.llantas.lineTo(t.x[c]+t.nx[c]*o,t.y[c]+t.ny[c]*o);
+        (q.grava||(q.grava=new Path2D())).moveTo(t.x[i]+t.nx[i]*og,t.y[i]+t.ny[i]*og);q.grava.lineTo(t.x[c]+t.nx[c]*og,t.y[c]+t.ny[c]*og);
+      }
+      tramos.push(q);
+    }
+    pista={T,curva,props,carteles,tribuna,tramos,vis:[]};
   }
   function dibujarPista(x,R){
     const p=pista,T=p.T;
-    x.fillStyle=p.tex.suelo;x.fillRect(cam.x-R,cam.y-R,R*2,R*2);
+    // Franjas de pasto cortado: son pocos rectángulos, no una textura que haya que repintar girada
+    if(calidad<2){x.fillStyle=T.s2;const a=28,y0=Math.floor((cam.y-R)/a/2)*a*2;for(let y=y0;y<cam.y+R;y+=a*2)x.fillRect(cam.x-R,y,R*2,a)}
     for(const q of p.props){
       if(Math.abs(q.x-cam.x)>R||Math.abs(q.y-cam.y)>R)continue;
       const k=T.prop==='farol'?(q.w<.4?'farol':'pino'):T.prop==='edificio'?'techo':T.prop==='cactus'?'cactus':T.prop==='nevado'?'nevado':'pino',e=(k==='techo'?10:k==='farol'?7:5.2)*q.e;
       if(k==='techo'){x.save();x.translate(q.x,q.y);x.rotate(q.r);x.drawImage(figura(k),-e/2,-e/2,e,e);x.restore()}else x.drawImage(figura(k),q.x-e/2,q.y-e/2,e,e);
     }
+    const vis=p.vis;vis.length=0;
+    for(const q of p.tramos){const dx=q.cx-cam.x,dy=q.cy-cam.y,m=R+q.r;if(dx*dx+dy*dy<m*m)vis.push(q)}
+    const traza=(k,dash)=>{for(const q of vis){if(!q[k])continue;if(dash)x.lineDashOffset=q.d;x.stroke(q[k])}};
     x.lineJoin='round';x.lineCap='butt';x.setLineDash([]);
-    x.strokeStyle=T.ban;x.lineWidth=(WALL+.4)*2;x.stroke(p.centro);
-    if(p.grava&&T.prop!=='nevado'){x.lineCap='round';x.strokeStyle=T.prop==='cactus'?'#e6cf9f':'#dcc792';x.lineWidth=3.6;x.stroke(p.grava);x.lineCap='butt'}
-    x.strokeStyle=p.tex.asfalto;x.lineWidth=HALF*2;x.stroke(p.centro);
-    x.strokeStyle='rgba(0,0,0,.1)';x.lineWidth=3.6;x.stroke(p.goma);
-    x.strokeStyle='rgba(0,0,0,.13)';x.lineWidth=.45;x.stroke(p.gomaA);x.stroke(p.gomaB);
-    x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=.16;x.stroke(p.bordeI);x.stroke(p.bordeD);
-    for(const k of [p.kerbI,p.kerbD]){
-      x.setLineDash([]);x.strokeStyle=T.kA;x.lineWidth=1.2;x.stroke(k);
-      x.setLineDash([3,3]);x.strokeStyle=T.kB;x.stroke(k);
+    x.strokeStyle=T.ban;x.lineWidth=(WALL+.4)*2;traza('centro');
+    if(T.prop!=='nevado'){x.lineCap='round';x.strokeStyle=T.prop==='cactus'?'#e6cf9f':'#dcc792';x.lineWidth=3.6;traza('grava');x.lineCap='butt'}
+    x.strokeStyle=T.asf;x.lineWidth=HALF*2;traza('centro');
+    x.strokeStyle='rgba(0,0,0,.1)';x.lineWidth=3.6;traza('goma');
+    x.strokeStyle='rgba(0,0,0,.13)';x.lineWidth=.45;traza('gomaA');traza('gomaB');
+    x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=.16;traza('bordeI');traza('bordeD');
+    for(const k of ['kerbI','kerbD']){
+      x.setLineDash([]);x.strokeStyle=T.kA;x.lineWidth=1.2;traza(k);
+      x.setLineDash([3,3]);x.strokeStyle=T.kB;traza(k,1);
     }
-    for(const k of [p.muroI,p.muroD]){
-      x.setLineDash([]);x.strokeStyle='rgba(0,0,0,.25)';x.lineWidth=1.3;x.stroke(k);
-      x.strokeStyle=T.mB;x.lineWidth=.8;x.stroke(k);
-      x.setLineDash([2.5,2.5]);x.strokeStyle=T.mA;x.stroke(k);
+    for(const k of ['muroI','muroD']){
+      x.setLineDash([]);x.strokeStyle=T.mB;x.lineWidth=.9;traza(k);
+      x.setLineDash([2.5,2.5]);x.strokeStyle=T.mA;traza(k,1);
     }
-    if(p.llantas){
-      x.lineCap='round';x.lineWidth=.9;
-      x.setLineDash([.01,5.99]);x.strokeStyle=T.mA;x.stroke(p.llantas);
-      x.setLineDash([.01,2.99]);x.strokeStyle='#17181a';x.stroke(p.llantas);
-      x.lineCap='butt';
-    }
-    x.setLineDash([4,4]);x.strokeStyle=T.linea;x.lineWidth=.26;x.stroke(p.centro);x.setLineDash([]);
+    x.lineCap='round';x.lineWidth=.9;
+    x.setLineDash([.01,5.99]);x.strokeStyle=T.mA;traza('llantas');
+    x.setLineDash([.01,2.99]);x.strokeStyle='#17181a';traza('llantas');
+    x.lineCap='butt';
+    x.setLineDash([4,4]);x.strokeStyle=T.linea;x.lineWidth=.26;traza('raya',1);x.setLineDash([]);x.lineDashOffset=0;
     // Carteles de frenada antes de cada curva: tres, dos y una raya
     for(const q of p.carteles){
       if(Math.abs(q.x-cam.x)>R||Math.abs(q.y-cam.y)>R)continue;
@@ -2777,10 +2784,11 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function dibujarMarcas(x){
     const n=Math.min(skidN,SK);if(!n)return;
+    const cerca=(Math.hypot(W,H)/cam.z)**2;
     // Las marcas viejas se van apagando
     const fin=(skidN-1)%SK,franja=(d0,d1,al)=>{
       x.strokeStyle='rgba(16,16,16,'+al+')';x.lineWidth=.3;x.beginPath();
-      for(let e=d0;e<d1&&e<n;e++){const i=(fin-e+SK*2)%SK,b=i*4,dx=skid[b+2]-skid[b],dy=skid[b+3]-skid[b+1];if(dx*dx+dy*dy>16)continue;x.moveTo(skid[b],skid[b+1]);x.lineTo(skid[b+2],skid[b+3])}
+      for(let e=d0;e<d1&&e<n;e++){const i=(fin-e+SK*2)%SK,b=i*4,dx=skid[b+2]-skid[b],dy=skid[b+3]-skid[b+1];if(dx*dx+dy*dy>16)continue;{const ex=skid[b]-cam.x,ey=skid[b+1]-cam.y;if(ex*ex+ey*ey>cerca)continue}x.moveTo(skid[b],skid[b+1]);x.lineTo(skid[b+2],skid[b+3])}
       x.stroke();
     };
     franja(0,160,.42);franja(160,300,.27);franja(300,SK,.14);
@@ -2788,8 +2796,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   const tono=(h,k)=>{const n=parseInt(h.slice(1),16),f=c=>Math.round(k<0?c*(1+k):c+(255-c)*k);return 'rgb('+f(n>>16)+','+f(n>>8&255)+','+f(n&255)+')'};
   function ruedasAuto(x,c,delta){
     const P=c.pz||{},kit=P.kit|0;
-    for(const [px,pz,d] of [[1.32,-1,1],[1.32,1,1],[-1.32,-1,0],[-1.32,1,0]]){
-      x.save();x.translate(px,pz*(.92+(kit>=3?.1:0)));if(d)x.rotate(delta);
+    for(let k=0;k<4;k++){
+      const px=k<2?1.32:-1.32,pz=k%2?1:-1;
+      x.save();x.translate(px,pz*(.92+(kit>=3?.1:0)));if(k<2)x.rotate(delta);
       x.fillStyle='#121315';x.fillRect(-.44,-.18,.88,.36);x.fillStyle='#2a2c30';x.fillRect(-.44,-.05,.88,.1);
       if(P.llanta){x.fillStyle=COLORES[P.lc|0];x.fillRect(-.24,-.18,.48,.36)}
       x.restore();
@@ -2841,7 +2850,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function autoEnPista(x,c,now){
     const cs=Math.cos(c.a),sn=Math.sin(c.a);
-    x.save();x.translate(c.x+.28,c.y+.4);x.rotate(c.a);x.drawImage(sombraAuto(),-2.75,-1.6,5.5,3.2);x.restore();
+    if(calidad<2){x.save();x.translate(c.x+.28,c.y+.4);x.rotate(c.a);x.drawImage(sombraAuto(),-2.75,-1.6,5.5,3.2);x.restore()}
     x.save();x.translate(c.x,c.y);x.rotate(c.a);
     ruedasAuto(x,c,c.delta||0);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);
     if(c.brk||c.mano){x.fillStyle='#ff3a24';x.fillRect(-2.2,-.72,.15,.46);x.fillRect(-2.2,.26,.15,.46);x.fillStyle='rgba(255,50,30,.28)';x.beginPath();x.arc(-2.3,-.5,.6,0,6.3);x.arc(-2.3,.5,.6,0,6.3);x.fill()}
@@ -2901,7 +2910,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     return sombraA=c;
   }
   function nubes(x,now){
-    if(pista.T.prop==='farol')return;
+    if(pista.T.prop==='farol'||calidad>0)return;
     const q=bocanada('#000000');x.globalAlpha=.1;
     for(let i=0;i<4;i++){const a=cam.x+((i*173+now*.0035)%340)-170,b=cam.y+((i*97+now*.0014)%340)-170;x.drawImage(q,a-55,b-40,110,80)}
     x.globalAlpha=1;
@@ -2913,7 +2922,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function draw(now,dt){
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-    tres.hidden=!(gl&&salaVista==='garaje');
+    {const v=!(gl&&salaVista==='garaje');if(tres.hidden!==v){tres.hidden=v;cv.style.visibility=v?'':'hidden'}}
     if(salaVista==='garaje'&&gl){dibujarSala3D(dt);return}
     if(salaVista){dibujarSala(dt);return}
     if(tapado)return;
@@ -2943,7 +2952,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     x.globalCompositeOperation='source-over';
     nubes(x,now);
     x.globalAlpha=1;x.restore();
-    x.drawImage(vineta||armarVineta(),0,0,W,H);
+    if(calidad===0)x.drawImage(vineta||armarVineta(),0,0,W,H);
     x.font='700 13px "Barlow Condensed",Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';
     for(const c of cars){
       if(c===me)continue;
@@ -2962,11 +2971,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     x.restore();
   }
   // --- HUD ---
-  let hudT=0;
+  let hudT=0,kmhT=0,kmhV=-1;
   function hud(now){
     if(!me)return;
-    $('kmh').textContent=Math.round(Math.hypot(me.vx,me.vy)*3.6);
-    if(now<hudT)return;hudT=now+180;
+    if(now>kmhT){kmhT=now+90;const v=Math.round(Math.hypot(me.vx,me.vy)*3.6);if(v!==kmhV){kmhV=v;$('kmh').textContent=v}}
+    if(now<hudT)return;hudT=now+250;
     const lista=race?racers():[];
     const pos=$('posicion'),rel=$('reloj'),tab=$('tabla');
     if(race){
@@ -3078,7 +3087,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const pat=me&&!me.grass&&s>4?clamp((me.slip-2.5)/9,0,1):0;
       au.rg.gain.setTargetAtTime(pat*.16,au.a.currentTime,.04);au.rf.frequency.setTargetAtTime(1150+pat*650,au.a.currentTime,.06);
     }
-    draw(now,dt);hud(now);
+    draw(now,dt);hud(now);vigilarFluidez(dt,now);
     requestAnimationFrame(frame);
   }
   armarCircuito();pintarCircuito();pintarPlata();
