@@ -7,7 +7,7 @@ fs.writeFileSync(path.join(__dirname,'index.html'),`<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js"></script>
+<script src="room.js?v=${Date.now().toString(36)}"></script>
 </head>
 <body>
 ${juego}
