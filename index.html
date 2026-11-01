@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvxm63d8"></script>
+<script src="room.js?v=mvxn0l1s"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -39,29 +39,23 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
 #tabla div{display:flex;gap:6px;justify-content:space-between}
 #tabla .yo{color:var(--amarillo);font-weight:700}
 #tabla span:first-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:110px}
-#velocidad{position:absolute;bottom:max(10px,env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);text-align:center;
+#velocidad{position:absolute;top:calc(max(8px,env(safe-area-inset-top,0px)) + 84px);left:max(14px,env(safe-area-inset-left,0px));text-align:left;
   font-family:var(--display);font-size:1.5rem;line-height:1;text-shadow:0 2px 0 var(--tinta);font-variant-numeric:tabular-nums}
 #velocidad small{font:700 .75rem var(--texto);display:block;letter-spacing:.08em}
 #grande{position:absolute;top:30%;left:0;right:0;text-align:center;font-family:var(--display);font-size:clamp(3rem,16vmin,7rem);color:var(--amarillo);text-shadow:0 4px 0 var(--tinta)}
 #aviso{position:absolute;top:58%;left:0;right:0;text-align:center;font-weight:700;font-size:1.3rem;text-shadow:0 2px 0 var(--tinta)}
-/* Controles táctiles */
-#tactil{position:absolute;inset:0;--ped:clamp(96px,30vmin,128px);--sep:8px;--rueda:clamp(150px,46vmin,196px);--abajo:max(14px,env(safe-area-inset-bottom,0px));--der:max(14px,env(safe-area-inset-right,0px));--izq:max(14px,env(safe-area-inset-left,0px))}
-@media (orientation:portrait){#tactil{--ped:clamp(68px,21vmin,104px);--rueda:clamp(124px,37vmin,170px)}}
-.pedal{position:absolute;bottom:var(--abajo);width:var(--ped);height:var(--ped);border-radius:50%;box-sizing:border-box;
-  display:grid;place-items:center;text-align:center;font-weight:700;letter-spacing:.05em;border:3px solid rgba(251,246,234,.8);color:var(--crema);pointer-events:none;text-shadow:0 1px 2px var(--tinta)}
-#pedal-gas{right:var(--der);background:rgba(46,125,70,.55)}
-#pedal-gas.auto{opacity:.4}
-#pedal-freno{right:calc(var(--der) + var(--ped) + var(--sep));background:rgba(216,65,47,.5)}
-#pedal-mano{right:var(--der);bottom:calc(var(--abajo) + var(--ped) + var(--sep));width:calc(var(--ped)*2 + var(--sep));height:clamp(48px,14vmin,60px);border-radius:12px;background:rgba(242,168,29,.55)}
-.pedal.on{filter:brightness(1.5);transform:scale(.95)}
-.flecha{position:absolute;bottom:var(--abajo);width:var(--ped);height:calc(var(--ped)*1.15);box-sizing:border-box;border-radius:14px;display:grid;place-items:center;font-size:2.2rem;color:var(--crema);border:3px solid rgba(251,246,234,.8);background:rgba(14,34,53,.42);pointer-events:none}
-#flecha-izq{left:var(--izq)}
-#flecha-der{left:calc(var(--izq) + var(--ped) + var(--sep))}
-.flecha.on{filter:brightness(1.6);transform:scale(.95)}
-#volante{position:absolute;left:var(--izq);bottom:var(--abajo);width:var(--rueda);height:var(--rueda);pointer-events:none;will-change:transform}
-#volante svg{display:block;width:100%;height:100%}
-#volante.on{filter:brightness(1.25)}
-#ayuda-volante{position:absolute;left:calc(var(--izq) + 4px);bottom:calc(var(--abajo) + var(--rueda) + 8px);width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
+/* Controles táctiles: translúcidos, y cada uno se ubica según los ajustes del jugador */
+#tactil{position:absolute;inset:0}
+.mando{position:absolute;box-sizing:border-box;display:grid;place-items:center;color:var(--crema);pointer-events:none;opacity:.42}
+.mando svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mando span{position:relative;font-weight:700;font-size:.8rem;letter-spacing:.06em;text-shadow:0 1px 2px var(--tinta)}
+.mando.on{opacity:.8;transform:scale(.97)}
+#pedal-gas.auto{opacity:.2}
+#mirar{opacity:.14}
+#mirar.on{opacity:.3;transform:none}
+#volante{will-change:transform}
+#volante.on{opacity:.8;transform:none}
+#ayuda-volante{position:absolute;width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
 /* Portada */
 #portada{position:absolute;inset:0;display:flex;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));overflow:auto;touch-action:pan-y;background:rgba(14,34,53,.28)}
 #cartel{margin:auto;min-width:0;max-width:100%;background:var(--celeste);color:var(--tinta);width:min(680px,100%);box-sizing:border-box;border:4px solid var(--tinta);outline:2px solid var(--celeste);outline-offset:3px;
@@ -147,6 +141,29 @@ label{font-weight:700;display:block;margin-bottom:3px}
 .opcion{display:flex;gap:10px;align-items:center;font-weight:700;margin:0;min-height:42px;cursor:pointer}
 .opcion input{width:24px;height:24px;margin:0;accent-color:var(--tinta)}
 .opcion small{display:block;font-size:.92rem;font-weight:500;line-height:1.1}
+#ajustar{background:var(--tinta);color:var(--crema);font-weight:700;padding:9px 12px;border-radius:4px;min-height:42px}
+/* Editor de controles */
+#editor{position:absolute;inset:0;z-index:30;background:#0b131a;color:var(--crema);overflow:hidden;touch-action:none}
+#editor-barra{position:absolute;top:0;right:0;left:0;z-index:3;display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;justify-content:flex-end;background:#262626;padding:6px max(10px,env(safe-area-inset-right,0px)) 6px max(10px,env(safe-area-inset-left,0px))}
+#editor-barra label{margin:0;display:flex;align-items:center;gap:8px;font-weight:700}
+#sens{width:clamp(110px,24vw,190px);height:28px;accent-color:var(--crema)}
+#fijo{width:24px;height:24px;margin:0;accent-color:var(--amarillo)}
+#editor-barra button{background:#2e5573;color:var(--crema);font-weight:700;padding:8px 14px;min-height:42px}
+.ed{position:absolute;box-sizing:border-box;border:2px solid rgba(251,246,234,.8);display:grid;place-items:center;font-weight:700;cursor:move;touch-action:none}
+.ed.activo{border-color:var(--amarillo)}
+.ed svg{position:absolute;inset:6px;width:calc(100% - 12px);height:calc(100% - 12px);opacity:.3;pointer-events:none}
+.ed span{position:relative;color:rgba(251,246,234,.7);pointer-events:none}
+.esq{position:absolute;width:30px;height:30px;touch-action:none}
+.esq::after{content:"";position:absolute;width:14px;height:14px;border:4px solid #fff}
+.esq.a{left:-13px;top:-13px;cursor:nwse-resize}.esq.a::after{left:6px;top:6px;border-right:0;border-bottom:0}
+.esq.b{right:-13px;top:-13px;cursor:nesw-resize}.esq.b::after{right:6px;top:6px;border-left:0;border-bottom:0}
+.esq.c{left:-13px;bottom:-13px;cursor:nesw-resize}.esq.c::after{left:6px;bottom:6px;border-right:0;border-top:0}
+.esq.d{right:-13px;bottom:-13px;cursor:nwse-resize}.esq.d::after{right:6px;bottom:6px;border-left:0;border-top:0}
+/* Aviso para jugar con el celular acostado */
+#girar{position:absolute;inset:0;z-index:40;background:var(--tinta);color:var(--crema);display:grid;place-content:center;justify-items:center;gap:14px;padding:24px;text-align:center}
+#girar svg{width:96px;height:96px}
+#girar p{margin:0;font:400 1.5rem/1.15 var(--display)}
+#girar button{background:none;color:var(--crema);text-decoration:underline;font-weight:700;min-height:42px;padding:6px}
 #tip-derrape{margin:0;line-height:1.2;background:rgba(251,246,234,.5);border-radius:4px;padding:8px 10px}
 /* Celular acostado: la sala en dos columnas, con el botón siempre a la vista */
 @media (min-width:620px) and (max-height:520px){
@@ -178,12 +195,13 @@ label{font-weight:700;display:block;margin-bottom:3px}
   <canvas id="lienzo" aria-hidden="true"></canvas>
   <div id="tactil" hidden>
     <div id="ayuda-volante">Apoyá el pulgar y movelo a los lados</div>
-    <div id="volante" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" fill="rgba(14,34,53,.28)" stroke="rgba(251,246,234,.85)" stroke-width="10"/><path d="M8 50H92M50 50V92" stroke="rgba(251,246,234,.75)" stroke-width="8"/><circle cx="50" cy="50" r="13" fill="rgba(251,246,234,.9)"/><path d="M50 3v10" stroke="#d8412f" stroke-width="7"/></svg></div>
-    <div class="flecha" id="flecha-izq" hidden>◀</div>
-    <div class="flecha" id="flecha-der" hidden>▶</div>
-    <div class="pedal" id="pedal-freno">FRENO</div>
-    <div class="pedal" id="pedal-gas">ACEL.</div>
-    <div class="pedal" id="pedal-mano">FRENO DE MANO</div>
+    <div class="mando" id="mirar"><span>MIRAR ATRÁS</span></div>
+    <div class="mando" id="volante" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" fill="rgba(14,34,53,.35)" stroke="#fbf6ea" stroke-width="10"/><path d="M8 50H92M50 50V92" stroke="#fbf6ea" stroke-width="8"/><circle cx="50" cy="50" r="13" fill="#fbf6ea"/><path d="M50 3v10" stroke="#d8412f" stroke-width="7"/></svg></div>
+    <div class="mando" id="flecha-izq" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M2 50 44 8V30H98V70H44V92Z" fill="#fbf6ea"/></svg></div>
+    <div class="mando" id="flecha-der" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M98 50 56 8V30H2V70H56V92Z" fill="#fbf6ea"/></svg></div>
+    <div class="mando" id="pedal-freno"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path fill-rule="evenodd" fill="#fbf6ea" d="M4 4H96V96H4ZM16 16V30H30V16ZM43 16V30H57V16ZM70 16V30H84V16ZM16 43V57H30V43ZM43 43V57H57V43ZM70 43V57H84V43ZM16 70V84H30V70ZM43 70V84H57V70ZM70 70V84H84V70Z"/></svg><span>FRENO</span></div>
+    <div class="mando" id="pedal-gas"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path fill-rule="evenodd" fill="#fbf6ea" d="M4 4H96V96H4ZM18 12V88H32V12ZM43 12V88H57V12ZM68 12V88H82V12Z"/></svg><span id="txt-gas">ACEL.</span></div>
+    <div class="mando" id="pedal-mano"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6 26 3 44 70 70 84 98 80V97H62L28 80Z" fill="#fbf6ea"/></svg><span>MANO</span></div>
   </div>
   <div id="hud" hidden>
     <div id="tablero">
@@ -266,14 +284,29 @@ label{font-weight:700;display:block;margin-bottom:3px}
           </div>
         </div>
         <label class="opcion"><input type="checkbox" id="gas-solo"><span>Acelerar solo<small>El auto acelera siempre; vos solo doblás y frenás.</small></span></label>
+        <button type="button" id="ajustar">Ajustar controles</button>
         <p id="tip-derrape"><b>Para derrapar:</b> soltá el acelerador, doblá y tocá el freno de mano un momento. Después acelerá y mantené la curva.</p>
-        <p id="teclas">Con teclado: flechas o WASD, Espacio para el freno de mano y R para volver a la pista.</p>
+        <p id="teclas">Con teclado: flechas o WASD, Espacio para el freno de mano, C para mirar atrás y R para volver a la pista.</p>
       </div>
       <div id="pie">
         <p id="proximo"></p>
         <button id="entrar" type="submit">Salir a pista</button>
       </div>
     </form>
+  </div>
+  <div id="editor" hidden>
+    <div id="editor-barra">
+      <label>Sensibilidad <b id="sens-valor">1,00</b><input type="range" id="sens" min=".5" max="2" step=".05"></label>
+      <label id="fila-fijo">Volante fijo<input type="checkbox" id="fijo"></label>
+      <button type="button" id="resetear">Resetear</button>
+      <button type="button" id="editor-atras">◀ Atrás</button>
+    </div>
+    <div id="editor-mesa"></div>
+  </div>
+  <div id="girar" hidden>
+    <svg viewBox="0 0 100 100" aria-hidden="true"><rect x="32" y="12" width="36" height="66" rx="6" fill="none" stroke="#ffd23f" stroke-width="6"/><path d="M14 62C10 44 16 28 28 20M28 20 16 20M28 20 27 32" fill="none" stroke="#fbf6ea" stroke-width="5"/></svg>
+    <p>Girá el celular para jugar acostado</p>
+    <button type="button" id="girar-no">Jugar así igual</button>
   </div>
   <div id="final" hidden>
     <div id="planilla">
@@ -613,11 +646,11 @@ if(typeof module!=='undefined')module.exports=Sim;
   const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34'];
   const LAPS=3,LS='picada-piloto';
   const TEMAS={
-    pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#5ea9d0',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72]},
-    medano:{s1:'#dcbb7c',s2:'#d3b06f',ban:'#c9a264',asf:'#a57c52',kA:'#f4e6c8',kB:'#c9622f',mA:'#8a5a34',mB:'#e8d3a7',top:'#b58f62',linea:'#caa67a',prop:'cactus',luz:[.86,.76]},
-    glaciar:{s1:'#e9f1f6',s2:'#e0eaf1',ban:'#cfe0ea',asf:'#a7c3d4',kA:'#ffffff',kB:'#3f7fb0',mA:'#2f6c9c',mB:'#f4f9fc',top:'#d7e5ee',linea:'#e7f2f8',prop:'nevado',luz:[.9,.68]},
-    noche:{s1:'#1a2838',s2:'#172331',ban:'#23384a',asf:'#33363d',kA:'#ffd23f',kB:'#f4f1e6',mA:'#e0a526',mB:'#3a4453',top:'#4a5563',linea:'#f4f1e6',prop:'farol',luz:[.62,.5]},
-    ciudad:{s1:'#8c8e90',s2:'#858789',ban:'#a7a79f',asf:'#46474a',kA:'#f6f1e4',kB:'#d8412f',mA:'#e6b422',mB:'#26282b',top:'#b9b7ad',linea:'#f6f1e4',prop:'edificio',luz:[.84,.72]}
+    pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#5ea9d0',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72],cielo:'#a9d8f0'},
+    medano:{s1:'#dcbb7c',s2:'#d3b06f',ban:'#c9a264',asf:'#a57c52',kA:'#f4e6c8',kB:'#c9622f',mA:'#8a5a34',mB:'#e8d3a7',top:'#b58f62',linea:'#caa67a',prop:'cactus',luz:[.86,.76],cielo:'#f3dcae'},
+    glaciar:{s1:'#e9f1f6',s2:'#e0eaf1',ban:'#cfe0ea',asf:'#a7c3d4',kA:'#ffffff',kB:'#3f7fb0',mA:'#2f6c9c',mB:'#f4f9fc',top:'#d7e5ee',linea:'#e7f2f8',prop:'nevado',luz:[.9,.68],cielo:'#d5e7f3'},
+    noche:{s1:'#1a2838',s2:'#172331',ban:'#23384a',asf:'#33363d',kA:'#ffd23f',kB:'#f4f1e6',mA:'#e0a526',mB:'#3a4453',top:'#4a5563',linea:'#f4f1e6',prop:'farol',luz:[.62,.5],cielo:'#101a27'},
+    ciudad:{s1:'#8c8e90',s2:'#858789',ban:'#a7a79f',asf:'#46474a',kA:'#f6f1e4',kB:'#d8412f',mA:'#e6b422',mB:'#26282b',top:'#b9b7ad',linea:'#f6f1e4',prop:'edificio',luz:[.84,.72],cielo:'#c2d0da'}
   };
   const leer=()=>{try{return JSON.parse(localStorage.getItem(LS))||{}}catch{return {}}};
   const guardar=v=>{try{localStorage.setItem(LS,JSON.stringify(v))}catch{}};
@@ -645,14 +678,14 @@ if(typeof module!=='undefined')module.exports=Sim;
   addBots();
   // --- Entradas ---
   const keys={};
-  const touch={steer:0,analogico:false,gas:0,brake:0,mano:0};
+  const touch={steer:0,analogico:false,gas:0,brake:0,mano:0,mirar:0};
   let suave=0;
   const inp=()=>{
     const k=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0),dest=k||touch.steer;
     // Las flechas entran de a poco, más despacio cuanto más rápido vas; el volante va directo
     if(touch.analogico&&!k)suave=dest;
     else{
-      const v=me?Math.hypot(me.vx,me.vy):0,rate=dest===0||dest*suave<0?11:6.5-4*Math.min(1,v/38);
+      const v=me?Math.hypot(me.vx,me.vy):0,rate=dest===0||dest*suave<0?11:(6.5-4*Math.min(1,v/38))*(pref.sens||1);
       suave+=clamp(dest-suave,-rate*DT,rate*DT);
     }
     const freno=keys.ArrowDown||keys.KeyS||touch.brake,mano=keys.Space||touch.mano;
@@ -665,67 +698,159 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(entered&&/^Arrow|Space/.test(e.code))e.preventDefault();
   });
   addEventListener('keyup',e=>{keys[e.code]=false});
-  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=touch.mano=0;pads.clear();renderPedals()});
+  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=touch.mano=touch.mirar=0;pads.clear();renderPedals()});
   const pads=new Map(),tactil=$('tactil');
   function renderPedals(){
-    let g=0,b=0,h=0,st=null;
+    let g=0,b=0,h=0,mi=0,st=null;
     let iz=0,de=0;
-    for(const p of pads.values()){if(p.z==='gas')g=1;else if(p.z==='brake')b=1;else if(p.z==='mano')h=1;else if(p.z==='izq')iz=1;else if(p.z==='der')de=1;else st=p}
-    touch.gas=g;touch.brake=b;touch.mano=h;touch.analogico=!!st;touch.steer=st?st.giro:de-iz;
-    $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);
+    for(const p of pads.values()){if(p.z==='pedal-gas')g=1;else if(p.z==='pedal-freno')b=1;else if(p.z==='pedal-mano')h=1;else if(p.z==='mirar')mi=1;else if(p.z==='flecha-izq')iz=1;else if(p.z==='flecha-der')de=1;else st=p}
+    touch.gas=g;touch.brake=b;touch.mano=h;touch.mirar=mi;touch.analogico=!!st;touch.steer=st?st.giro:de-iz;
+    $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);$('mirar').classList.toggle('on',!!mi);
     $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);$('pedal-mano').classList.toggle('on',!!h);
     const v=$('volante');v.classList.toggle('on',!!st);v.style.transform='rotate('+(touch.steer*110).toFixed(1)+'deg)';
   }
-  // Volante fijo: el pulgar se mueve a los lados desde donde apoya. Al pasarse del recorrido el punto
+  // Posición y tamaño de cada control: centro en fracción de pantalla, medidas en fracción del lado corto
+  const DEF={
+    'volante':{x:.14,y:.73,w:.5,h:.5},
+    'flecha-izq':{x:.1,y:.82,w:.34,h:.29},
+    'flecha-der':{x:.265,y:.82,w:.34,h:.29},
+    'pedal-freno':{x:.795,y:.81,w:.19,h:.29},
+    'pedal-gas':{x:.93,y:.8,w:.2,h:.33},
+    'pedal-mano':{x:.92,y:.48,w:.235,h:.27},
+    'mirar':{x:.44,y:.36,w:1.3,h:.18}
+  };
+  const AJ=()=>pref.ajustes||(pref.ajustes={});
+  const ajuste=id=>{const a=AJ()[id],d=DEF[id];return a&&[a.x,a.y,a.w,a.h].every(n=>typeof n==='number'&&isFinite(n))?a:d};
+  const pantalla=()=>{const j=$('juego');return {W:j.clientWidth,H:j.clientHeight}};
+  function caja(id){
+    const {W,H}=pantalla(),u=Math.min(W,H),a=ajuste(id),w=a.w*u,h=a.h*u,l=clamp(a.x*W-w/2,0,Math.max(0,W-w)),t=clamp(a.y*H-h/2,0,Math.max(0,H-h));
+    return {l,t,r:l+w,b:t+h,w,h};
+  }
+  const ponerCaja=(el,c)=>{el.style.left=c.l+'px';el.style.top=c.t+'px';el.style.width=c.w+'px';el.style.height=c.h+'px'};
+  function posicionar(){
+    for(const id in DEF)ponerCaja($(id),caja(id));
+    const c=caja('volante'),ay=$('ayuda-volante');ay.style.left=c.l+'px';ay.style.bottom=($('juego').clientHeight-c.t+6)+'px';
+  }
+  const dirige=()=>pref.control==='flechas'?['flecha-izq','flecha-der']:['volante'];
+  const PEDALES=['pedal-gas','pedal-freno','pedal-mano'];
+  const distancia=(c,x,y)=>Math.hypot(Math.max(c.l-x,0,x-c.r),Math.max(c.t-y,0,y-c.b));
+  function cercano(ids,x,y,lim){
+    let mejor=null,d0=lim;
+    for(const id of ids){const d=distancia(caja(id),x,y);if(d<=d0){d0=d;mejor=id}}
+    return mejor;
+  }
+  // Primero lo que el dedo tocó de lleno; si erró por poco, el control más cercano
+  function queToca(x,y){
+    const ids=[...dirige(),...PEDALES],vol=pref.control!=='flechas';
+    const lleno=cercano(ids,x,y,0)||cercano(['mirar'],x,y,0)||cercano(ids,x,y,40);
+    if(lleno)return lleno;
+    const c=caja('volante'),W=$('juego').clientWidth;
+    return vol&&(x<W/2)===((c.l+c.r)/2<W/2)?'volante':null;
+  }
+  // Volante: el pulgar se mueve a los lados desde donde apoya. Al pasarse del recorrido el punto
   // de partida lo acompaña, así contravolantear responde apenas el dedo cambia de sentido.
-  const RECORRIDO=52;
   function moverVolante(p,x){
+    const rec=52/(pref.sens||1);
     let d=x-p.ox;
-    if(d>RECORRIDO){p.ox+=d-RECORRIDO;d=RECORRIDO}else if(d<-RECORRIDO){p.ox+=d+RECORRIDO;d=-RECORRIDO}
-    const q=Math.max(0,Math.abs(d)-3)/(RECORRIDO-3);
+    if(d>rec){p.ox+=d-rec;d=rec}else if(d<-rec){p.ox+=d+rec;d=-rec}
+    const q=Math.max(0,Math.abs(d)-3)/(rec-3);
     p.giro=Math.sign(d)*Math.pow(q,1.25);
   }
-  function zonaFlecha(x,antes){
-    const a=$('flecha-izq').getBoundingClientRect(),b=$('flecha-der').getBoundingClientRect();
-    return x<(a.right+b.left)/2+(antes==='izq'?10:antes==='der'?-10:0)?'izq':'der';
-  }
-  const lado=(x,w)=>x<w*.45;
   function pintarControl(){
     const fl=pref.control==='flechas';
     $('flecha-izq').hidden=$('flecha-der').hidden=!fl;$('volante').hidden=fl;$('ayuda-volante').hidden=fl||pref.ayudaVista;
-    $('pedal-gas').classList.toggle('auto',!!pref.gasSolo);$('pedal-gas').textContent=pref.gasSolo?'AUTO':'ACEL.';$('gas-solo').checked=!!pref.gasSolo;
+    $('pedal-gas').classList.toggle('auto',!!pref.gasSolo);$('txt-gas').textContent=pref.gasSolo?'AUTO':'ACEL.';$('gas-solo').checked=!!pref.gasSolo;
     $('ctrl-volante').setAttribute('aria-pressed',!fl);$('ctrl-flechas').setAttribute('aria-pressed',fl);
-    pads.clear();renderPedals();
-  }
-  // Cada zona tiene un margen: el pulgar puede moverse un poco sin saltar al pedal de al lado
-  function pedalZone(x,y,antes){
-    const a=$('pedal-gas').getBoundingClientRect(),b=$('pedal-freno').getBoundingClientRect(),h=$('pedal-mano').getBoundingClientRect();
-    const techo=a.top+(antes==='mano'?10:antes?-10:-2);
-    if(y<techo&&y>h.top-34)return 'mano';
-    const mid=(a.left+b.right)/2+(antes==='gas'?-14:antes==='brake'?14:0);
-    return x>=mid?'gas':'brake';
+    pads.clear();renderPedals();posicionar();
   }
   tactil.addEventListener('pointerdown',e=>{
     e.preventDefault();tactil.setPointerCapture(e.pointerId);
-    const izq=lado(e.clientX,tactil.clientWidth),fl=pref.control==='flechas';
-    const z=!izq?pedalZone(e.clientX,e.clientY):fl?zonaFlecha(e.clientX):'steer';
-    pads.set(e.pointerId,{z,izq,giro:0,ox:e.clientX});
-    if(z==='steer'){$('ayuda-volante').hidden=true;pref.ayudaVista=true}
+    const z=queToca(e.clientX,e.clientY);if(!z)return;
+    pads.set(e.pointerId,{z,giro:0,ox:e.clientX});
+    if(z==='volante'){
+      $('ayuda-volante').hidden=true;pref.ayudaVista=true;
+      if(pref.volanteSuelto){const c=caja('volante'),v=$('volante');v.style.left=(e.clientX-c.w/2)+'px';v.style.top=(e.clientY-c.h/2)+'px'}
+    }
     renderPedals();
   });
-  // El dedo queda en el lado donde apoyó: el de doblar nunca termina frenando, ni al revés
+  // El dedo queda en su grupo: el de doblar nunca termina frenando, ni al revés, y cada zona deja un margen
   tactil.addEventListener('pointermove',e=>{
     const p=pads.get(e.pointerId);if(!p)return;
-    if(p.z==='steer')moverVolante(p,e.clientX);
-    else p.z=p.izq?zonaFlecha(e.clientX,p.z):pedalZone(e.clientX,e.clientY,p.z);
+    if(p.z==='volante')moverVolante(p,e.clientX);
+    else if(p.z!=='mirar'){
+      const ids=PEDALES.includes(p.z)?PEDALES:dirige();
+      if(distancia(caja(p.z),e.clientX,e.clientY)>12)p.z=cercano(ids,e.clientX,e.clientY,70)||p.z;
+    }
     renderPedals();
   });
-  const soltar=e=>{pads.delete(e.pointerId);renderPedals()};
+  const soltar=e=>{const p=pads.get(e.pointerId);pads.delete(e.pointerId);if(p&&p.z==='volante')posicionar();renderPedals()};
   tactil.addEventListener('pointerup',soltar);tactil.addEventListener('pointercancel',soltar);
   addEventListener('contextmenu',e=>e.preventDefault());
+  addEventListener('resize',()=>{posicionar();vigilarGiro()});
   $('ctrl-volante').onclick=()=>{pref.control='volante';guardar(pref);pintarControl()};
   $('ctrl-flechas').onclick=()=>{pref.control='flechas';guardar(pref);pintarControl()};
   $('gas-solo').onchange=e=>{pref.gasSolo=e.target.checked;guardar(pref);pintarControl()};
+
+  // --- Celular acostado ---
+  const esTactil=()=>navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches;
+  let giroOmitido=false;
+  function vigilarGiro(){
+    const jugando=entered&&$('portada').hidden&&$('inicio').hidden;
+    $('girar').hidden=!(esTactil()&&!giroOmitido&&innerHeight>innerWidth&&(jugando||!$('editor').hidden));
+  }
+  async function acostar(){
+    if(!esTactil())return;
+    try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen({navigationUI:'hide'})}catch{}
+    try{if(screen.orientation&&screen.orientation.lock)await screen.orientation.lock('landscape')}catch{}
+  }
+  $('girar-no').onclick=()=>{giroOmitido=true;vigilarGiro()};
+
+  // --- Editor de controles ---
+  let edicion=null;
+  const ETIQUETAS={'volante':'Volante','flecha-izq':'Izquierda','flecha-der':'Derecha','pedal-freno':'Freno','pedal-gas':'Acelerador','pedal-mano':'Freno de mano','mirar':'Mirar atrás'};
+  const textoSens=()=>(pref.sens||1).toFixed(2).replace('.',',');
+  function pintarEditor(){
+    const m=$('editor-mesa');m.textContent='';
+    for(const id of [...dirige(),...PEDALES,'mirar']){
+      const d=document.createElement('div'),sv=$(id).querySelector('svg'),t=document.createElement('span');
+      d.className='ed';d.dataset.id=id;ponerCaja(d,caja(id));
+      if(sv)d.append(sv.cloneNode(true));
+      t.textContent=ETIQUETAS[id];d.append(t);
+      for(const k of ['a','b','c','d']){const q=document.createElement('div');q.className='esq '+k;q.dataset.k=k;d.append(q)}
+      m.append(d);
+    }
+    $('sens').value=pref.sens||1;$('sens-valor').textContent=textoSens();
+    $('fila-fijo').hidden=pref.control==='flechas';$('fijo').checked=!pref.volanteSuelto;
+  }
+  $('ajustar').onclick=()=>{acostar();$('editor').hidden=false;pintarEditor();vigilarGiro();setTimeout(pintarEditor,350)};
+  $('editor-atras').onclick=()=>{$('editor').hidden=true;guardar(pref);posicionar();vigilarGiro()};
+  $('resetear').onclick=()=>{pref.ajustes={};pref.sens=1;pref.volanteSuelto=false;guardar(pref);posicionar();pintarEditor()};
+  $('sens').oninput=e=>{pref.sens=+e.target.value;$('sens-valor').textContent=textoSens();guardar(pref)};
+  $('fijo').onchange=e=>{pref.volanteSuelto=!e.target.checked;guardar(pref)};
+  const mesa=$('editor-mesa');
+  mesa.addEventListener('pointerdown',e=>{
+    const d=e.target.closest('.ed');if(!d)return;
+    e.preventDefault();d.setPointerCapture(e.pointerId);
+    for(const n of mesa.children)n.classList.toggle('activo',n===d);
+    mesa.append(d);
+    edicion={id:d.dataset.id,d,esq:e.target.dataset.k||null,x:e.clientX,y:e.clientY,a:{...ajuste(d.dataset.id)}};
+    d.setPointerCapture(e.pointerId);
+  });
+  mesa.addEventListener('pointermove',e=>{
+    if(!edicion)return;
+    const {W,H}=pantalla(),u=Math.min(W,H),o=edicion.a,dx=e.clientX-edicion.x,dy=e.clientY-edicion.y;
+    const n={...o};
+    if(edicion.esq){
+      const sx=/[bd]/.test(edicion.esq)?1:-1,sy=/[cd]/.test(edicion.esq)?1:-1;
+      let w=clamp(o.w+sx*dx/u,.14,1.8),h=clamp(o.h+sy*dy/u,.12,1);
+      if(edicion.id==='volante')w=h=clamp(Math.max(w,h),.3,.9);
+      n.w=w;n.h=h;n.x=o.x+sx*(w-o.w)*u/2/W;n.y=o.y+sy*(h-o.h)*u/2/H;
+    }else{n.x=o.x+dx/W;n.y=o.y+dy/H}
+    AJ()[edicion.id]=n;
+    ponerCaja(edicion.d,caja(edicion.id));
+  });
+  const fin=()=>{if(edicion){edicion=null;guardar(pref);posicionar()}};
+  mesa.addEventListener('pointerup',fin);mesa.addEventListener('pointercancel',fin);
   pintarControl();
   // --- Sonido ---
   let au=null,mute=!!pref.mute;
@@ -1048,7 +1173,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     b.append(c,e);b.onclick=()=>{if(i!==trackIdx&&!anfitrion&&!race)setCircuito(i)};
     $('circuitos').append(b);
   });
-  $('garaje').onclick=()=>{$('garaje').blur();if(!race){$('entrar').textContent='Volver a pista';aGaraje(false)}};
+  $('garaje').onclick=()=>{$('garaje').blur();if(!race){$('entrar').textContent='Volver a pista';aGaraje(false);vigilarGiro()}};
   function raceTick(now){
     const jefe=quienManda(now);
     if(jefe!==anfitrion){anfitrion=jefe;pintarCircuito()}
@@ -1154,6 +1279,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('garaje').addEventListener('click',()=>pintarFicha());
   $('cartel').addEventListener('submit',e=>{
     e.preventDefault();
+    acostar();setTimeout(vigilarGiro,300);
     const name=$('nombre').value.trim().slice(0,12)||'Piloto';
     pref.nombre=name;pref.color=color;pref.modelo=modelo;guardar(pref);
     if(me){
@@ -1165,18 +1291,19 @@ if(typeof module!=='undefined')module.exports=Sim;
     const g=gridSpot(Math.floor(Math.random()*6));place(me,g.idx,g.off);me.ghost=2;
     cars.push(me);entered=true;if(!codigo)entroT=performance.now();
     $('portada').hidden=true;$('hud').hidden=false;
-    if(navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches)tactil.hidden=false;
+    if(esTactil())tactil.hidden=false;
+    posicionar();
     audioOn();if(au&&au.a.state==='suspended')au.a.resume();
     try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(()=>{})}catch{}
     document.activeElement&&document.activeElement.blur();
   });
-  // --- Dibujo 3D: cámara detrás del auto, inclinada a 45° ---
+  // --- Dibujo 3D: cámara cerca y detrás del auto ---
   const tres=$('tres');
   let gl=null;
   try{if(window.THREE)gl=new THREE.WebGLRenderer({canvas:tres,antialias:true,powerPreference:'high-performance'})}catch{gl=null}
   if(!gl){sinTres=true;salon()}
   const scene=gl&&new THREE.Scene();
-  const camara=gl&&new THREE.PerspectiveCamera(46,1,2,900);
+  const camara=gl&&new THREE.PerspectiveCamera(58,1,1,1000);
   const colorHex=h=>new THREE.Color(h);
   let circuito=null;
   let sueloC=null,sueloT=null,hemi=null,sol=null;
@@ -1184,7 +1311,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const x=sueloC.getContext('2d');
     x.fillStyle=T.s1;x.fillRect(0,0,128,128);x.fillStyle=T.s2;x.fillRect(0,0,64,64);x.fillRect(64,64,64,64);
     sueloT.needsUpdate=true;
-    scene.background=colorHex(T.s1);hemi.intensity=T.luz[0];sol.intensity=T.luz[1];
+    scene.background=colorHex(T.cielo);scene.fog=new THREE.Fog(colorHex(T.cielo),130,380);hemi.intensity=T.luz[0];sol.intensity=T.luz[1];
   }
   function suelo(){
     sueloC=document.createElement('canvas');sueloC.width=sueloC.height=128;
@@ -1418,20 +1545,21 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
   }
   addEventListener('resize',size);size();
-  const cam={x:0,y:0,a:0,d:40,init:false};
+  const cam={x:0,y:0,a:0,d:8,init:false};
   const focus=()=>me||cars.find(c=>c.kind==='net')||cars[0];
   function camera(dt){
     const c=focus();if(!c)return;
     const sp=Math.hypot(c.vx,c.vy);
     const lookA=sp>4&&c.vf>=-.5?Math.atan2(c.vy,c.vx):c.a;
     if(!cam.init){cam.a=c.a;cam.x=c.x;cam.y=c.y;cam.init=true}
-    cam.a+=wrap(lookA-cam.a)*(1-Math.exp(-dt*3.2));
-    const k=1-Math.exp(-dt*10);cam.x+=(c.x-cam.x)*k;cam.y+=(c.y-cam.y)*k;
-    cam.d+=(38+clamp(sp/38,0,1)*15-cam.d)*(1-Math.exp(-dt*2));
+    cam.a+=wrap(lookA-cam.a)*(1-Math.exp(-dt*4.5));
+    const k=1-Math.exp(-dt*22);cam.x+=(c.x-cam.x)*k;cam.y+=(c.y-cam.y)*k;
+    cam.d+=(7.6+clamp(sp/45,0,1)*2.6-cam.d)*(1-Math.exp(-dt*2.5));
     if(!gl)return;
-    const fx=Math.cos(cam.a),fy=Math.sin(cam.a),adel=5+sp*.28,lado=cam.d*Math.SQRT1_2,tx=cam.x+fx*adel,ty=cam.y+fy*adel,sh=camShake*1.1;
-    camara.position.set(tx-fx*lado+(Math.random()-.5)*sh,lado+(Math.random()-.5)*sh,ty-fy*lado);
-    camara.lookAt(tx,0,ty);
+    // Mirar atrás da vuelta la cámara sin moverla del auto
+    const atras=touch.mirar||keys.KeyC,ang=cam.a+(atras?Math.PI:0),fx=Math.cos(ang),fy=Math.sin(ang),sh=camShake*.45;
+    camara.position.set(cam.x-fx*cam.d+(Math.random()-.5)*sh,3.05+(Math.random()-.5)*sh,cam.y-fy*cam.d);
+    camara.lookAt(cam.x+fx*7,.9,cam.y+fy*7);
   }
   const vec=gl&&new THREE.Vector3();
   let mapa=null;
