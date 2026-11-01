@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvy93yd4"></script>
+<script src="room.js?v=mvy9gs97"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -44,9 +44,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
 #tabla div{display:flex;gap:6px;justify-content:space-between}
 #tabla .yo{color:var(--amarillo);font-weight:700}
 #tabla span:first-child{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;max-width:110px}
-#velocidad{position:absolute;top:max(8px,env(safe-area-inset-top,0px));right:calc(min(30vw,170px) + 34px);text-align:right;
   font-family:var(--display);font-size:1.5rem;line-height:1;text-shadow:0 2px 0 var(--tinta);font-variant-numeric:tabular-nums}
-#velocidad small{font:700 .75rem var(--texto);display:block;letter-spacing:.08em}
 #grande{position:absolute;top:30%;left:0;right:0;text-align:center;font-family:var(--display);font-size:clamp(3rem,16vmin,7rem);color:var(--amarillo);text-shadow:0 4px 0 var(--tinta)}
 #aviso{position:absolute;top:58%;left:0;right:0;text-align:center;font-weight:700;font-size:1.3rem;text-shadow:0 2px 0 var(--tinta)}
 /* Controles táctiles: translúcidos, y cada uno se ubica según los ajustes del jugador */
@@ -489,14 +487,8 @@ html,body{background:#000;touch-action:manipulation}
 #posicion small{color:var(--suave);font-size:.85rem}
 #posicion span{margin-left:6px}
 .boton-hud{background:rgba(10,11,15,.74);color:#fff;box-shadow:none;border-radius:10px;min-height:32px;font-size:.92rem;padding:4px 10px}
-#velocidad{left:50%;right:auto;top:auto;bottom:calc(30vh + 8px);transform:translateX(-50%);display:flex;align-items:center;gap:8px;background:rgba(10,11,15,.62);border-radius:12px;padding:4px 10px;font-size:1.35rem;text-shadow:none;position:absolute;text-align:left}
-#velocidad>div{display:flex;align-items:baseline;gap:3px}
-#velocidad small{display:inline;font-size:.8rem;letter-spacing:0;color:var(--suave)}
-#velocidad em{font-style:normal;color:var(--oro);font-size:1.1rem}
-#velocidad i{display:block;width:48px;height:7px;border-radius:4px;background:rgba(255,255,255,.2);overflow:hidden}
-#velocidad u{display:block;height:100%;background:var(--oro)}
-#curva{position:absolute;bottom:calc(30vh + 56px);left:50%;transform:translateX(-50%);background:rgba(10,11,15,.8);color:#fff;font-weight:700;padding:5px 12px;border-radius:999px;white-space:nowrap}
-#curva.dura{background:#c62b1e}
+#velocidad{position:absolute;right:max(14px,env(safe-area-inset-right,0px));left:auto;bottom:auto;top:calc(max(10px,env(safe-area-inset-top,0px)) + min(18.6vw,105px) + 6px);display:flex;align-items:baseline;gap:4px;background:rgba(10,11,15,.74);border-radius:10px;padding:3px 10px;font:400 1.3rem var(--display);text-shadow:none;transform:none}
+#velocidad small{display:inline;font:700 .8rem var(--texto);letter-spacing:0;color:var(--suave)}
 #grande{top:26%}
 #grande.luces{display:flex;justify-content:center;gap:12px}
 #grande.luces i{width:46px;height:46px;border-radius:50%;background:#2a2c33;border:4px solid #0b0c10}
@@ -539,8 +531,7 @@ html,body{background:#000;touch-action:manipulation}
     <div id="derrape-box" hidden></div>
     <div id="grande" hidden></div>
     <div id="aviso" hidden></div>
-    <div id="curva" hidden></div>
-    <div id="velocidad"><div><span id="kmh">0</span><small>km/h</small></div><em id="marcha">1</em><i><u id="rpm"></u></i></div>
+    <div id="velocidad"><span id="kmh">0</span><small>km/h</small></div>
   </div>
   <div id="inicio" hidden>
     <div id="tapa">
@@ -1105,7 +1096,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const textoPremios=PREMIOS.map((p,i)=>(i===4?'5º o peor ':(i+1)+'º ')+pesos(p)).join(' · ');
   for(const e of document.querySelectorAll('.premios')){
     e.textContent='Premios online: '+textoPremios;
-    const n=document.createElement('small');n.textContent='Se suman tu bono de estilo y lo que hagas derrapando.';e.append(n);
+    const n=document.createElement('small');n.textContent='Se suma tu bono de estilo.';e.append(n);
   }
 
   if(!esMio(modelo))modelo=pref.autos[0]??0;
@@ -1714,7 +1705,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       titulo=med?'Medalla de '+med.n:'Sin medalla';filas.push([pts.toLocaleString('es-AR')+' puntos de derrape',pesos(porPuntos)]);if(med)filas.unshift(['Medalla de '+med.n,pesos(med.p)]);
     }else if(mio&&mio.fin!=null){
       g=premio(pos)+porPuntos;rep=[120,80,50,30][Math.min(pos,3)]+Math.round(pts/60);
-      titulo=pos===0?'¡Ganaste!':'Llegaste '+(pos+1)+'º';filas.push(['Premio por llegar '+(pos+1)+'º'+(bonoEstilo()?' (+'+bonoEstilo()+'% de estilo)':''),pesos(premio(pos))],['Derrape: '+pts.toLocaleString('es-AR')+' puntos',pesos(porPuntos)]);
+      titulo=pos===0?'¡Ganaste!':'Llegaste '+(pos+1)+'º';filas.push(['Premio por llegar '+(pos+1)+'º'+(bonoEstilo()?' (+'+bonoEstilo()+'% de estilo)':''),pesos(premio(pos))]);
     }else{titulo='No llegaste';filas.push(['Sin llegar a la meta no hay premio','$0'])}
     pref.plata+=g;
     const sube=darRep(rep);pintarPlata();
@@ -2020,6 +2011,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function guardarCombo(){derrape.carrera+=derrape.act;derrape.act=0;derrape.combo=1;derrape.tiempo=0}
   function puntuar(dt){
     if(!me||me.frozen)return;
+    if(!evento||evento.tipo!=='derrape'){$('derrape-box').hidden=true;return}
     const v=Math.hypot(me.vx,me.vy),b=v>4?Math.abs(Math.atan2(me.vr,Math.abs(me.vf)))*57.3:0;
     if(b>12&&v>8&&!me.grass&&me.vf>0){
       const cerca=Math.abs(me.off)>WALL-3?1.5:1;
@@ -2880,8 +2872,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   let hudT=0;
   function hud(now){
     if(!me)return;
-    const vel=Math.hypot(me.vx,me.vy),tope=me.spec.tope||(me.spec.tope=punta(me.spec)),razon=clamp(vel/tope,0,.999)*5;
-    $('kmh').textContent=Math.round(vel*3.6);$('marcha').textContent=vel<.5?'N':Math.floor(razon)+1;$('rpm').style.width=(25+75*(razon%1))+'%';
+    $('kmh').textContent=Math.round(Math.hypot(me.vx,me.vy)*3.6);
     if(now<hudT)return;hudT=now+180;
     const lista=race?racers():[];
     const pos=$('posicion'),rel=$('reloj'),tab=$('tabla');
@@ -2910,10 +2901,6 @@ if(typeof module!=='undefined')module.exports=Sim;
       rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
     }
     $('garaje').hidden=!!race||modo!=='online';$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';
-    const cv2=$('curva'),idx=me.idx<0?0:me.idx;let hay=null;
-    if(pista&&vel>6&&race)for(let d=4;d<46;d+=2){const k=pista.curva[(idx+d)%track.N];if(Math.abs(k)>.011){hay={d:d*track.sp,k};break}}
-    cv2.hidden=!hay;
-    if(hay){cv2.textContent=(hay.k>0?'▶\uFE0E ':'◀\uFE0E ')+'Curva '+(Math.abs(hay.k)>.024?'cerrada':'suave')+' · '+Math.round(hay.d/10)*10+' m';cv2.className=Math.abs(hay.k)>.024?'dura':''}
     $('nitro-chip').hidden=!conNitro();if(conNitro())$('nitro-u').style.width=me.nos*100+'%';
     $('espera').hidden=!!race||!anfitrion||modo!=='online';
     if(anfitrion)$('espera').textContent='Larga '+String(anfitrion.pr.n||'el creador').slice(0,12);
