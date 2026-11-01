@@ -53,6 +53,10 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
 #pedal-gas{right:max(14px,env(safe-area-inset-right,0px));background:rgba(46,125,70,.55)}
 #pedal-freno{right:calc(max(14px,env(safe-area-inset-right,0px)) + clamp(94px,27vmin,124px));background:rgba(216,65,47,.5)}
 .pedal.on{filter:brightness(1.5);transform:scale(.95)}
+.flecha{position:absolute;bottom:max(16px,env(safe-area-inset-bottom,0px));width:clamp(84px,24vmin,112px);height:clamp(84px,24vmin,112px);border-radius:12px;display:grid;place-items:center;font-size:2rem;color:var(--crema);border:3px solid rgba(251,246,234,.8);background:rgba(14,34,53,.45);pointer-events:none}
+#flecha-izq{left:max(14px,env(safe-area-inset-left,0px))}
+#flecha-der{left:calc(max(14px,env(safe-area-inset-left,0px)) + clamp(94px,27vmin,124px))}
+.flecha.on{filter:brightness(1.6);transform:scale(.95)}
 #volante{position:absolute;width:150px;height:44px;margin:-22px 0 0 -75px;border-radius:22px;background:rgba(14,34,53,.35);border:2px solid rgba(251,246,234,.65);pointer-events:none}
 #perilla{position:absolute;top:3px;left:54px;width:34px;height:34px;border-radius:50%;background:var(--crema)}
 #ayuda-volante{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:max(30px,env(safe-area-inset-bottom,0px));width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
@@ -67,7 +71,7 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
 label{font-weight:700;display:block;margin-bottom:3px}
 #nombre{width:100%;font:700 1.15rem var(--texto);padding:8px 10px;border:2px solid var(--tinta);border-radius:4px;background:var(--crema);color:var(--tinta);-webkit-user-select:text;user-select:text;box-sizing:border-box}
 #colores{display:flex;flex-wrap:wrap;gap:6px}
-#colores button{width:36px;height:36px;border-radius:4px;border:2px solid var(--tinta)}
+#colores button{width:30px;height:30px;border-radius:4px;border:2px solid var(--tinta)}
 #colores button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--crema),0 0 0 5px var(--tinta)}
 #eleccion{grid-column:1/-1;min-width:0;display:grid;gap:7px}
 .titulo-eleccion{font-weight:700}
@@ -99,6 +103,31 @@ label{font-weight:700;display:block;margin-bottom:3px}
 @media (min-width:560px){#cartel{grid-template-columns:1fr 1fr}#teclas{grid-column:1/-1}}
 @media (max-height:440px){#teclas{display:none}#bajada{display:none}}
 
+/* Inicio y partidas */
+#inicio{position:absolute;inset:0;display:flex;padding:12px max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));overflow:auto;touch-action:pan-y;background:rgba(14,34,53,.28)}
+#tapa{margin:auto;box-sizing:border-box;background:var(--celeste);color:var(--tinta);width:min(440px,100%);border:4px solid var(--tinta);outline:2px solid var(--celeste);outline-offset:3px;border-radius:6px;padding:14px 18px;display:grid;gap:10px}
+#tapa h1{margin:0;font:400 clamp(2rem,9vmin,3.1rem)/.98 var(--display);text-wrap:balance}
+#tapa #bajada{margin:0}
+.grande{background:var(--amarillo);color:var(--tinta);font:400 1.3rem var(--display);padding:11px 14px;border-radius:4px;border:2px solid var(--tinta);box-shadow:0 4px 0 var(--tinta)}
+.grande:active{transform:translateY(3px);box-shadow:0 1px 0 var(--tinta)}
+.grande:disabled{opacity:.5;cursor:not-allowed}
+.grande.secundario{background:var(--crema);padding:8px 14px}
+.fila-codigo{display:flex;gap:8px}
+#codigo{flex:1;min-width:0;font:700 1.2rem var(--texto);text-transform:uppercase;letter-spacing:.08em;padding:8px 10px;border:2px solid var(--tinta);border-radius:4px;background:var(--crema);color:var(--tinta);-webkit-user-select:text;user-select:text}
+#solo,#dejar{background:none;color:var(--tinta);text-decoration:underline;font-weight:700;padding:6px;min-height:34px}
+#estado-inicio{margin:0;font-weight:700;line-height:1.2}
+#invitar{grid-column:1/-1;display:grid;grid-template-columns:1fr auto;gap:6px 12px;align-items:center;background:var(--tinta);color:var(--crema);border-radius:4px;padding:9px 12px}
+#invitar .titulo-eleccion{display:block;font-size:.9rem}
+#ver-codigo{font:400 1.7rem/1.05 var(--display);letter-spacing:.08em;color:var(--amarillo)}
+#copiar{background:var(--amarillo);color:var(--tinta);font-weight:700;padding:8px 14px;border-radius:4px;min-height:40px}
+#texto-invitar{grid-column:1/-1;margin:0;line-height:1.15;word-break:break-all}
+#lista-sala{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:5px;font-weight:700}
+#lista-sala span{background:rgba(251,246,234,.16);padding:2px 8px;border-radius:3px}
+#dejar{grid-column:1/-1;color:var(--crema);justify-self:start}
+#tipo-control{display:flex;gap:6px}
+#tipo-control button{flex:1;background:var(--crema);color:var(--tinta);font-weight:700;border:2px solid var(--tinta);border-radius:4px;padding:7px 8px;min-height:40px}
+#tipo-control button[aria-pressed="true"]{background:var(--tinta);color:var(--crema)}
+
 /* Resultados */
 #final{position:absolute;inset:0;display:grid;place-items:center;padding:12px 16px;background:rgba(14,34,53,.45);touch-action:pan-y;overflow:auto}
 #planilla{background:var(--crema);color:var(--tinta);border:4px solid var(--tinta);border-radius:6px;padding:14px 18px;width:min(420px,100%);display:grid;gap:10px}
@@ -114,6 +143,8 @@ label{font-weight:700;display:block;margin-bottom:3px}
   <div id="tactil" hidden>
     <div id="ayuda-volante">Apoyá el dedo acá y deslizalo para doblar</div>
     <div id="volante" hidden><div id="perilla"></div></div>
+    <div class="flecha" id="flecha-izq" hidden>◀</div>
+    <div class="flecha" id="flecha-der" hidden>▶</div>
     <div class="pedal" id="pedal-freno">FRENO</div>
     <div class="pedal" id="pedal-gas">ACEL.</div>
   </div>
@@ -122,9 +153,11 @@ label{font-weight:700;display:block;margin-bottom:3px}
       <div class="fila">
         <div class="chip" id="posicion"></div>
         <div class="chip" id="reloj"></div>
+        <div class="chip" id="chip-partida" hidden></div>
       </div>
       <div class="fila">
         <button class="boton-hud" id="largar">Largar carrera</button>
+        <div class="chip" id="espera" hidden></div>
         <button class="boton-hud" id="garaje">Garaje</button>
         <button class="boton-hud" id="reponer" aria-label="Volver a la pista">↺ Volver</button>
         <button class="boton-hud" id="sonido">Sonido sí</button>
@@ -135,17 +168,41 @@ label{font-weight:700;display:block;margin-bottom:3px}
     <div id="aviso" hidden></div>
     <div id="velocidad"><span id="kmh">0</span><small>KM/H</small></div>
   </div>
-  <div id="portada">
+  <div id="inicio">
+    <div id="tapa">
+      <h1>Picada de Barrio</h1>
+      <p id="bajada">Diecisiete pistas, tres vueltas y sin árbitro. Si te tocan, te tocan.</p>
+      <button id="crear" class="grande">Crear partida</button>
+      <form id="unirse">
+        <label for="codigo">¿Te pasaron un código?</label>
+        <div class="fila-codigo">
+          <input id="codigo" maxlength="24" autocomplete="off" autocapitalize="characters" placeholder="Ej: KBTZ">
+          <button type="submit" class="grande secundario">Unirme</button>
+        </div>
+      </form>
+      <button id="solo">Practicar solo</button>
+      <p id="estado-inicio" role="status"></p>
+    </div>
+  </div>
+  <div id="portada" hidden>
     <form id="cartel">
+      <div id="invitar" hidden>
+        <div><span class="titulo-eleccion">Código de partida</span><b id="ver-codigo"></b></div>
+        <button type="button" id="copiar">Invitar</button>
+        <p id="texto-invitar"></p>
+        <div id="lista-sala"></div>
+        <button type="button" id="dejar">Salir de la partida</button>
+      </div>
+      <p id="salon" style="grid-column:1/-1;margin:0"></p>
+      <div><label for="nombre">Tu nombre</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Piloto"></div>
       <div>
-        <h1>Picada de Barrio</h1>
-        <p id="bajada">Diecisiete pistas, tres vueltas y sin árbitro. Si te tocan, te tocan.</p>
-        <p id="salon">Buscando rivales…</p>
+        <label>Cómo doblás en el celular</label>
+        <div id="tipo-control" role="group" aria-label="Controles">
+          <button type="button" id="ctrl-deslizar">Deslizar el dedo</button>
+          <button type="button" id="ctrl-flechas">Flechas</button>
+        </div>
       </div>
-      <div style="display:grid;gap:9px">
-        <div><label for="nombre">Tu nombre</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Piloto"></div>
-        <div><label id="etiqueta-color">Tu auto</label><div id="colores" role="group" aria-labelledby="etiqueta-color"></div></div>
-      </div>
+      <div style="grid-column:1/-1"><label id="etiqueta-color">Color</label><div id="colores" role="group" aria-labelledby="etiqueta-color"></div></div>
       <div id="eleccion">
         <div class="titulo-eleccion">Elegí tu auto</div>
         <div id="modelos" role="group" aria-label="Modelo de auto"></div>
@@ -157,7 +214,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
       <div class="titulo-eleccion" style="grid-column:1/-1;margin-bottom:-6px">Pista <span id="quien-pista"></span></div>
       <div id="circuitos" role="group" aria-label="Pista"></div>
       <button id="entrar" type="submit">Salir a pista</button>
-      <p id="teclas">Celular: dedo izquierdo para doblar, derecho para pedales. Teclado: flechas o WASD, R vuelve a la pista.</p>
+      <p id="teclas">Con teclado: flechas o WASD, y R para volver a la pista.</p>
     </form>
   </div>
   <div id="final" hidden>
@@ -180,16 +237,20 @@ const Sim=(()=>{
   CAR.L=CAR.A+CAR.B;CAR.I=CAR.m*(CAR.len*CAR.len+CAR.wid*CAR.wid)/12*1.1;
   const modelo=o=>{const m={...CAR,rear:1,...o};m.I=m.m*(m.len*m.len+m.wid*m.wid)/12*1.1;return m};
   const MODELOS=[
-    {nombre:'Rural',tag:'Equilibrado',txt:'Hace todo bien y nada de más. Ideal para empezar.',forma:{cl:1.45,cx:-.55,ch:1.05}},
-    {nombre:'Flecha',tag:'Rápido, frena poco',txt:'Vuela en las rectas, pero hay que frenar mucho antes.',power:176000,brake:9000,mu:1.48,fmax:6500,forma:{h:.85,ala:1,franja:1}},
-    {nombre:'Picudo',tag:'Mucho pique, poca punta',txt:'Sale como una bala y se queda en las rectas largas.',power:125000,fmax:11500,m:980,drag:3.8,forma:{h:.9,cl:.72,cx:-.7,ch:1.15}},
-    {nombre:'Crucero',tag:'Poco pique, mucha punta',txt:'Tarda en arrancar, pero nadie lo alcanza lanzado.',power:185000,fmax:4300,brake:13000,forma:{h:.9,cx:-.75,cl:.85,franja:1}},
-    {nombre:'Pegote',tag:'Mucho agarre',txt:'Dobla como sobre rieles. Lo paga en velocidad final.',power:88000,mu:1.9,fmax:7500,forma:{h:.72,ala:1,cl:.6,cx:-.4,ch:.85}},
-    {nombre:'Bólido',tag:'Rapidísimo y arisco',txt:'El más veloz, con poco agarre y frenos flojos.',power:215000,fmax:7200,brake:9500,mu:1.36,forma:{h:.7,ala:1,franja:1,cl:.7,cx:-.2,ch:.8}},
-    {nombre:'Tanque',tag:'Pesado, gana los choques',txt:'Empuja a todos. Le cuesta acelerar y frenar.',m:1750,power:165000,fmax:7600,brake:17000,forma:{h:1.25,caja:1,rueda:1.25}},
-    {nombre:'Pluma',tag:'Liviano y nervioso',txt:'Acelera y frena enseguida. Un toque y sale volando.',m:720,power:92000,drag:2.5,fmax:6200,brake:13000,forma:{h:.8,cl:.55,cx:-.1,ch:1.2}},
-    {nombre:'Clavado',tag:'Los mejores frenos',txt:'Entra última en la curva y frena donde nadie se anima.',brake:24000,mu:1.74,power:98000,forma:{h:.88,cl:.9,franja:1}},
-    {nombre:'Deriva',tag:'Cola suelta',txt:'Atrás patina a propósito. Hay que manejarlo de costado.',rear:.92,mu:1.6,power:128000,fmax:7200,forma:{h:.82,ala:1,rueda:1.1}}
+    {nombre:'Rural',tag:'Equilibrado',txt:'Hace todo bien y nada de más. Ideal para empezar.',forma:{cl:1.45,cx:-.55,ch:1.05,tipo:'sedan'}},
+    {nombre:'Flecha',tag:'Rápido, frena poco',txt:'Vuela en las rectas, pero hay que frenar mucho antes.',power:176000,brake:9000,mu:1.48,fmax:6500,forma:{h:.85,ala:1,franja:1,tipo:'cuna'}},
+    {nombre:'Picudo',tag:'Mucho pique, poca punta',txt:'Sale como una bala y se queda en las rectas largas.',power:125000,fmax:11500,m:980,drag:3.8,forma:{h:.9,cl:.72,cx:-.7,ch:1.15,tipo:'mini'}},
+    {nombre:'Crucero',tag:'Poco pique, mucha punta',txt:'Tarda en arrancar, pero nadie lo alcanza lanzado.',power:185000,fmax:4300,brake:13000,forma:{h:.9,cx:-.75,cl:.85,franja:1,tipo:'sedan'}},
+    {nombre:'Pegote',tag:'Mucho agarre',txt:'Dobla como sobre rieles. Lo paga en velocidad final.',power:88000,mu:1.9,fmax:7500,forma:{h:.72,ala:1,cl:.6,cx:-.4,ch:.85,tipo:'cuna'}},
+    {nombre:'Bólido',tag:'Rapidísimo y arisco',txt:'El más veloz, con poco agarre y frenos flojos.',power:215000,fmax:7200,brake:9500,mu:1.36,forma:{h:.7,ala:1,franja:1,cl:.7,cx:-.2,ch:.8,tipo:'cuna'}},
+    {nombre:'Tanque',tag:'Pesado, gana los choques',txt:'Empuja a todos. Le cuesta acelerar y frenar.',m:1750,power:165000,fmax:7600,brake:17000,forma:{h:1.2,caja:1,rueda:1.25,tipo:'pick'}},
+    {nombre:'Pluma',tag:'Liviano y nervioso',txt:'Acelera y frena enseguida. Un toque y sale volando.',m:720,power:92000,drag:2.5,fmax:6200,brake:13000,forma:{h:.8,cl:.55,cx:-.1,ch:1.2,tipo:'mini'}},
+    {nombre:'Clavado',tag:'Los mejores frenos',txt:'Entra última en la curva y frena donde nadie se anima.',brake:24000,mu:1.74,power:98000,forma:{h:.88,cl:.9,franja:1,tipo:'sedan'}},
+    {nombre:'Deriva',tag:'Cola suelta',txt:'Atrás patina a propósito. Hay que manejarlo de costado.',rear:.92,mu:1.6,power:128000,fmax:7200,forma:{h:.82,ala:1,rueda:1.1,tipo:'cuna'}},
+    {nombre:'Puma',tag:'Rápido y dobla mucho',txt:'Veloz, con mucho agarre y frenos fuertes.',power:205000,fmax:10500,brake:21000,mu:1.95,forma:{tipo:'cuna',h:.82,cl:.75,cx:-.35,ch:.9,franja:1}},
+    {nombre:'Rayo',tag:'Veloz y frena fuerte',txt:'Muy rápido y frena casi donde quiere.',power:255000,fmax:9800,brake:24000,mu:1.85,forma:{tipo:'cuna',h:.76,ala:1,cl:.7,cx:-.3,ch:.82}},
+    {nombre:'Cóndor',tag:'Punta enorme y buen freno',txt:'Se traga las rectas sin perder frenos.',power:320000,fmax:9000,brake:25000,mu:1.78,drag:1.8,forma:{tipo:'cuna',h:.72,ala:1,franja:1,cl:.72,cx:-.25,ch:.78}},
+    {nombre:'Cometa',tag:'El mejor en todo',txt:'El tope de gama: velocidad, frenos y agarre.',power:380000,fmax:11500,brake:28000,mu:2.05,drag:1.75,forma:{tipo:'cuna',h:.68,ala:1,franja:1,cl:.62,cx:-.2,ch:.76,rueda:1.08}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE;
 
@@ -391,7 +452,7 @@ const Sim=(()=>{
     const tc=Math.cos(th),ts=Math.sin(th),tvx=s.vx*tc-s.vy*ts,tvy=s.vx*ts+s.vy*tc;
     const dx=tx-c.x,dy=ty-c.y,err=Math.hypot(dx,dy);
     if(err>14){c.x=tx;c.y=ty;c.vx=tvx;c.vy=tvy;c.a=s.a+th;c.w=s.w;return}
-    const k=1-Math.exp(-dt*(c.hitT>0?1.8:10));
+    const k=1-Math.exp(-dt*(c.hitT>0?1.8:7));
     c.x+=dx*k;c.y+=dy*k;c.vx+=(tvx-c.vx)*k;c.vy+=(tvy-c.vy)*k;
     c.a+=wrap(s.a+th-c.a)*k;c.w+=(s.w-c.w)*k;
     c.hitT=Math.max(0,c.hitT-dt);
@@ -453,7 +514,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const {clamp,wrap,HALF,WALL,TRACKS,MODELOS,track,newCar,place,gridSpot}=Sim;
   const $=id=>document.getElementById(id);
   const cv=$('lienzo'),ctx=cv.getContext('2d');
-  const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6'];
+  const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34'];
   const LAPS=3,LS='picada-piloto';
   const TEMAS={
     pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#5ea9d0',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72]},
@@ -466,14 +527,15 @@ if(typeof module!=='undefined')module.exports=Sim;
   const leer=()=>{try{return JSON.parse(localStorage.getItem(LS))||{}}catch{return {}}};
   const guardar=v=>{try{localStorage.setItem(LS,JSON.stringify(v))}catch{}};
   const pref=leer();
-  let color=Number.isInteger(pref.color)&&pref.color>=0&&pref.color<8?pref.color:Math.floor(Math.random()*8);
+  let color=Number.isInteger(pref.color)&&pref.color>=0&&pref.color<COLORES.length?pref.color:Math.floor(Math.random()*COLORES.length);
   let modelo=Number.isInteger(pref.modelo)&&pref.modelo>=0&&pref.modelo<MODELOS.length?pref.modelo:0;
   if(typeof pref.nombre==='string')$('nombre').value=pref.nombre.slice(0,12);
 
   // --- Mundo local ---
   const cars=[];
   let me=null,entered=false,race=null,room=null,roomKnown=false,myKey='',myShort='';
-  const remotes=new Map(),doneRaces=new Set();
+  const remotes=new Map(),enSala=new Map(),doneRaces=new Set();
+  let base=null,codigo=null;
   let hitSeq=0,myHit=null,lastEcho=0,toFree=0,camShake=0,trackIdx=0,sinTres=false,entroT=0,anfitrion=null;
   const ev=[];
 
@@ -507,13 +569,21 @@ if(typeof module!=='undefined')module.exports=Sim;
   const pads=new Map(),tactil=$('tactil');
   function renderPedals(){
     let g=0,b=0,st=null;
-    for(const p of pads.values()){if(p.z==='gas')g=1;else if(p.z==='brake')b=1;else st=p}
-    touch.gas=g;touch.brake=b;touch.steer=st?clamp((st.x-st.ox)/58,-1,1):0;
+    let iz=0,de=0;
+    for(const p of pads.values()){if(p.z==='gas')g=1;else if(p.z==='brake')b=1;else if(p.z==='izq')iz=1;else if(p.z==='der')de=1;else st=p}
+    touch.gas=g;touch.brake=b;touch.steer=st?clamp((st.x-st.ox)/58,-1,1):de-iz;
+    $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);
     $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);
     const v=$('volante');v.hidden=!st;
     if(st){v.style.left=st.ox+'px';v.style.top=st.oy+'px';$('perilla').style.left=(54+touch.steer*54)+'px'}
   }
-  const zona=(x,w)=>x<w*.45?'steer':null;
+  const zona=(x,w)=>x>=w*.45?null:pref.control==='flechas'?(x<w*.225?'izq':'der'):'steer';
+  function pintarControl(){
+    const fl=pref.control==='flechas';
+    $('flecha-izq').hidden=$('flecha-der').hidden=!fl;$('ayuda-volante').hidden=fl||pref.ayudaVista;
+    $('ctrl-deslizar').setAttribute('aria-pressed',!fl);$('ctrl-flechas').setAttribute('aria-pressed',fl);
+    pads.clear();renderPedals();
+  }
   function pedalZone(x,y){
     const a=$('pedal-gas').getBoundingClientRect(),b=$('pedal-freno').getBoundingClientRect();
     const mid=(a.left+b.right)/2;
@@ -524,18 +594,21 @@ if(typeof module!=='undefined')module.exports=Sim;
     const w=tactil.clientWidth;
     const z=zona(e.clientX,w)||pedalZone(e.clientX,e.clientY);
     pads.set(e.pointerId,{z,x:e.clientX,ox:e.clientX,oy:e.clientY});
-    if(z==='steer')$('ayuda-volante').hidden=true;
+    if(z==='steer'){$('ayuda-volante').hidden=true;pref.ayudaVista=true}
     renderPedals();
   });
   tactil.addEventListener('pointermove',e=>{
     const p=pads.get(e.pointerId);if(!p)return;
     p.x=e.clientX;
-    if(p.z!=='steer')p.z=pedalZone(e.clientX,e.clientY);
+    if(p.z!=='steer')p.z=zona(e.clientX,tactil.clientWidth)||pedalZone(e.clientX,e.clientY);
     renderPedals();
   });
   const soltar=e=>{pads.delete(e.pointerId);renderPedals()};
   tactil.addEventListener('pointerup',soltar);tactil.addEventListener('pointercancel',soltar);
   addEventListener('contextmenu',e=>e.preventDefault());
+  $('ctrl-deslizar').onclick=()=>{pref.control='deslizar';guardar(pref);pintarControl()};
+  $('ctrl-flechas').onclick=()=>{pref.control='flechas';guardar(pref);pintarControl()};
+  pintarControl();
 
   // --- Sonido ---
   let au=null,mute=!!pref.mute;
@@ -585,6 +658,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function syncRemote(p,now){
     if(p.sameTab){myKey=p.peer;myShort=myKey.slice(0,6);return}
     const pr=p.presence||{},snap=Sim.readSnapshot(pr.s,now);
+    const ent=enSala.get(p.peer)||{};ent.pr=pr;ent.recv=now;enSala.set(p.peer,ent);
     let r=remotes.get(p.peer);
     if(!snap){if(r&&!pr.s)dropRemote(p.peer);return}
     if(!r){
@@ -593,10 +667,12 @@ if(typeof module!=='undefined')module.exports=Sim;
       remotes.set(p.peer,r);cars.push(r.car);removeBots();
     }
     if(typeof pr.t==='number'&&pr.t===r.lastT&&!r.isNewHit)return;
+    // Usa la hora del envío para que los saltos de la red no muevan al rival
+    if(typeof pr.t==='number'){const o=now-pr.t;r.ofs=r.ofs===undefined?o:Math.min(o,r.ofs+(now-r.recv)*.003);snap.rt=pr.t+r.ofs}
     r.pr=pr;r.recv=now;r.lastT=typeof pr.t==='number'?pr.t:0;
     const c=r.car;c.net=snap;c.stale=false;
     c.name=String(pr.n||'Piloto').slice(0,12);
-    c.color=Number.isInteger(pr.c)?clamp(pr.c,0,7):0;
+    c.color=Number.isInteger(pr.c)?clamp(pr.c,0,COLORES.length-1):0;
     const v=Number.isInteger(pr.v)&&pr.v>=0&&pr.v<MODELOS.length?pr.v:0;
     if(c.v!==v){c.v=v;c.spec=MODELOS[v]}
     const k=pr.k|0;c.gas=k&1;c.brk=(k&2)>>1;c.ghost=k&4?.2:0;
@@ -619,17 +695,18 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
   }
   function dropRemote(k){
+    enSala.delete(k);
     const r=remotes.get(k);if(!r)return;
     const i=cars.indexOf(r.car);if(i>=0)cars.splice(i,1);
     remotes.delete(k);
     if(!remotes.size&&!race)addBots();
   }
   function sendNet(now){
-    if(!room||!entered||!me)return;
-    const patch={n:me.name,c:me.color,v:me.v,s:Sim.snapshot(me),t:Math.round(now),
-      k:(me.gas?1:0)|(me.brk?2:0)|(me.ghost>0?4:0),p:Math.round(Sim.progressValue(me)*1000),
-      f:me.finT==null?null:Math.round(me.finT),
-      m:trackIdx,an:Math.round(now-entroT),r:race?[race.id,Math.round(race.t0-now)]:null,h:myHit&&now-myHit.at<500?myHit.d:null};
+    if(!room)return;
+    const patch={n:me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto',c:me?me.color:color,v:me?me.v:modelo,t:Math.round(now),
+      m:trackIdx,an:Math.round(now-entroT),r:race?[race.id,Math.round(race.t0-now)]:null};
+    if(me&&entered)Object.assign(patch,{s:Sim.snapshot(me),k:(me.gas?1:0)|(me.brk?2:0)|(me.ghost>0?4:0),p:Math.round(Sim.progressValue(me)*1000),
+      f:me.finT==null?null:Math.round(me.finT),h:myHit&&now-myHit.at<500?myHit.d:null});
     if(now-lastEcho>400){
       lastEcho=now;const e={};let n=0;
       for(const [k,r] of remotes){if(n++>=16)break;if(r.lastT)e[k.slice(0,6)]=[r.lastT,Math.round(now-r.recv)]}
@@ -637,28 +714,87 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     room.presence(patch).catch(()=>{});
   }
+  let listaVista='';
   function salon(){
-    const n=remotes.size,el=$('salon');
+    const el=$('salon');
     if(sinTres){el.textContent='Este dispositivo no puede mostrar gráficos 3D. Probá con otro navegador.';return}
-    if(!roomKnown)return;
-    if(!room)el.textContent='Esta vista no tiene conexión en vivo: corrés contra autos de práctica.';
-    else if(!n)el.textContent='Por ahora no hay nadie: corrés contra autos de práctica hasta que entre alguien.';
-    else el.textContent=(n===1?'Hay 1 piloto':'Hay '+n+' pilotos')+' en pista ahora.';
+    if(!codigo){el.textContent='Modo práctica: corrés contra autos de la máquina.';return}
+    const n=enSala.size+1;
+    el.textContent=n===1?'Por ahora estás solo en la partida.':'Hay '+n+' jugadores en la partida.';
+    const nombres=[me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto'];
+    for(const e of enSala.values())nombres.push(String(e.pr.n||'Piloto').slice(0,12));
+    const clave=nombres.join('|');
+    if(clave!==listaVista){
+      listaVista=clave;const l=$('lista-sala');l.textContent='';
+      nombres.forEach((t,i)=>{const b=document.createElement('span');b.textContent=i?t:t+' (vos)';l.append(b)});
+    }
   }
-  (async()=>{
-    try{
-      room=window.claude&&window.claude.use?await window.claude.use('room'):null;
-    }catch{room=null}
-    roomKnown=true;salon();
-    if(!room)return;
-    const fuera=()=>{room=null;for(const k of [...remotes.keys()])dropRemote(k);salon()};
-    room.onPeers(ch=>{
+  const LETRAS='bcdfghjkmnpqrstvwxz';
+  const nuevoCodigo=()=>Array.from({length:4},()=>LETRAS[Math.floor(Math.random()*LETRAS.length)]).join('');
+  async function conectar(cod){
+    if(!base)return false;
+    let sala=null;
+    try{sala=await base.join('p-'+cod)}catch{return false}
+    room=sala;codigo=cod;entroT=performance.now();myKey='';myShort='';listaVista='';
+    sala.onPeers(ch=>{
+      if(room!==sala)return;
       const now=performance.now();
       for(const p of ch.joined)syncRemote(p,now);
       for(const p of ch.updated)syncRemote(p,now);
       for(const p of ch.left)dropRemote(p.peer);
       salon();
-    },fuera);
+    },()=>{if(room===sala)dejarPartida()});
+    return true;
+  }
+  function dejarPartida(){
+    const r=room;room=null;codigo=null;
+    if(r&&r.leave)r.leave().catch(()=>{});
+    for(const k of [...enSala.keys()])dropRemote(k);
+    anfitrion=null;pintarCircuito();
+    $('chip-partida').hidden=true;$('invitar').hidden=true;
+    $('portada').hidden=true;$('inicio').hidden=false;
+    salon();
+  }
+  function aGaraje(uniendose){
+    $('inicio').hidden=true;$('portada').hidden=false;
+    const inv=$('invitar');inv.hidden=!codigo;
+    if(codigo){
+      $('ver-codigo').textContent=codigo.toUpperCase();
+      $('copiar').hidden=!window.__enlace;
+      $('texto-invitar').textContent=uniendose?'Te uniste a esta partida.':'Pasales este código a tus amigos: entran con «Unirme».';
+      $('chip-partida').textContent='Partida '+codigo.toUpperCase();$('chip-partida').hidden=false;
+      if(uniendose)setTimeout(()=>{if(codigo&&!enSala.size)$('texto-invitar').textContent='Todavía no hay nadie con este código. Revisá que esté bien escrito.'},7000);
+    }
+    salon();
+  }
+  async function entrarA(cod,uniendose){
+    $('estado-inicio').textContent='Conectando…';
+    if(!await conectar(cod)){$('estado-inicio').textContent='No pudimos conectarte. Probá de nuevo o practicá solo.';return}
+    $('estado-inicio').textContent='';aGaraje(uniendose);
+  }
+  $('crear').onclick=()=>entrarA(nuevoCodigo(),false);
+  $('solo').onclick=()=>aGaraje(false);
+  $('dejar').onclick=dejarPartida;
+  $('unirse').addEventListener('submit',e=>{
+    e.preventDefault();
+    const cod=$('codigo').value.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24);
+    if(!cod){$('estado-inicio').textContent='Escribí el código que te pasaron.';return}
+    if(base)entrarA(cod,true);
+  });
+  $('copiar').onclick=async()=>{
+    const url=window.__enlace(codigo),b=$('copiar');
+    try{if(navigator.share){await navigator.share({title:'Picada de Barrio',text:'Sumate a mi partida',url});return}}catch(e){if(e&&e.name==='AbortError')return}
+    try{await navigator.clipboard.writeText(url);b.textContent='¡Copiado!';setTimeout(()=>{b.textContent='Invitar'},1600)}
+    catch{$('texto-invitar').textContent=url}
+  };
+  (async()=>{
+    try{base=window.claude&&window.claude.use?await window.claude.use('room'):null}catch{base=null}
+    if(!base||!base.join){
+      base=null;$('crear').disabled=true;
+      $('estado-inicio').textContent='Sin conexión en esta vista: podés practicar solo.';return;
+    }
+    const auto=(window.__salaUrl||location.hash.slice(1)).toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24);
+    if(auto)entrarA(auto,true);
   })();
 
   // --- Carrera ---
@@ -682,14 +818,14 @@ if(typeof module!=='undefined')module.exports=Sim;
   function pintarCircuito(){
     const libre=!anfitrion;
     for(const [i,b] of [...$('circuitos').children].entries()){b.setAttribute('aria-pressed',i===trackIdx);b.disabled=!libre}
-    $('quien-pista').textContent=libre?'Elegís vos':'La elige '+anfitrion.car.name;
+    $('quien-pista').textContent=libre?'Elegís vos':'La elige '+String(anfitrion.pr.n||'quien creó la partida').slice(0,12);
   }
   // Manda quien lleva más tiempo en pista: si se va, pasa al siguiente
   function quienManda(now){
-    let jefe=null,edad=entered?now-entroT:-1,clave=myKey;
-    for(const [k,r] of remotes){
-      const a=(typeof r.pr.an==='number'?r.pr.an:0)+(now-r.recv);
-      if(a>edad||(a===edad&&k<clave)){edad=a;jefe=r;clave=k}
+    let jefe=null,edad=codigo?now-entroT:-1,clave=myKey;
+    for(const [k,e] of enSala){
+      const a=(typeof e.pr.an==='number'?e.pr.an:0)+(now-e.recv);
+      if(a>edad||(a===edad&&k<clave)){edad=a;jefe=e;clave=k}
     }
     return jefe;
   }
@@ -715,7 +851,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     b.append(c,e);b.onclick=()=>{if(i!==trackIdx&&!anfitrion&&!race)setCircuito(i)};
     $('circuitos').append(b);
   });
-  $('garaje').onclick=()=>{$('garaje').blur();if(!race){$('entrar').textContent='Volver a pista';$('portada').hidden=false}};
+  $('garaje').onclick=()=>{$('garaje').blur();if(!race){$('entrar').textContent='Volver a pista';aGaraje(false)}};
   function raceTick(now){
     const jefe=quienManda(now);
     if(jefe!==anfitrion){anfitrion=jefe;pintarCircuito()}
@@ -831,7 +967,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     me=newCar({kind:'me',name,color,v:modelo,spec:MODELOS[modelo],num:1+Math.floor(Math.random()*98)});
     const g=gridSpot(Math.floor(Math.random()*6));place(me,g.idx,g.off);me.ghost=2;
-    cars.push(me);entered=true;entroT=performance.now();
+    cars.push(me);entered=true;if(!codigo)entroT=performance.now();
     $('portada').hidden=true;$('hud').hidden=false;
     if(navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches)tactil.hidden=false;
     audioOn();if(au&&au.a.state==='suspended')au.a.resume();
@@ -946,29 +1082,57 @@ if(typeof module!=='undefined')module.exports=Sim;
     suelo();
   }
   const SOMBRA=gl&&new THREE.MeshBasicMaterial({color:'#000',transparent:true,opacity:.26,depthWrite:false});
-  const GEO=gl&&{cuerpo:new THREE.BoxGeometry(4.4,.52,1.92),trompa:new THREE.BoxGeometry(1.2,.16,1.7),cabina:new THREE.BoxGeometry(2.05,.46,1.62),techo:new THREE.BoxGeometry(1.45,.07,1.4),
-    rueda:new THREE.CylinderGeometry(.37,.37,.32,12),luz:new THREE.BoxGeometry(.06,.14,.42),sombra:new THREE.PlaneGeometry(4.9,2.5),numero:new THREE.PlaneGeometry(.95,.95)};
+  // Silueta lateral de cada carrocería; visto de arriba se angosta hacia las puntas
+  const PERFILES={
+    sedan:[[[-2.2,.32],[2.2,.32],[2.2,.6],[2.17,.8,1.72,.84],[.95,.95],[-1.55,1],[-2.12,1,-2.2,.72]],6],
+    cuna:[[[-2.2,.32],[2.2,.32],[2.2,.44],[2.1,.58,1.6,.66],[.55,.9],[-1.6,1.02],[-2.12,1.04,-2.2,.76]],3.2],
+    mini:[[[-2.2,.32],[2.2,.32],[2.2,.68],[2.15,.95,1.6,1],[-1.6,1.05],[-2.15,1.05,-2.2,.7]],9],
+    pick:[[[-2.2,.36],[2.2,.36],[2.2,.72],[2.16,.92,1.7,.96],[.85,1.04],[-.1,1.06],[-.1,.94],[-2.2,.94]],8]
+  };
+  function puntosPerfil(p){
+    const o=[new THREE.Vector2(p[0][0],p[0][1])];let a=p[0];
+    for(let i=1;i<=p.length;i++){
+      const q=p[i%p.length],curva=q.length>2,fin=curva?[q[2],q[3]]:q;
+      const n=curva?8:Math.max(1,Math.ceil(Math.hypot(fin[0]-a[0],fin[1]-a[1])/.3));
+      for(let k=1;k<=n;k++){
+        const t=k/n,u=1-t;
+        o.push(curva?new THREE.Vector2(u*u*a[0]+2*u*t*q[0]+t*t*fin[0],u*u*a[1]+2*u*t*q[1]+t*t*fin[1]):new THREE.Vector2(a[0]+(fin[0]-a[0])*t,a[1]+(fin[1]-a[1])*t));
+      }
+      a=fin;
+    }
+    o.pop();return o;
+  }
+  function extruir(p,ancho,n,bev=.09){
+    const g=new THREE.ExtrudeGeometry(new THREE.Shape(puntosPerfil(p)),{depth:ancho-2*bev,steps:1,bevelEnabled:true,bevelThickness:bev,bevelSize:bev,bevelSegments:2,curveSegments:1});
+    g.translate(0,0,-(ancho-2*bev)/2);g.computeBoundingBox();
+    const L=Math.max(Math.abs(g.boundingBox.min.x),Math.abs(g.boundingBox.max.x)),a=g.attributes.position;
+    for(let i=0;i<a.count;i++){const u=Math.min(1,Math.abs(a.getX(i))/L);a.setZ(i,a.getZ(i)*Math.max(.34,Math.pow(1-Math.pow(u,n),1/n)))}
+    g.computeVertexNormals();return g;
+  }
+  const cuerpos={};
+  const cuerpoDe=t=>cuerpos[t]||(cuerpos[t]=extruir(PERFILES[t][0],1.94,PERFILES[t][1]));
+  const GEO=gl&&{vidrio:extruir([[-1,0],[1,0],[.42,.5],[-.72,.5]],1.68,4),techo:extruir([[-.74,0],[.46,0],[.46,.06],[-.74,.06]],1.48,5,.03),ala:extruir([[-.3,0],[.3,0],[.3,.07],[-.3,.07]],2.0,10,.025),
+    rueda:new THREE.CylinderGeometry(.37,.37,.32,14),luz:new THREE.BoxGeometry(.08,.14,.38),sombra:new THREE.CircleGeometry(1,24),numero:new THREE.PlaneGeometry(.95,.95)};
   const VIDRIO=gl&&new THREE.MeshLambertMaterial({color:'#1d2a33'}),GOMA=gl&&new THREE.MeshLambertMaterial({color:'#16181a'}),FARO=gl&&new THREE.MeshBasicMaterial({color:'#fff4c2'});
   const autos=new Map();
   function armarAuto(c,escena=scene){
     const g=new THREE.Group(),caja=new THREE.Group(),pint=new THREE.MeshLambertMaterial({color:COLORES[c.color]});
     const pone=(geo,mat,x,y,z,padre=caja)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);padre.add(m);return m};
-    const f=MODELOS[c.v].forma||{},h=f.h||1,cx=f.caja?.7:f.cx??-.3,cl=f.caja?.8:f.cl||1,ch=f.ch||1,techoY=.85+.46*ch+.03;
-    pone(GEO.cuerpo,pint,0,.6,0);pone(GEO.trompa,pint,1.25,.92,0);
-    const cab=pone(GEO.cabina,VIDRIO,cx,.85+.23*ch,0),tec=pone(GEO.techo,pint,cx-.05,techoY,0);
-    cab.scale.set(cl,ch,1);tec.scale.x=cl;
-    if(f.franja){pone(GEO.techo,FARO,1,.9,-.3).scale.set(1.5,1,.18);pone(GEO.techo,FARO,1,.9,.3).scale.set(1.5,1,.18);pone(GEO.techo,FARO,-1.6,.9,-.3).scale.set(.9,1,.18);pone(GEO.techo,FARO,-1.6,.9,.3).scale.set(.9,1,.18)}
-    if(f.caja){pone(GEO.cuerpo,pint,-1.25,.98,0).scale.set(.4,.45,1)}
-    if(f.ala){pone(GEO.techo,pint,-2.05,1.3,0).scale.set(.45,1.4,1.32);pone(GEO.luz,GOMA,-2.05,1.1,-.6);pone(GEO.luz,GOMA,-2.05,1.1,.6)}
+    const f=MODELOS[c.v].forma||{},tipo=f.tipo||'sedan',h=f.h||1,cx=f.caja?.42:f.cx??-.3,cl=f.caja?.55:f.cl||1,ch=f.ch||1,base=.86,techoY=base+.5*ch;
+    pone(cuerpoDe(tipo),pint,0,0,0);
+    pone(GEO.vidrio,VIDRIO,cx,base,0).scale.set(cl,ch,1);
+    pone(GEO.techo,pint,cx,techoY,0).scale.x=cl;
+    if(f.franja)for(const z of [-.27,.27])pone(cuerpoDe(tipo),FARO,0,.014,z).scale.z=.13;
+    if(f.ala){pone(GEO.ala,pint,-2.02,1.22,0);pone(GEO.luz,GOMA,-2.02,1.08,-.62).scale.set(1,2.4,.3);pone(GEO.luz,GOMA,-2.02,1.08,.62).scale.set(1,2.4,.3)}
     caja.scale.y=h;
     const frenoMat=new THREE.MeshBasicMaterial({color:'#7a1b12'});
-    pone(GEO.luz,frenoMat,-2.22,.7,-.62);pone(GEO.luz,frenoMat,-2.22,.7,.62);pone(GEO.luz,FARO,2.22,.7,-.62);pone(GEO.luz,FARO,2.22,.7,.62);
+    pone(GEO.luz,frenoMat,-2.1,.72,-.52);pone(GEO.luz,frenoMat,-2.1,.72,.52);pone(GEO.luz,FARO,2.06,.56,-.52);pone(GEO.luz,FARO,2.06,.56,.52);
     const n=document.createElement('canvas');n.width=n.height=64;
     const x=n.getContext('2d');
     x.fillStyle='#fbf6ea';x.beginPath();x.arc(32,32,31,0,6.3);x.fill();
     x.fillStyle='#0e2235';x.font='700 42px "Barlow Condensed",Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(c.num,32,34);
-    const tex=new THREE.CanvasTexture(n),numero=pone(GEO.numero,new THREE.MeshBasicMaterial({map:tex,transparent:true}),cx-.05,techoY+.045,0);
-    numero.scale.setScalar(Math.min(1,cl*.9));
+    const tex=new THREE.CanvasTexture(n),numero=pone(GEO.numero,new THREE.MeshBasicMaterial({map:tex,transparent:true}),cx-.14,techoY+.075,0);
+    numero.scale.setScalar(Math.min(1,cl*.85));
     numero.rotation.set(-Math.PI/2,0,-Math.PI/2);
     g.add(caja);
     const ruedas=[];
@@ -977,7 +1141,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const r=new THREE.Mesh(GEO.rueda,GOMA);r.rotation.x=Math.PI/2;r.scale.setScalar(f.rueda||1);eje.add(r);g.add(eje);
       if(del)ruedas.push(eje);
     }
-    const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.position.y=.09;g.add(so);
+    const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(2.6,1.3,1);so.position.y=.09;g.add(so);
     escena.add(g);
     return {g,caja,pint,frenoMat,ruedas,v:c.v,color:c.color,roll:0,pitch:0,tex,alfa:1,mats:[pint,VIDRIO,GOMA]};
   }
@@ -1136,12 +1300,21 @@ if(typeof module!=='undefined')module.exports=Sim;
         if(x.yo)d.className='yo';d.append(a,v);tab.append(d);
       }
     }else{
-      tab.hidden=true;pos.textContent='';
-      const n=remotes.size,b=document.createElement('b');b.textContent=n?n+1:1;
-      pos.append(b,n?'en pista':'práctica');
+      pos.textContent='';
+      const n=enSala.size,b=document.createElement('b');b.textContent=n+1;
+      pos.append(b,codigo?(n?'en la partida':'solo en la partida'):'práctica');
+      tab.hidden=!n;tab.textContent='';
+      for(const [k,e] of enSala){
+        const d=document.createElement('div'),a=document.createElement('span'),v=document.createElement('span');
+        const c=remotes.get(k);
+        a.textContent=String(e.pr.n||'Piloto').slice(0,12);v.textContent=!c?'garaje':c.car.stale?'sin señal':'en pista';
+        d.append(a,v);tab.append(d);
+      }
       rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
     }
-    $('largar').hidden=$('garaje').hidden=!!race;
+    $('garaje').hidden=!!race;$('largar').hidden=!!race||!!anfitrion;
+    $('espera').hidden=!!race||!anfitrion;
+    if(anfitrion)$('espera').textContent='Larga '+String(anfitrion.pr.n||'el creador').slice(0,12);
     const cs=Math.cos(me.a),sn=Math.sin(me.a),i=me.idx<0?0:me.idx;
     const contra=(track.tx[i]*cs+track.ty[i]*sn)<-.3&&Math.hypot(me.vx,me.vy)>6;
     const a=$('aviso');
@@ -1192,7 +1365,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     raceTick(now);
     camShake=Math.max(0,camShake-dt*2.2);
     if(matchMedia('(prefers-reduced-motion:reduce)').matches)camShake=0;
-    if(now>netT){netT=now+36;sendNet(now)}
+    if(now>netT){netT=now+(entered?36:300);sendNet(now)}
     camera(dt);
     if(au){
       const s=me?Math.hypot(me.vx,me.vy):0,gear=(s%13)/13;
