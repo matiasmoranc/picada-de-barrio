@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvy59tid"></script>
+<script src="room.js?v=mvy6fn3l"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -927,7 +927,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const {clamp,wrap,HALF,WALL,TRACKS,MODELOS,track,newCar,place,gridSpot}=Sim;
   const $=id=>document.getElementById(id);
   const cv=$('lienzo'),ctx=cv.getContext('2d');
-  const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34','#bcc3ca'];
+  const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34','#dde1e6'];
   const LAPS=3,LS='picada-piloto';
   const TEMAS={
     pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#5ea9d0',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72],cielo:'#a9d8f0'},
@@ -2258,16 +2258,18 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(let i=0;i<a.count;i++){const u=Math.min(1,Math.abs(a.getX(i))/L);a.setZ(i,a.getZ(i)*Math.max(.34,Math.pow(1-Math.pow(u,n),1/n)))}
     g.computeVertexNormals();return g;
   }
-  // Réplicas: carrocería a partir de medidas del auto real, con huecos en los vidrios e interior.
+  // Réplicas: carrocería a partir de medidas del auto real, panel por panel.
   // El detalle se pinta en cuatro vistas (costado, arriba, frente y cola) y cada cara de la chapa usa la suya.
   const MATCAP={};
   const REPLICAS={
     h206:{
-      x:[2.2,-2.2],ejes:[1.34,-1.47],arco:.445,piso:.25,
-      techo:[[2.2,.62],[2.19,.8],[2.12,.91],[1.9,.99],[1.5,1.08],[1.25,1.13],[1.04,1.18],[.75,1.33],[.4,1.5],[.1,1.6],[-.3,1.645],[-.7,1.645],[-1.1,1.62],[-1.5,1.57],[-1.75,1.42],[-1.95,1.22],[-2.06,1.09],[-2.14,.98],[-2.18,.8],[-2.2,.6]],
-      cintura:[[2.2,.64],[2.1,.76],[1.6,.92],[1.1,1.06],[.7,1.11],[-.5,1.16],[-1.5,1.22],[-1.95,1.16],[-2.14,.94],[-2.2,.68]],
-      ancho:[[2.2,.62],[2.17,.76],[2.02,.84],[1.75,.9],[1.5,.93],[1.34,.94],[.8,.935],[0,.945],[-1,.95],[-1.47,.95],[-1.9,.91],[-2.12,.82],[-2.2,.68]],
-      hombro:[[2.2,.46],[1.6,.76],[1.05,.84],[.65,.78],[.1,.7],[-.7,.68],[-1.4,.63],[-1.9,.62],[-2.2,.5]]
+      ejes:[1.34,-1.47],arco:.445,
+      // Cada línea recorre el auto de punta a punta: [x, altura, medio ancho]
+      centro:[[2.2,.74,0],[2.12,.9,0],[1.9,.99,0],[1.6,1.06,0],[1.25,1.12,0],[1.06,1.17,0],[.72,1.34,0],[.38,1.52,0],[.1,1.61,0],[-.3,1.655,0],[-.8,1.665,0],[-1.2,1.645,0],[-1.52,1.59,0],[-1.78,1.42,0],[-1.98,1.24,0],[-2.06,1.12,0],[-2.14,1.02,0],[-2.19,.84,0],[-2.2,.7,0]],
+      riel:[[2.2,.74,.54],[2.12,.86,.6],[1.9,.95,.68],[1.6,1.02,.74],[1.25,1.08,.79],[1.06,1.13,.82],[.72,1.3,.76],[.38,1.46,.71],[.1,1.55,.68],[-.3,1.585,.67],[-.8,1.595,.665],[-1.2,1.57,.66],[-1.52,1.52,.64],[-1.78,1.36,.66],[-1.98,1.2,.7],[-2.06,1.09,.72],[-2.14,.98,.72],[-2.19,.84,.7],[-2.2,.7,.6]],
+      cintura:[[2.2,.62,.72],[2.12,.7,.84],[1.9,.82,.9],[1.6,.92,.93],[1.25,1,.94],[1.06,1.06,.94],[.72,1.1,.945],[.38,1.125,.945],[-.3,1.155,.945],[-.9,1.18,.945],[-1.52,1.21,.94],[-1.78,1.19,.92],[-1.98,1.12,.9],[-2.1,.98,.86],[-2.19,.82,.8],[-2.2,.7,.74]],
+      bajo:[[2.2,.36,.72],[2.12,.36,.86],[1.9,.4,.93],[1.5,.42,.955],[0,.42,.955],[-1.5,.42,.955],[-1.98,.4,.92],[-2.14,.36,.84],[-2.2,.36,.74]],
+      estaciones:[2.2,2.16,2.12,2,1.9,1.79,1.74,1.66,1.56,1.45,1.34,1.23,1.12,1.06,.98,.89,.72,.55,.38,.24,.1,-.18,-.3,-.55,-.8,-.86,-.93,-1.02,-1.11,-1.22,-1.36,-1.47,-1.52,-1.58,-1.72,-1.83,-1.92,-1.98,-2.06,-2.14,-2.19,-2.2]
     }
   };
   const lineal=p=>x=>{
@@ -2278,17 +2280,16 @@ if(typeof module!=='undefined')module.exports=Sim;
   const perfil=p=>{const L=lineal(p);return x=>(L(x-.08)+L(x-.04)+2*L(x)+L(x+.04)+L(x+.08))/6};
   const cat=(a,b,c,d,t)=>.5*(2*b+(c-a)*t+(2*a-5*b+4*c-d)*t*t+(3*b-a-3*c+d)*t*t*t);
   function chapa(r){
-    const T=perfil(r.techo),C=perfil(r.cintura),A=perfil(r.ancho),H=perfil(r.hombro);
-    return (x,q)=>{
-      const t=T(x);let W=A(x),B=r.piso;
-      for(const e of r.ejes){const d=Math.abs(x-e);W+=.028*Math.exp(-d*d/.3);if(d<r.arco)B=Math.max(B,.37+Math.sqrt(r.arco*r.arco-d*d))}
-      if(x>1.88||x<-2.02)W+=.022;
-      const S=Math.min(C(x),t-.03),rw=Math.min(H(x),W-.04);B=Math.min(B,S-.1);
-      const P=[[0,t],[rw*.55,t-.012],[rw,Math.max(t-.085,(S+t)/2)],[W-.045,S+.02],[W+.006,S-.03],[W-.012,(S+B)/2],[W*.965,B]];
-      const f=Math.min(q,.9999)*6,i=Math.floor(f),u=f-i,g=k=>P[clamp(k,0,6)];
-      const a=g(i-1),b=g(i),c=g(i+1),d=g(i+2);
-      return [x,cat(a[1],b[1],c[1],d[1],u),Math.max(0,cat(a[0],b[0],c[0],d[0],u))];
+    const tr=(p,k)=>lineal(p.map(q=>[q[0],q[k]]));
+    const Ay=tr(r.centro,1),Ry=tr(r.riel,1),Rz=tr(r.riel,2),Cy=tr(r.cintura,1),Cz=tr(r.cintura,2),By=tr(r.bajo,1),Bz=tr(r.bajo,2);
+    const lineas=x=>{
+      let arco=.25;
+      for(const e of r.ejes){const d=Math.abs(x-e);if(d<r.arco)arco=Math.max(arco,.37+Math.sqrt(r.arco*r.arco-d*d))}
+      const a=[0,Ay(x)],c=[Rz(x),Ry(x)],d=[Cz(x),Cy(x)],f=[Bz(x),Math.max(By(x),arco+.012)];
+      return [a,[c[0]*.9,c[1]+(a[1]-c[1])*.14],c,[c[0]+(d[0]-c[0])*.09,c[1]+(d[1]-c[1])*.1],d,[d[0]+.008,Math.max(d[1]-.13,f[1]+.03)],f,[f[0]*.975,arco]];
     };
+    const sec=(x,q)=>{const P=lineas(x),l=Math.min(q,.9999)*7,i=Math.floor(l),u=l-i,a=P[i],b=P[i+1];return [x,a[1]+(b[1]-a[1])*u,a[0]+(b[0]-a[0])*u]};
+    sec.lineas=lineas;return sec;
   }
   // Vistas del atlas: costado, arriba, frente y cola
   const VISTAS={
@@ -2317,21 +2318,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     return o;
   };
   const rue=(c,v,x,y,r,estilo,s=1)=>{const o=[];for(let i=0;i<40;i++){const a=i/40*6.283;o.push([x+Math.cos(a)*r,y+Math.sin(a)*r*s])}en(c,v,o,{...estilo,c:1})};
-  const SIDE={
-    puerta:[[.84,1.16],[.48,1.33],[.14,1.47],[-.4,1.515],[-.86,1.522],[-.86,1.2],[-.3,1.17]],
-    cuarto:[[-.95,1.522],[-1.3,1.495],[-1.55,1.4],[-1.74,1.27],[-1.5,1.22],[-.95,1.195]]
-  };
-  const PARABRISAS=[[1.07,0],[1.05,.42],[.91,.74],[.17,.6],[.13,.3],[.12,0]];
-  const LUNETA=[[0,1.22],[.42,1.24],[.62,1.28],[.58,1.42],[.46,1.52],[0,1.55]];
-  function pintarGlass(c,fondo){
-    if(fondo){c.fillStyle=fondo;c.fillRect(0,0,2048,2048)}
-    const color=fondo?'#000':'#fff';
-    en(c,'L',curvaC(SIDE.puerta,true),{c:1,f:color});en(c,'L',curvaC(SIDE.cuarto,true),{c:1,f:color});
-    en(c,'T',curvaC(PARABRISAS,false),{c:1,f:color});
-    en(c,'R',curvaC(LUNETA,false),{c:1,f:color});
-  }
   // Piezas pegadas a la chapa: se dibujan a lo largo del auto (x) y alrededor de la sección (q)
-  const OPTICA={x:[2.2,1.02],q:[.3,.76]},ZFARO={x:[-1.7,-2.2],q:[.3,.8]};
+  const OPTICA={x:[2.2,1.16],q:[.26,.66]},ZFARO={x:[-1.7,-2.2],q:[.3,.8]};
   function lienzoPieza(w,h,area,fn){
     const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
     const U=a=>(a-area.x[0])/(area.x[1]-area.x[0])*w,Y=q=>(q-area.q[0])/(area.q[1]-area.q[0])*h;
@@ -2341,32 +2329,32 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function texturaOptica(){
     return lienzoPieza(768,384,OPTICA,(x,ruta,U,Y)=>{
-      const borde=[[2.16,.66],[2.12,.72],[1.9,.7],[1.6,.64],[1.3,.56],[1.1,.47],[1.14,.42],[1.42,.42],[1.72,.4],[2.0,.38],[2.14,.46],[2.17,.56]];
+      const borde=[[2.12,.33],[2.08,.56],[1.96,.62],[1.72,.62],[1.5,.58],[1.3,.5],[1.22,.4],[1.34,.335],[1.6,.31],[1.9,.3],[2.06,.3]];
       ruta(borde);x.fillStyle='#07080a';x.fill();
-      const adentro=[[2.13,.655],[2.09,.695],[1.9,.68],[1.6,.62],[1.3,.54],[1.17,.46],[1.44,.44],[1.72,.42],[1.98,.4],[2.11,.47],[2.145,.56]];
-      ruta(adentro);const g=x.createLinearGradient(0,Y(.4),0,Y(.7));g.addColorStop(0,'#f2f7fa');g.addColorStop(.5,'#c4d3df');g.addColorStop(1,'#92a6b6');x.fillStyle=g;x.fill();
+      const adentro=borde.map(p=>[1.7+(p[0]-1.7)*.92,.45+(p[1]-.45)*.82]);
+      ruta(adentro);const g=x.createLinearGradient(0,Y(.3),0,Y(.62));g.addColorStop(0,'#f2f7fa');g.addColorStop(.5,'#c9d7e2');g.addColorStop(1,'#93a7b7');x.fillStyle=g;x.fill();
       x.save();ruta(adentro);x.clip();
-      x.fillStyle='#f09a2e';ruta([[1.42,.56],[1.26,.52],[1.22,.47],[1.42,.48]]);x.fill();
+      x.fillStyle='#f09a2e';ruta([[2.06,.54],[1.96,.575],[1.92,.52],[2.04,.49]]);x.fill();
       const lamp=(a,q,r)=>{const cx=U(a),cy=Y(q);const g=x.createRadialGradient(cx,cy,2,cx,cy,r);g.addColorStop(0,'#ffffff');g.addColorStop(.4,'#e4ecf2');g.addColorStop(.8,'#7c8a96');g.addColorStop(1,'#2a3036');x.fillStyle=g;x.beginPath();x.ellipse(cx,cy,r*1.3,r,0,0,6.3);x.fill()};
-      lamp(1.86,.54,60);lamp(1.6,.52,42);
+      lamp(1.8,.42,56);lamp(1.52,.42,40);
       x.restore();
-      x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=3;ruta([[2.1,.44],[1.8,.425],[1.44,.45],[1.2,.46]],false);x.stroke();
+      x.strokeStyle='rgba(255,255,255,.7)';x.lineWidth=3;ruta([[2.04,.325],[1.8,.33],[1.5,.345],[1.32,.39]],false);x.stroke();
     });
   }
   function texturaCola(){
     return lienzoPieza(256,384,ZFARO,(x,ruta)=>{
-      ruta([[-1.72,.34],[-1.9,.36],[-2.1,.48],[-2.16,.66],[-2.14,.76],[-1.98,.74],[-1.86,.6],[-1.74,.44]]);
+      ruta([[-1.84,.34],[-1.96,.36],[-2.08,.42],[-2.13,.52],[-2.12,.6],[-2.0,.6],[-1.92,.5],[-1.85,.42]]);
       x.fillStyle='#fff';x.fill();
     });
   }
   function texturaColaFija(){
     return lienzoPieza(256,384,ZFARO,(x,ruta)=>{
-      const b=[[-1.72,.34],[-1.9,.36],[-2.1,.48],[-2.16,.66],[-2.14,.76],[-1.98,.74],[-1.86,.6],[-1.74,.44]];
+      const b=[[-1.84,.34],[-1.96,.36],[-2.08,.42],[-2.13,.52],[-2.12,.6],[-2.0,.6],[-1.92,.5],[-1.85,.42]];
       ruta(b);x.strokeStyle='#160406';x.lineWidth=7;x.stroke();
       x.save();ruta(b);x.clip();
       x.fillStyle='rgba(255,255,255,.22)';x.fillRect(0,0,256,70);
-      x.fillStyle='#f09a2e';ruta([[-2.0,.56],[-2.14,.56],[-2.15,.62],[-1.96,.62]]);x.fill();
-      x.fillStyle='#ececec';ruta([[-1.94,.63],[-2.15,.63],[-2.15,.69],[-1.9,.69]]);x.fill();
+      x.fillStyle='#f09a2e';ruta([[-1.98,.47],[-2.12,.47],[-2.13,.51],[-1.96,.51]]);x.fill();
+      x.fillStyle='#ececec';ruta([[-1.94,.52],[-2.13,.52],[-2.13,.56],[-1.92,.56]]);x.fill();
       x.restore();
     });
   }
@@ -2396,10 +2384,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Junta de chapa: línea oscura con un filo de luz al lado, como un corte de verdad
     const junta=(v,p,w=4.6,al=.92)=>{en(c,v,p,{s:'rgba(6,7,9,'+al+')',w});en(c,v,p.map(q=>[q[0],q[1]+(v==='T'?.012:-.012)]),{s:'rgba(255,255,255,.34)',w:1.6})};
     for(const e of [1.34,-1.47]){const o=[];for(let i=0;i<=40;i++){const a=i/40*Math.PI;o.push([e+Math.cos(a)*.5,.37+Math.sin(a)*.5])}en(c,'L',o,{s:'rgba(0,0,0,.2)',w:30})}
-    // Vidrios: burlete negro
-    for(const k of ['puerta','cuarto'])en(c,'L',curvaC(SIDE[k],true),{c:1,s:'#08090b',w:9});
-    en(c,'T',curvaC(PARABRISAS,false),{c:1,s:'#08090b',w:10});
-    en(c,'R',curvaC(LUNETA,false),{c:1,s:'#08090b',w:7});
     // Costado: puerta, moldura, manija, tapa de nafta
     junta('L',curvaC([[.88,1.14],[.84,.8],[.8,.5],[.7,.36],[.4,.33],[-.8,.33],[-.9,.42],[-.91,.8],[-.9,1.19]],false));
     junta('L',curvaC([[1.86,.8],[1.74,.62],[1.72,.46],[1.82,.3]],false));
@@ -2433,9 +2417,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     en(c,'T',curvaC([[1.16,.1],[1.6,.13],[1.95,.11]],false),{s:'rgba(255,255,255,.3)',w:5});
     en(c,'T',[[1.14,.1],[1.09,.62]],{s:'#111316',w:7});en(c,'T',[[1.14,-.02],[1.1,.42]],{s:'#111316',w:7});
     en(c,'T',curvaC([[.02,.66],[-.5,.645],[-1,.6],[-1.4,.55]],false),{s:'rgba(8,9,11,.5)',w:3});
-    // Techo solar
-    en(c,'T',[[-.18,.42],[-.98,.42],[-.98,-.0],[-.18,-.0]],{c:1,f:'#0d1115',s:'#050608',w:6});
-    en(c,'T',[[-.32,.3],[-.5,.3],[-.8,.06],[-.62,.06]],{c:1,f:'rgba(255,255,255,.2)'});
     // Trompa
     const F=(p,e)=>en(c,'F',p,{c:1,...e});
     F([[0,.875],[.22,.87],[.31,.84],[.22,.8],[0,.79]],{f:'#0b0c0f',s:'#8d949b',w:3});
@@ -2462,11 +2443,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     en(c,'R',[[0,.86],[.14,.86],[.14,.9],[0,.9]],{c:1,f:'#23262b'});
     // Limpiaparabrisas de atrás y bajo del alerón
     en(c,'R',[[0,1.585],[.6,1.56]],{s:'rgba(0,0,0,.5)',w:6});
-  }
-  function pintarReflejos(c){
-    en(c,'T',[[.96,.5],[.78,.5],[.42,.12],[.6,.12]],{c:1,f:'rgba(255,255,255,.2)'});
-    en(c,'T',[[.58,.56],[.5,.56],[.26,.3],[.34,.3]],{c:1,f:'rgba(255,255,255,.14)'});
-    en(c,'L',[[.5,1.3],[.3,1.4],[-.14,1.24],[.06,1.2]],{c:1,f:'rgba(255,255,255,.14)'});
   }
   // Tira 3D pegada al costado, a una altura dada
   function tiraCostado(sec,x0,y0,x1,y1,alto,sale,sz){
@@ -2495,8 +2471,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const z of [1,-1]){
       lista.push([tiraCostado(sec,1.02,.58,-1.02,.66,.09,.024,z),negro]);
       lista.push([tiraCostado(sec,1.02,.665,-1.02,.745,.012,.03,z),cromo]);
-      lista.push([tiraCostado(sec,.84,1.135,-1.5,1.205,.03,.016,z),negro]);
-      lista.push([tiraCostado(sec,.78,.26,-.96,.26,.075,.022,z),negro]);
+            lista.push([tiraCostado(sec,.78,.26,-.96,.26,.075,.022,z),negro]);
     }
     return {lista,plano,mPat,negro};
   }
@@ -2504,74 +2479,69 @@ if(typeof module!=='undefined')module.exports=Sim;
   const replicas={};
   function replica(t){
     if(replicas[t])return replicas[t];
-    const r=REPLICAS[t],sec=chapa(r),[x0,x1]=r.x,NX=132,NQ=24,V=[],I=[];
-    for(let i=0;i<=NX;i++){
-      const x=x0+(x1-x0)*i/NX,fin=i===0||i===NX;
-      for(let k=-NQ;k<=NQ;k++){
-        const P=sec(x,Math.abs(k)/NQ),cx=sec(x,.75)[1];
-        V.push(x,fin?cx+(P[1]-cx)*.92:P[1],fin?P[2]*.9*(k<0?-1:1):P[2]*(k<0?-1:1));
+    const r=REPLICAS[t],sec=chapa(r),X=r.estaciones,CH=[],VI=[],NE=[];
+    // Qué es cada celda de la malla: b es la franja entre dos líneas, x el centro de la celda
+    const tipo=(x,b)=>{
+      if(b===0&&x<1.06&&x>.1)return VI;
+      if(b===0&&x<-1.52&&x>-2.06)return VI;
+      if(b===0&&x<-.18&&x>-1.02)return NE;
+      if(b===2&&x<.89&&x>-1.72)return NE;
+      if(b===3&&x<.89&&x>-1.72)return x<-.84&&x>-.95?NE:VI;
+      return CH;
+    };
+    const panel=(x,b)=>(b<2?0:b<4?1:b<5?2:3)*16+(x>1.88?0:x>1.06?1:x>.1?2:x>-1.52?3:x>-2.06?4:5);
+    const celda=(lista,p,q,n)=>lista.push([p,q,n]);
+    for(let i=0;i<X.length-1;i++){
+      const a=sec.lineas(X[i]),c=sec.lineas(X[i+1]),mx=(X[i]+X[i+1])/2;
+      for(let b=0;b<7;b++)for(const z of [1,-1]){
+        const P=[[X[i],a[b][1],a[b][0]*z],[X[i+1],c[b][1],c[b][0]*z],[X[i],a[b+1][1],a[b+1][0]*z],[X[i+1],c[b+1][1],c[b+1][0]*z]];
+        const q=z>0?[P[0],P[1],P[2],P[2],P[1],P[3]]:[P[0],P[2],P[1],P[2],P[3],P[1]];
+        tipo(mx,b).push({q,k:panel(mx,b)+(z>0?0:256)});
       }
     }
-    const fila=NQ*2+1;
-    for(let i=0;i<NX;i++)for(let k=0;k<fila-1;k++){const a=i*fila+k,b=a+1,c=a+fila,e=c+1;I.push(a,c,b,b,c,e)}
-    // Tapas de la trompa y la cola
-    {const cerrar=(i,inv)=>{const c=V.length/3;V.push(V[(i*fila+NQ)*3],sec(V[(i*fila+NQ)*3],.75)[1],0);for(let k=0;k<fila;k++){const a=i*fila+k,b=i*fila+(k+1)%fila;inv?I.push(c,b,a):I.push(c,a,b)}};cerrar(0,false);cerrar(NX,true)}
-    let g=new THREE.BufferGeometry();
-    g.setAttribute('position',new THREE.Float32BufferAttribute(V,3));g.setIndex(I);g.computeVertexNormals();
-    {const n=g.attributes.normal;let q=0;for(let i=0;i<n.count;i++)q+=n.getY(i)*(V[i*3+1]-.8);
-     if(q<0){for(let i=0;i<I.length;i+=3){const a=I[i];I[i]=I[i+1];I[i+1]=a}g.setIndex(I);g.computeVertexNormals()}}
-    // Cada triángulo toma la vista que mejor lo mira
-    const pos=g.attributes.position,nor=g.attributes.normal,N=I.length,fp=new Float32Array(N*3),fn=new Float32Array(N*3),fu=new Float32Array(N*2);
-    const a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3(),ab=new THREE.Vector3(),ac=new THREE.Vector3();
-    const qDe=i=>[0,1,2].map(k=>I[i+k]<fila*(NX+1)?Math.abs(I[i+k]%fila-NQ)/NQ:1).reduce((p,q)=>p+q)/3;
-    const panel=(mx,tq)=>(tq<.345?0:tq<.5?1:2)+(mx>1.88?3:mx<-2.02?6:0),acum=new Map();
-    for(let i=0;i<N;i+=3){
-      a.fromBufferAttribute(pos,I[i]);b.fromBufferAttribute(pos,I[i+1]);c.fromBufferAttribute(pos,I[i+2]);
-      ab.subVectors(b,a);ac.subVectors(c,a);ab.cross(ac);
-      const p=panel((a.x+b.x+c.x)/3,qDe(i));
-      for(let k=0;k<3;k++){const q=I[i+k]*16+p,o=acum.get(q)||[0,0,0];o[0]+=ab.x;o[1]+=ab.y;o[2]+=ab.z;acum.set(q,o)}
+    // Frente y cola: un plano que cierra la sección
+    for(const [x,inv,k] of [[X[0],false,512],[X[X.length-1],true,513]]){
+      const L=sec.lineas(x),o=[...L.map(p=>[x,p[1],p[0]]),[x,.25,0],...L.slice().reverse().map(p=>[x,p[1],-p[0]])],c=[x,.5,0];
+      for(let i=0;i<o.length-1;i++)CH.push({q:inv?[c,o[i+1],o[i]]:[c,o[i],o[i+1]],k});
     }
-    const fs2=new Float32Array(N*3);
-    for(let i=0;i<N;i+=3){
-      a.fromBufferAttribute(pos,I[i]);b.fromBufferAttribute(pos,I[i+1]);c.fromBufferAttribute(pos,I[i+2]);
-      ab.subVectors(b,a);ac.subVectors(c,a);ab.cross(ac).normalize();
-      const mx=(a.x+b.x+c.x)/3,tq=qDe(i),pn=panel(mx,tq),cab=mx<1.12&&mx>-1.95,v=cab&&!(ab.x<-.55&&mx<-1.5&&Math.abs(ab.z)<.55)?(tq<.345?'T':'L'):ab.x>.62&&mx>1.55&&Math.abs(ab.z)<.62?'F':ab.x<-.55&&mx<-1.55&&Math.abs(ab.z)<.55?'R':Math.abs(ab.z)>Math.max(ab.y,.3)*.92||ab.y<.1?'L':'T',M=VISTAS[v];
-      for(let k=0;k<3;k++){
-        const j=I[i+k],px=pos.getX(j),py=pos.getY(j),pz=pos.getZ(j),u=M(px,py,pz);
-        const o=acum.get(j*16+pn),l=Math.hypot(o[0],o[1],o[2])||1;
-        fp.set([px,py,pz],(i+k)*3);fn.set([o[0]/l,o[1]/l,o[2]/l],(i+k)*3);fs2.set([nor.getX(j),nor.getY(j),nor.getZ(j)],(i+k)*3);fu.set([u[0]/2048,u[1]/2048],(i+k)*2);
+    const armar=(lista)=>{
+      const acum=new Map(),clave=(p,k)=>k+'|'+p.map(n=>n.toFixed(3)).join(),a=new THREE.Vector3(),b=new THREE.Vector3(),c=new THREE.Vector3();
+      for(const e of lista)for(let t=0;t<e.q.length;t+=3){
+        a.fromArray(e.q[t]);b.fromArray(e.q[t+1]).sub(a);c.fromArray(e.q[t+2]).sub(a);b.cross(c);
+        for(let k=0;k<3;k++){const q=clave(e.q[t+k],e.k),o=acum.get(q)||[0,0,0];o[0]+=b.x;o[1]+=b.y;o[2]+=b.z;acum.set(q,o)}
       }
-    }
-    const geo=new THREE.BufferGeometry();
-    geo.setAttribute('position',new THREE.BufferAttribute(fp,3));geo.setAttribute('normal',new THREE.BufferAttribute(fn,3));geo.setAttribute('uv',new THREE.BufferAttribute(fu,2));
-    const borde=geo.clone(),bp=borde.attributes.position,bn=new THREE.BufferAttribute(fs2,3);
-    for(let i=0;i<bp.count;i++)bp.setXYZ(i,bp.getX(i)+bn.getX(i)*.022,bp.getY(i)+bn.getY(i)*.022,bp.getZ(i)+bn.getZ(i)*.022);
-    const huecos=lienzoAtlas(1024,x=>pintarGlass(x,'#fff')),detalle=lienzoAtlas(2048,x=>pintarDetalle(x,sec));
-    const reflejo=lienzoAtlas(1024,x=>{pintarReflejos(x)});
+      const fp=[],fn=[],fu=[];
+      for(const e of lista)for(let t=0;t<e.q.length;t+=3){
+        a.fromArray(e.q[t]);b.fromArray(e.q[t+1]).sub(a);c.fromArray(e.q[t+2]).sub(a);b.cross(c).normalize();
+        const mx=(e.q[t][0]+e.q[t+1][0]+e.q[t+2][0])/3,v=b.x>.62&&mx>1.55?'F':b.x<-.55&&mx<-1.55?'R':Math.abs(b.z)>Math.max(b.y,.25)?'L':'T',M=VISTAS[v];
+        for(let k=0;k<3;k++){
+          const p=e.q[t+k],o=acum.get(clave(p,e.k)),l=Math.hypot(o[0],o[1],o[2])||1,u=M(p[0],p[1],p[2]);
+          fp.push(p[0],p[1],p[2]);fn.push(o[0]/l,o[1]/l,o[2]/l);fu.push(u[0]/2048,u[1]/2048);
+        }
+      }
+      const g=new THREE.BufferGeometry();
+      g.setAttribute('position',new THREE.Float32BufferAttribute(fp,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(fn,3));g.setAttribute('uv',new THREE.Float32BufferAttribute(fu,2));
+      return g;
+    };
+    const geo=armar(CH),geoVidrio=armar(VI),geoNegro=armar(NE);
+    const borde=armar([...CH,...VI,...NE]),bp=borde.attributes.position,bn=borde.attributes.normal;
+    for(let i=0;i<bp.count;i++)bp.setXYZ(i,bp.getX(i)+bn.getX(i)*.016,bp.getY(i)+bn.getY(i)*.016,bp.getZ(i)+bn.getZ(i)*.016);
+    const detalle=lienzoAtlas(2048,x=>pintarDetalle(x,sec));
     const sobre={polygonOffset:true,polygonOffsetFactor:-1,polygonOffsetUnits:-2};
     const pieza=(a,mat,e)=>[1,-1].map(z=>({g:parche(sec,a,z,e),m:mat}));
     const sobreP={transparent:true,alphaTest:.05,polygonOffset:true,polygonOffsetFactor:-3,polygonOffsetUnits:-4,side:THREE.DoubleSide};
-    return replicas[t]={geo,borde,huecos,cola:texturaCola(),ejes:r.ejes,
+    return replicas[t]={geo,geoVidrio,geoNegro,borde,cola:texturaCola(),ejes:r.ejes,
       opticas:pieza(OPTICA,new THREE.MeshBasicMaterial({map:texturaOptica(),...sobreP}),.012),
       gColas:[parche(sec,ZFARO,1,.012),parche(sec,ZFARO,-1,.012)],
       colaFija:pieza(ZFARO,new THREE.MeshBasicMaterial({map:texturaColaFija(),...sobreP,polygonOffsetFactor:-4,polygonOffsetUnits:-5}),.015),
-      linea:new THREE.MeshBasicMaterial({color:'#08090b',side:THREE.BackSide,alphaMap:huecos,alphaTest:.5}),
+      linea:new THREE.MeshBasicMaterial({color:'#08090b',side:THREE.BackSide}),negro:new THREE.MeshMatcapMaterial({color:'#25272c',matcap:matcapDe('metal')}),
       detalle:new THREE.MeshBasicMaterial({map:detalle,transparent:true,depthWrite:false,...sobre}),
-      vidrios:['#7f909c','#566470','#2a3036'].map((color,i)=>new THREE.MeshMatcapMaterial({color,matcap:matcapDe('vidrio'),transparent:true,opacity:[.86,.92,.97][i],depthWrite:false,side:THREE.DoubleSide})),
-      reflejo:new THREE.MeshBasicMaterial({map:reflejo,transparent:true,depthWrite:false,...sobre}),
+      vidrios:['#8c9dab','#566470','#2a3036'].map(color=>new THREE.MeshMatcapMaterial({color,matcap:matcapDe('vidrio')})),
       interior:interiorDe(),rueda:ruedaDe(),reales:piezasReales(sec)};
   }
   function interiorDe(){
-    const g=new THREE.Group(),oscuro=new THREE.MeshLambertMaterial({color:'#26282d'}),tela=new THREE.MeshLambertMaterial({color:'#3f4249'}),negro=new THREE.MeshLambertMaterial({color:'#0e0f12'});
-    const caja=(m,x,y,z,sx,sy,sz,rz=0)=>{const q=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),m);q.position.set(x,y,z);q.scale.set(sx,sy,sz);q.rotation.z=rz;g.add(q);return q};
-    caja(negro,0,.62,0,3.5,.5,1.72);
-    caja(oscuro,.72,1.04,0,.46,.2,1.6,-.2);
-    for(const z of [-.42,.42]){
-      caja(tela,-.42,.9,z,.5,.16,.5);caja(tela,-.68,1.16,z,.14,.56,.48,-.16);caja(tela,-.76,1.5,z,.12,.2,.26,-.12);
-      caja(oscuro,-1.3,.92,z,.5,.2,.5);caja(oscuro,-1.56,1.14,z,.14,.46,.48,-.16);
-    }
-    const vol=new THREE.Mesh(new THREE.TorusGeometry(.17,.026,8,20),negro);vol.position.set(.42,1.16,.42);vol.rotation.y=Math.PI/2;vol.rotation.x=.35;g.add(vol);
-    return g;
+    const g=new THREE.Group(),q=new THREE.Mesh(new THREE.BoxGeometry(1,1,1),new THREE.MeshLambertMaterial({color:'#0e0f12'}));
+    q.position.set(-.1,.52,0);q.scale.set(3.5,.5,1.74);g.add(q);return g;
   }
   // Rueda: goma redondeada, llanta de cinco rayos dobles, disco y mordaza roja
   function ruedaDe(){
@@ -2591,26 +2561,6 @@ if(typeof module!=='undefined')module.exports=Sim;
   const cuerpoDe=t=>cuerpos[t]||(cuerpos[t]=REPLICAS[t]?replica(t).geo:extruir(PERFILES[t][0],1.94,PERFILES[t][1]));
   const GEO=gl&&{vidrio:extruir([[-1,0],[1,0],[.42,.5],[-.72,.5]],1.68,4),techo:extruir([[-.74,0],[.46,0],[.46,.06],[-.74,.06]],1.48,5,.03),ala:extruir([[-.3,0],[.3,0],[.3,.07],[-.3,.07]],2.0,10,.025),
     rueda:new THREE.CylinderGeometry(.37,.37,.32,14),llanta:new THREE.CylinderGeometry(.34,.34,.02,14),pieza:new THREE.BoxGeometry(1,1,1),caño:new THREE.CylinderGeometry(.075,.075,.3,10),luz:new THREE.BoxGeometry(.08,.14,.38),sombra:new THREE.CircleGeometry(1,24),sombra3:new THREE.SphereGeometry(1,12,8),numero:new THREE.PlaneGeometry(.95,.95)};
-  // Paños de vidrio: siguen la chapa un poco hacia adentro de los huecos
-  const paniosV={};
-  function vidriosDe(rep,i,pone){
-    if(!paniosV.geo){
-      const sec=chapa(REPLICAS.h206);
-      const lista=[],poner=(xa,xb,qa,qb,sz)=>{
-        const NX=14,NQ=8;
-        for(let i=0;i<NX;i++)for(let k=0;k<NQ;k++){
-          const f=[[i,k],[i,k+1],[i+1,k],[i+1,k],[i,k+1],[i+1,k+1]];
-          for(const [a,b] of f){const x=xa+(xb-xa)*a/NX,q=qa+(qb-qa)*b/NQ,P=sec(x,q);lista.push(P[0],P[1]-.012,P[2]*sz*.985)}
-        }
-      };
-      for(const sz of [1,-1]){poner(1.08,-1.78,.1,.56,sz)}
-      poner(1.08,.08,0,.34,1);poner(1.08,.08,0,.34,-1);
-      poner(-1.5,-2.1,0,.4,1);poner(-1.5,-2.1,0,.4,-1);
-      const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(lista,3));g.computeVertexNormals();
-      paniosV.geo=g;
-    }
-    const m=pone(paniosV.geo,rep.vidrios[i],0,0,0);m.renderOrder=1;
-  }
   const VIDRIOS=gl&&['#9fb6c6','#5b6a75','#23282d'].map(c=>new THREE.MeshMatcapMaterial({color:c,matcap:matcapDe('vidrio')})),CARBONO=gl&&new THREE.MeshPhongMaterial({color:'#141518',shininess:60,specular:'#555'}),CROMO=gl&&new THREE.MeshPhongMaterial({color:'#b9bec6',shininess:90,specular:'#fff'});
   // Reflejos pintados: el horizonte marcado y la luz de taller dan brillo de auto sin depender de las luces
   function matcapDe(k){
@@ -2641,20 +2591,18 @@ if(typeof module!=='undefined')module.exports=Sim;
     const P=c.pz||{},extra=[],g=new THREE.Group(),caja=new THREE.Group();
     const ter=P.ter|0,rep=REPLICAS[MODELOS[c.v].forma.tipo]?replica(MODELOS[c.v].forma.tipo):null,brillo=ter||(rep?1:0);
     const pint=brillo?new THREE.MeshMatcapMaterial({color:COLORES[c.color],matcap:matcapDe(rep||ter>1?'brillo':'satin')}):new THREE.MeshLambertMaterial({color:COLORES[c.color]});
-    if(rep){pint.alphaMap=rep.huecos;pint.alphaTest=.5}
     const nuevo=m=>{extra.push(m);return m};
     const pone=(geo,mat,x,y,z,padre=caja)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);padre.add(m);return m};
     const f=MODELOS[c.v].forma||{},tipo=f.tipo||'sedan',h=f.h||1,cx=f.caja?.42:f.cx??-.3,cl=f.caja?.55:f.cl||1,ch=f.ch||1,base=.86,techoY=base+.5*ch;
     pone(cuerpoDe(tipo),pint,0,0,0);
     if(rep){
       pone(rep.borde,rep.linea,0,0,0);
-      pone(rep.geo,rep.detalle,0,0,0);pone(rep.geo,rep.reflejo,0,0,0);
+      pone(rep.geo,rep.detalle,0,0,0);pone(rep.geoNegro,rep.negro,0,0,0);pone(rep.geoVidrio,rep.vidrios[P.polar|0],0,0,0);
       for(const q of [...rep.opticas,...rep.colaFija])pone(q.g,q.m,0,0,0);
       caja.add(rep.interior.clone());
-      vidriosDe(rep,P.polar|0,pone);
       for(const [q,mat] of rep.reales.lista)pone(q,mat,0,0,0);
       {const pf=pone(rep.reales.plano,rep.reales.mPat,2.232,.32,0);pf.rotation.y=Math.PI/2;const pr=pone(rep.reales.plano,rep.reales.mPat,-2.232,.58,0);pr.rotation.y=-Math.PI/2}
-      const chapaSola=nuevo(pint.clone());chapaSola.alphaMap=null;chapaSola.alphaTest=0;
+      const chapaSola=pint;
       {const al=pone(GEO.ala,chapaSola,-1.6,1.565,0);al.scale.set(.62,.7,.7);al.rotation.z=-.14}
       for(const z of [-1,1]){
         const br=pone(GEO.pieza,GOMA,1.04,1.215,z*.34);br.scale.set(.03,.022,.6);br.rotation.y=z*.16;
@@ -2673,7 +2621,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     if(f.franja)for(const z of [-.27,.27])pone(cuerpoDe(tipo),FARO,0,.014,z).scale.z=.13;
     if(P.vinilo){
-      const vc=nuevo(new THREE.MeshLambertMaterial({color:COLORES[P.vc|0],...(rep?{alphaMap:rep.huecos,alphaTest:.5}:{})}));
+      const vc=nuevo(new THREE.MeshLambertMaterial({color:COLORES[P.vc|0]}));
       const banda=(z,e)=>pone(cuerpoDe(tipo),vc,0,.016,z).scale.z=e;
       if(P.vinilo===1)banda(0,.2);
       else if(P.vinilo===2){banda(-.2,.1);banda(.2,.1)}
