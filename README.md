@@ -6,8 +6,8 @@ Carrera online de autitos en 3D, con física de choques en tiempo real y control
 
 Abrí el enlace de GitHub Pages y compartilo. No hace falta cuenta ni instalar nada.
 
-- **Cómo se juega:** desde la portada entrás a Jugar, Garaje o Cómo jugar. En Jugar elegís Circuito, Derrape, Práctica, El barrio, Multijugador o Garaje. En el garaje las flechas recorren tus autos y los que están en venta. En El barrio recorrés las calles manejando y cada arco de neón es un local.
-- **Teclado:** flechas o WASD. Espacio es el freno de mano, N el nitro, C mira atrás, R te devuelve a la pista y Enter entra a un local.
+- **Cómo se juega:** juego visto desde arriba, centrado en las físicas de manejo. En Jugar elegís Circuito, Derrape, Práctica o Multijugador. En el Garaje comprás autos y les ponés piezas.
+- **Teclado:** flechas o WASD. Espacio es el freno de mano, N el nitro, C mira atrás, R te devuelve a la pista.
 - **Partidas:** al entrar ves las partidas abiertas y te unís con un toque. También podés crear la tuya o entrar con un código o un enlace.
 - **Progreso:** arrancás con tres autos. Las picadas y los puntos de derrape dan plata y reputación; la reputación sube tu nivel y desbloquea autos, y el estilo de tu auto suma un bono a los premios. Todo se guarda en cada dispositivo.
 - **Controles:** elegí volante o flechas con el botón ⚙ y movelos o cambiales el tamaño en «Ajustar controles».
