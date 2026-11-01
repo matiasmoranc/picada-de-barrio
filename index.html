@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvyb2jsp"></script>
+<script src="room.js?v=mvybkmmj"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -54,7 +54,9 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--amarillo);outli
 .mando span{position:relative;font-weight:700;font-size:.8rem;letter-spacing:.06em;text-shadow:0 1px 2px var(--tinta)}
 .mando.on{opacity:.8;transform:scale(.97)}
 #pedal-gas.auto{opacity:.2}
-#volante{will-change:transform}
+#riel{position:absolute;left:6%;right:6%;top:50%;height:46%;transform:translateY(-50%);border-radius:999px;background:rgba(14,34,53,.35);border:3px solid #fbf6ea;box-sizing:border-box}
+#perilla{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:#fbf6ea;will-change:transform}
+#volante span{position:absolute;bottom:0}
 #volante.on{opacity:.8;transform:none}
 #ayuda-volante{position:absolute;width:38%;max-width:220px;font-weight:700;line-height:1.15;text-shadow:0 1px 2px var(--tinta);pointer-events:none}
 /* Portada */
@@ -505,8 +507,8 @@ html,body{background:#000;touch-action:manipulation}
   <canvas id="tres" aria-hidden="true" hidden></canvas>
   <canvas id="lienzo" aria-label="Pista de carreras vista desde arriba"></canvas>
   <div id="tactil" hidden>
-    <div id="ayuda-volante">Apoyá el pulgar y movelo a los lados</div>
-    <div class="mando" id="volante" hidden><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" fill="rgba(14,34,53,.35)" stroke="#fbf6ea" stroke-width="10"/><path d="M8 50H92M50 50V92" stroke="#fbf6ea" stroke-width="8"/><circle cx="50" cy="50" r="13" fill="#fbf6ea"/><path d="M50 3v10" stroke="#d8412f" stroke-width="7"/></svg></div>
+    <div id="ayuda-volante">Arrastrá el dedo a la izquierda o a la derecha</div>
+    <div class="mando" id="volante" hidden><i id="riel"></i><i id="perilla"></i><span>DESLIZÁ</span></div>
     <div class="mando" id="flecha-izq" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M2 50 44 8V30H98V70H44V92Z" fill="#fbf6ea"/></svg></div>
     <div class="mando" id="flecha-der" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M98 50 56 8V30H2V70H56V92Z" fill="#fbf6ea"/></svg></div>
     <div class="mando" id="pedal-freno"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path fill-rule="evenodd" fill="#fbf6ea" d="M4 4H96V96H4ZM16 16V30H30V16ZM43 16V30H57V16ZM70 16V30H84V16ZM16 43V57H30V43ZM43 43V57H57V43ZM70 43V57H84V43ZM16 70V84H30V70ZM43 70V84H57V70ZM70 70V84H84V70Z"/></svg><span>FRENO</span></div>
@@ -585,7 +587,6 @@ html,body{background:#000;touch-action:manipulation}
   <div id="editor" hidden>
     <div id="editor-barra">
       <label>Sensibilidad <b id="sens-valor">1,00</b><input type="range" id="sens" min=".5" max="2" step=".05"></label>
-      <label id="fila-fijo">Volante fijo<input type="checkbox" id="fijo"></label>
       <button type="button" id="resetear">Resetear</button>
       <button type="button" id="editor-atras">◀ Atrás</button>
     </div>
@@ -631,7 +632,7 @@ html,body{background:#000;touch-action:manipulation}
       <div class="grupo-op"><h3>Doblar con</h3>
         <div id="tipo-control" role="group" aria-label="Controles">
           <button type="button" id="ctrl-flechas">Flechas</button>
-          <button type="button" id="ctrl-volante">Volante</button>
+          <button type="button" id="ctrl-volante">Deslizar</button>
         </div>
         <button type="button" id="ajustar">Mover y agrandar controles</button>
       </div>
@@ -1057,6 +1058,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const pref=leer();
   // Controles pensados para el celular parado: quien venía de la versión acostada arranca de cero
   if(pref.vertical!==1){pref.vertical=1;pref.ajustes={};pref.control='flechas'}
+  if(pref.ajustes&&pref.deslizar!==1){pref.deslizar=1;delete pref.ajustes.volante}
   let color=Number.isInteger(pref.color)&&pref.color>=0&&pref.color<COLORES.length?pref.color:Math.floor(Math.random()*COLORES.length);
   let modelo=Number.isInteger(pref.modelo)&&pref.modelo>=0&&pref.modelo<MODELOS.length?pref.modelo:0,visto=modelo,modo='menu',evento=null,vueltas=LAPS;
   if(typeof pref.nombre==='string')$('nombre').value=pref.nombre.slice(0,12);
@@ -1202,11 +1204,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     touch.gas=g;touch.brake=b;touch.mano=h;touch.nitro=nt;touch.analogico=!!st;touch.steer=st?st.giro:de-iz;
     $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);
     $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);$('pedal-mano').classList.toggle('on',!!h);$('pedal-nitro').classList.toggle('on',!!nt);
-    const v=$('volante');v.classList.toggle('on',!!st);v.style.transform='rotate('+(touch.steer*110).toFixed(1)+'deg)';
+    $('volante').classList.toggle('on',!!st);$('perilla').style.transform='translateX('+(touch.steer*Math.max(0,caja('volante').w/2-44)).toFixed(1)+'px)';
   }
   // Posición y tamaño de cada control: centro en fracción de pantalla, medidas en fracción del lado corto
   const DEF={
-    'volante':{x:.24,y:.85,w:.44,h:.44},
+    'volante':{x:.28,y:.87,w:.52,h:.3},
     'flecha-izq':{x:.106,y:.85,w:.213,h:.4},
     'flecha-der':{x:.347,y:.845,w:.214,h:.394},
     'pedal-freno':{x:.642,y:.887,w:.181,h:.268},
@@ -1243,7 +1245,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const c=caja('volante'),W=$('juego').clientWidth;
     return vol&&(x<W/2)===((c.l+c.r)/2<W/2)?'volante':null;
   }
-  // Volante: el pulgar se mueve a los lados desde donde apoya. Al pasarse del recorrido el punto
+  // Deslizar: el pulgar se mueve a los lados desde donde apoya. Al pasarse del recorrido el punto
   // de partida lo acompaña, así contravolantear responde apenas el dedo cambia de sentido.
   function moverVolante(p,x){
     const rec=52/(pref.sens||1);
@@ -1266,7 +1268,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     pads.set(e.pointerId,{z,giro:0,ox:e.clientX,lx:e.clientX,ly:e.clientY});
     if(z==='volante'){
       $('ayuda-volante').hidden=true;pref.ayudaVista=true;
-      if(pref.volanteSuelto){const c=caja('volante'),v=$('volante');v.style.left=(e.clientX-c.w/2)+'px';v.style.top=(e.clientY-c.h/2)+'px'}
     }
     renderPedals();
   });
@@ -1327,7 +1328,7 @@ if(typeof module!=='undefined')module.exports=Sim;
 
   // --- Editor de controles ---
   let edicion=null;
-  const ETIQUETAS={'volante':'Volante','flecha-izq':'Izquierda','flecha-der':'Derecha','pedal-freno':'Freno','pedal-gas':'Acelerador','pedal-mano':'Freno de mano','pedal-nitro':'Nitro'};
+  const ETIQUETAS={'volante':'Deslizar','flecha-izq':'Izquierda','flecha-der':'Derecha','pedal-freno':'Freno','pedal-gas':'Acelerador','pedal-mano':'Freno de mano','pedal-nitro':'Nitro'};
   const textoSens=()=>(pref.sens||1).toFixed(2).replace('.',',');
   function pintarEditor(){
     const m=$('editor-mesa');m.textContent='';
@@ -1340,13 +1341,11 @@ if(typeof module!=='undefined')module.exports=Sim;
       m.append(d);
     }
     $('sens').value=pref.sens||1;$('sens-valor').textContent=textoSens();
-    $('fila-fijo').hidden=pref.control==='flechas';$('fijo').checked=!pref.volanteSuelto;
   }
   $('ajustar').onclick=()=>{pararCelular();$('editor').hidden=false;pintarEditor();vigilarGiro();setTimeout(pintarEditor,350)};
   $('editor-atras').onclick=()=>{$('editor').hidden=true;guardar(pref);posicionar();vigilarGiro()};
-  $('resetear').onclick=()=>{pref.ajustes={};pref.sens=1;pref.volanteSuelto=false;guardar(pref);posicionar();pintarEditor()};
+  $('resetear').onclick=()=>{pref.ajustes={};pref.sens=1;guardar(pref);posicionar();pintarEditor()};
   $('sens').oninput=e=>{pref.sens=+e.target.value;$('sens-valor').textContent=textoSens();guardar(pref)};
-  $('fijo').onchange=e=>{pref.volanteSuelto=!e.target.checked;guardar(pref)};
   const mesa=$('editor-mesa');
   mesa.addEventListener('touchstart',sinGesto,{passive:false});
   mesa.addEventListener('pointerdown',e=>{
@@ -1364,7 +1363,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(edicion.esq){
       const sx=/[bd]/.test(edicion.esq)?1:-1,sy=/[cd]/.test(edicion.esq)?1:-1;
       let w=clamp(o.w+sx*dx/u,.14,1.8),h=clamp(o.h+sy*dy/u,.12,1);
-      if(edicion.id==='volante')w=h=clamp(Math.max(w,h),.3,.9);
       n.w=w;n.h=h;n.x=o.x+sx*(w-o.w)*u/2/W;n.y=o.y+sy*(h-o.h)*u/2/H;
     }else{n.x=o.x+dx/W;n.y=o.y+dy/H}
     AJ()[edicion.id]=n;
@@ -1911,7 +1909,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       t.textContent='Cómo jugar';
       const d=el('div','texto-menu');
       [
-        ['Manejá','Flechas para doblar. Abajo a la derecha, freno y acelerador.'],
+        ['Manejá','Flechas para doblar, o elegí Deslizar en Opciones. Abajo a la derecha, freno y acelerador.'],
         ['Derrapá','Soltá el acelerador, doblá y tocá Mano un momento. Después acelerá y mantené la curva.'],
             ['Largá bien','Soltá el acelerador con el semáforo. Tocalo justo cuando se apagan las luces: si te adelantás, salís tarde.'],
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
