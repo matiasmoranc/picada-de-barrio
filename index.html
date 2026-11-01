@@ -2,21 +2,26 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Picada">
+<meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvxoarit"></script>
+<script src="room.js?v=mvy3b890"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Barlow+Condensed:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Barlow+Condensed:wght@500;700&display=swap">
 <style>
 /* Concepto: pista de barrio a pleno sol, cartelería de chapa esmaltada celeste; el juego ocupa toda la pantalla. */
 :root{
   --pasto:#7ea356;--sombra-pasto:#6c9149;--asfalto:#5a5853;--celeste:#8fcdec;--celeste-osc:#5ea9d0;
   --marino:#14304a;--tinta:#0e2235;--crema:#fbf6ea;--amarillo:#ffd23f;--rojo:#d8412f;
-  --display:"Alfa Slab One","Rockwell","Georgia",serif;--texto:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --display:"Bowlby One","Arial Black",Impact,sans-serif;--texto:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   color-scheme:light;
 }
 [hidden]{display:none!important}
@@ -174,7 +179,6 @@ label{font-weight:700;display:block;margin-bottom:3px}
 #bienvenida h1{margin:0;font:400 clamp(2.4rem,11vmin,4.6rem)/.95 var(--display);color:var(--amarillo);text-shadow:0 0 18px rgba(255,210,63,.55)}
 #bienvenida p{margin:0;font-size:1.1rem;font-weight:500}
 #bienvenida input{width:min(280px,80vw);font:700 1.15rem var(--texto);text-align:center;padding:9px;border:2px solid #2b3a5c;border-radius:4px;background:#101726;color:#fff;-webkit-user-select:text;user-select:text;box-sizing:border-box}
-#jugar{background:var(--amarillo);color:var(--tinta);font:400 1.5rem var(--display);padding:12px 44px;border-radius:4px;box-shadow:0 0 22px rgba(255,210,63,.5)}
 #barra{pointer-events:auto;flex-wrap:nowrap}
 #barra .chip{white-space:nowrap}
 #barra .chip b{color:var(--amarillo)}
@@ -287,6 +291,128 @@ label{font-weight:700;display:block;margin-bottom:3px}
 #resultados{list-style:none;margin:0;padding:0;display:grid;gap:3px;font-weight:700;font-variant-numeric:tabular-nums}
 #resultados li{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid rgba(14,34,53,.2);padding-bottom:2px}
 @media (prefers-reduced-motion:reduce){.pedal{transition:none}}
+/* Menús: bloques amarillos, letra gorda con contorno y franjas de peligro */
+:root{--oro:#ffd51a;--azul:#4fb4ff;--violeta:#5a1fd0;--ciruela:#3b2a55;--borde:2px 0 #000,-2px 0 #000,0 2px #000,0 -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000,-2px -2px #000,4px 4px 0 #000;
+  --peligro:repeating-linear-gradient(135deg,#0b0b14 0 26px,var(--violeta) 26px 52px);--peligro-az:repeating-linear-gradient(135deg,#0b0b14 0 26px,#0a9dff 26px 52px);--patron:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27520%27%20height%3D%27250%27%20viewBox%3D%270%200%20520%20250%27%3E%3Cg%20fill%3D%27%238f0a0a%27%3E%3Cpath%20d%3D%27M20%20150%2090%2040%2096%2096%20190%2024%20170%2092%20300%2020%20262%2096%20400%2042%20352%20118%20470%2096%20396%20160%20300%20150%20280%20214%20214%20168%20150%20226%20136%20172Z%27%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%27%23000%27%20font-family%3D%27Arial%20Black%2CArial%2Csans-serif%27%20font-weight%3D%27900%27%20font-style%3D%27italic%27%3E%3Ctext%20x%3D%2796%27%20y%3D%27128%27%20font-size%3D%2754%27%3EPICADA%3C%2Ftext%3E%3C%2Fg%3E%3Cpath%20d%3D%27M118%20164h22l26-20h56l34%2020%2034%206%206%2014h-26a15%2015%200%200%200-29%200h-58a15%2015%200%200%200-29%200h-36Z%27%20fill%3D%27%23000%27%2F%3E%3C%2Fsvg%3E")}
+/* iPhone: nada se selecciona ni abre la lupa al mantener apretado */
+*{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+html,body{background:#000;touch-action:manipulation}
+#juego{position:fixed;inset:0;width:auto;height:auto;background:#000}
+.fr{display:flex;align-items:center;justify-content:center;gap:.55em;background:var(--oro);color:#fff;font:400 clamp(1.15rem,6vh,1.8rem)/1 var(--display);text-transform:uppercase;text-shadow:var(--borde);letter-spacing:.02em;padding:8px 14px;min-height:clamp(46px,14vh,68px);border-radius:0;box-shadow:5px 5px 0 #000;white-space:nowrap}
+.fr:active{transform:translate(3px,3px);box-shadow:2px 2px 0 #000}
+.fr:disabled{background:#6d6d74;cursor:not-allowed}
+.fr svg{width:1.1em;height:1.1em;flex:none;color:#fff;filter:drop-shadow(1px 1px 0 #000) drop-shadow(-1px -1px 0 #000)}
+.fr.azul{background:var(--azul)}
+.titulo-fr{margin:0;font:400 clamp(1.4rem,min(10vh,8vw),3rem)/1.05 var(--display);color:#fff;text-transform:uppercase;text-shadow:var(--borde);text-align:center}
+.atras{position:absolute;top:0;right:0;z-index:3;display:flex;align-items:center;gap:8px;background:#1b1826;color:#fff;font:400 clamp(.95rem,5vh,1.25rem) var(--display);text-shadow:2px 2px 0 #000;padding:6px max(16px,env(safe-area-inset-right,0px)) 6px 14px;min-height:44px}
+.atras i{width:0;height:0;border:10px solid transparent;border-right:15px solid #fff;border-left:0}
+.engranaje{position:absolute;z-index:3;width:48px;height:48px;padding:4px;background:none;color:#c9c9cf;filter:drop-shadow(2px 2px 0 #000)}
+.engranaje svg{display:block;width:100%;height:100%}
+/* Portada */
+#bienvenida{display:block;padding:0;background:none;text-align:left;place-content:unset;overflow:hidden}
+#bienvenida .logo{position:absolute;left:0;right:0;top:max(10px,5vh);margin:0;display:flex;flex-wrap:wrap;justify-content:center;gap:0 .32em;font:400 min(9.1vw,19vh)/1 var(--display);transform:rotate(-3deg) skewX(-12deg);text-shadow:none;color:inherit;pointer-events:none}
+.logo span{position:relative;isolation:isolate;display:inline-block;white-space:nowrap}
+.logo span::before,.logo span::after{content:attr(data-t);position:absolute;left:0;top:0;z-index:-1}
+.logo span::before{color:#000;-webkit-text-stroke:.3em #000;transform:translate(.05em,.07em)}
+.logo span::after{color:#fff;-webkit-text-stroke:.16em #fff}
+.logo b{position:relative;font-weight:400;color:transparent;background:linear-gradient(#ffe600 18%,#ffb01f 50%,#f03a1c 88%);-webkit-background-clip:text;background-clip:text}
+#t-menu{position:absolute;left:max(18px,env(safe-area-inset-left,0px));bottom:max(16px,5vh);width:min(36vw,300px);display:grid;gap:10px}
+#t-menu .fr{justify-content:flex-start}
+#t-piloto{position:absolute;right:max(16px,env(safe-area-inset-right,0px));bottom:14px;display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.72);padding:5px 8px;font-weight:700;color:#fff}
+#t-piloto label{margin:0;font:400 .85rem var(--display);color:var(--oro)}
+#bienvenida #nombre{width:128px;padding:5px 7px;font-size:1.05rem;text-align:left;background:#fff;color:#000;border:0;border-radius:0}
+#t-engranaje{top:max(8px,env(safe-area-inset-top,0px));right:max(10px,env(safe-area-inset-right,0px))}
+@media (orientation:portrait){#bienvenida .logo{top:9vh;font-size:min(15vw,9vh);flex-direction:column;align-items:center}#t-menu{left:18px;right:18px;width:auto;bottom:70px}}
+/* Selección */
+#menu{position:absolute;inset:0;z-index:16;display:grid;grid-template-rows:auto minmax(0,1fr);justify-items:center;gap:clamp(4px,2vh,12px);box-sizing:border-box;padding:max(8px,env(safe-area-inset-top,0px)) max(14px,env(safe-area-inset-right,0px)) 10px max(14px,env(safe-area-inset-left,0px));background:#000 var(--patron) center/min(62vw,520px) auto}
+#menu-titulo{max-width:calc(100% - 200px)}
+#menu-caja{width:min(620px,100%);max-height:100%;min-height:0;align-self:center;display:flex;flex-direction:column;background:var(--azul)}
+#menu.ancho #menu-caja{width:min(880px,100%);height:100%}
+#menu-caja::before,#menu-caja::after{content:"";flex:none;height:clamp(14px,7vh,44px);background:var(--peligro)}
+#menu-cuerpo{min-height:0;flex:1;overflow:auto;touch-action:pan-y;padding:clamp(8px,3vh,16px);color:#06121f}
+#menu-engranaje{right:max(10px,env(safe-area-inset-right,0px));bottom:6px}
+.grilla-modos{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,2.6vh,14px)}
+.grilla-modos .fr{min-width:0;font-size:clamp(1rem,5.4vh,1.5rem);white-space:normal;text-align:center}
+.sel-pista{display:grid;gap:10px;grid-template-columns:minmax(0,5fr) minmax(0,8fr);height:100%;min-height:0}
+.sel-pista>div{display:grid;gap:8px;align-content:start;min-height:0}
+.sel-pista>div:last-child{overflow:auto;touch-action:pan-y}
+.sel-pista .nota{color:#06121f;font-weight:700;font-size:1rem}
+.sel-pista .pista-nombre{margin:0;font:400 1.15rem var(--display);color:#06121f}
+@media (orientation:portrait){.sel-pista{grid-template-columns:1fr;height:auto}}
+#menu .pistas-ev{grid-template-columns:repeat(auto-fill,minmax(112px,1fr))}
+#menu .pistas-ev button{background:#10131c}
+#menu .pistas-ev button[aria-pressed="true"]{outline:4px solid var(--oro)}
+.texto-menu{display:grid;gap:8px;font-size:1.05rem;font-weight:700;line-height:1.2}
+.texto-menu h3{margin:4px 0 0;font:400 1.05rem var(--display)}
+.texto-menu p{margin:0}
+#menu #panel-controles{color:#06121f}
+#menu #panel-controles label,#menu .opcion{color:#06121f}
+#menu .opcion input{accent-color:#000}
+#menu #tip-derrape{background:rgba(255,255,255,.55);color:#06121f!important}
+#menu #teclas{color:#06121f!important}
+#menu #ajustar,#menu #sonido2{background:#10131c;color:#fff;border-radius:0}
+#menu #tipo-control button{border-radius:0}
+#panel-controles .boton-p{grid-column:auto;grid-row:auto}
+/* Garaje */
+#local{display:block;--ac:#ffd51a;background:none}
+#g-barra{position:absolute;left:0;right:0;top:0;z-index:4;display:flex;align-items:center;gap:clamp(8px,3vw,22px);height:42px;background:var(--ciruela);color:#fff;font:400 clamp(1rem,5.4vh,1.35rem) var(--display);text-shadow:2px 2px 0 #000;padding:0 150px 0 max(14px,env(safe-area-inset-left,0px));box-sizing:border-box;margin-top:8px}
+#g-barra::before,#g-barra::after{content:"";position:absolute;left:0;right:0;height:8px;background:var(--peligro-az)}
+#g-barra::before{top:-8px}#g-barra::after{bottom:-8px}
+#g-barra span{white-space:nowrap}
+#g-nivel,#g-estilo{font-size:.78em;color:var(--oro)}
+#g-barra .atras{top:0;height:42px;min-height:0;background:#1b1826;padding-top:0;padding-bottom:0}
+#orbita{position:absolute;inset:58px 0 0 0;touch-action:none}
+.flecha{position:absolute;top:54%;z-index:2;width:64px;height:88px;margin-top:-44px;background:none;padding:0;color:#fff;filter:drop-shadow(3px 3px 0 #000)}
+.flecha svg{display:block;width:100%;height:100%}
+#g-ant{left:max(10px,env(safe-area-inset-left,0px))}#g-sig{right:max(10px,env(safe-area-inset-right,0px))}
+#g-datos{position:absolute;top:6px;right:max(14px,env(safe-area-inset-right,0px));z-index:2;margin:0;font:400 clamp(.82rem,4.4vh,1.05rem)/1.28 var(--display);color:#fff;text-shadow:2px 2px 0 #000;text-align:left;pointer-events:none}
+#g-datos div{display:flex;gap:6px}
+#g-datos dt{color:#fff}#g-datos dd{margin:0}
+#g-ficha{position:absolute;left:max(14px,env(safe-area-inset-left,0px));top:6px;z-index:2;max-width:46%;color:#fff;pointer-events:none}
+#g-nombre{margin:0;font:400 clamp(1.3rem,8vh,2.1rem)/1 var(--display);color:#fff;text-shadow:var(--borde);text-transform:uppercase}
+#g-tag{margin:6px 0 0;font-weight:700;font-size:1rem;line-height:1.1;text-shadow:1px 1px 2px #000}
+#g-cuenta{margin:2px 0 0;font-weight:500;font-size:.95rem;color:#d7d7de;text-shadow:1px 1px 2px #000}
+#g-accion{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:3;min-width:190px}
+#g-accion .fr{width:100%;flex-direction:column;gap:4px;font-size:clamp(1rem,5vh,1.3rem);min-height:62px}
+#g-tabs{position:absolute;left:max(14px,env(safe-area-inset-left,0px));right:max(14px,env(safe-area-inset-right,0px));bottom:10px;z-index:3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+#g-tabs .fr{font-size:clamp(.72rem,min(3.7vh,2.6vw),1rem);min-height:46px;padding:4px;box-shadow:3px 3px 0 #000;text-shadow:1.5px 0 #000,-1.5px 0 #000,0 1.5px #000,0 -1.5px #000,2px 2px 0 #000}
+#local-panel{position:absolute;right:0;top:58px;bottom:0;width:min(52%,440px);background:rgba(10,10,14,.94);border:0;border-left:4px solid var(--oro);z-index:3}
+#local-cabeza{padding:8px 12px;border-bottom:0}
+#local-cabeza h2{color:var(--oro)}
+.fila-p{background:#1b1a22;border-radius:0}
+.fila-p button,.boton-p{border-radius:0;background:var(--azul);color:#04121f}
+.fila-p button:disabled,.boton-p:disabled{background:#33323c;color:#a3a2ad}
+.pastillas button,.deslizar{border-radius:0;background:#1b1a22}
+@media (orientation:portrait){
+  #local{display:block}
+  #local-panel{left:0;right:0;width:auto;top:44%;border-left:0;border-top:4px solid var(--oro)}
+  #g-datos{top:auto;bottom:132px;right:14px}#g-ficha{max-width:92%}#g-estilo{display:none}#g-barra{padding-right:112px}#menu-titulo{margin-top:40px;max-width:100%}#g-tabs .fr{font-size:.8rem}#g-accion{bottom:14px}
+  #g-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .flecha{top:36%;width:48px}
+}
+#local.con-panel .flecha,#local.con-panel #g-datos,#local.con-panel #g-tabs,#local.con-panel #g-accion{display:none}
+#local.con-panel #g-ficha{max-width:44%}
+/* Multijugador y resultados con la misma cara */
+#inicio{z-index:16;background:#000 var(--patron) center/min(62vw,520px) auto}
+#tapa,#cartel{--celeste:#0e0e14;background:#0e0e14;border:0;outline:0;border-radius:0;border-top:12px solid transparent;border-image:var(--peligro) 12;box-shadow:6px 6px 0 #000}
+#tapa h1{font:400 clamp(1.5rem,8vh,2.3rem)/1 var(--display);color:#fff;text-shadow:var(--borde)}
+#abiertas{background:var(--azul);border-radius:0;color:#06121f}
+#abiertas h2{color:#06121f}
+#sin-abiertas{color:#06121f}
+.partida{border-radius:0}.partida em{border-radius:0;background:var(--oro)}
+.grande,#entrar,#seguir,#gastar,#al-garaje{border-radius:0;border:0;background:var(--oro);color:#fff;text-shadow:var(--borde);text-transform:uppercase;box-shadow:5px 5px 0 #000}
+.grande.secundario{background:var(--azul)}
+#al-garaje{background:var(--azul);font:400 1.1rem var(--display);padding:10px}
+#seguir{background:var(--azul)!important}
+#solo{color:#fff}
+#planilla{background:#0e0e14;color:#fff;border:0;border-radius:0;border-top:12px solid transparent;border-image:var(--peligro) 12;box-shadow:6px 6px 0 #000}
+#planilla h2{color:#fff;text-shadow:var(--borde);text-transform:uppercase}
+#cobro{background:var(--azul);color:#06121f;border-radius:0}
+#resultados li{border-bottom-color:rgba(255,255,255,.2)}
+#resultados em{color:var(--oro)}
+#planilla .fila-fin{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#final{z-index:14}
 </style>
 <div id="juego">
   <canvas id="tres" aria-label="Pista de carreras vista desde atrás y arriba"></canvas>
@@ -308,6 +434,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
         <div class="chip" id="b-plata"></div>
         <div class="chip" id="b-nivel"></div>
         <div class="chip" id="b-estilo"></div>
+        <button class="boton-hud" id="menu-barrio">Menú</button>
         <button class="boton-hud" id="abrir-mapa">Mapa</button>
         <button class="boton-hud" id="abrir-controles" aria-label="Controles y sonido">⚙</button>
       </div>
@@ -320,7 +447,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
         <button class="boton-hud" id="largar">Largar carrera</button>
         <div class="chip" id="espera" hidden></div>
         <button class="boton-hud" id="garaje">Sala</button>
-        <button class="boton-hud" id="abandonar" hidden>Abandonar</button>
+        <button class="boton-hud" id="abandonar" hidden>Salir</button>
         <div class="chip" id="nitro-chip" hidden><i><u id="nitro-u"></u></i></div>
         <button class="boton-hud" id="reponer" aria-label="Volver a la pista">↺ Volver</button>
         <button class="boton-hud" id="sonido">Sonido sí</button>
@@ -335,7 +462,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
   </div>
   <div id="inicio" hidden>
     <div id="tapa">
-      <h1>Picada de Barrio</h1>
+      <h1>Multijugador</h1>
       <p id="plata-inicio"></p>
       <section id="abiertas" aria-labelledby="t-abiertas" hidden>
         <h2 id="t-abiertas">Partidas abiertas</h2>
@@ -352,7 +479,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
           </div>
         </form>
       </details>
-      <button id="solo">◀ Volver al barrio</button>
+      <button id="solo">◀ Atrás</button>
       <p id="estado-inicio" role="status"></p>
       <p class="premios" style="grid-column:1/-1"></p>
     </div>
@@ -393,15 +520,33 @@ label{font-weight:700;display:block;margin-bottom:3px}
     <button type="button" id="girar-no">Jugar así igual</button>
   </div>
   <div id="bienvenida">
-    <h1>Picada de Barrio</h1>
-    <p>Comprá, prepará y corré. El barrio es tuyo.</p>
-    <input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre de piloto" aria-label="Tu nombre">
-    <button id="jugar">Jugar</button>
+    <h1 class="logo" aria-label="Picada de Barrio"><span data-t="PICADA"><b>PICADA</b></span><span data-t="DE BARRIO"><b>DE BARRIO</b></span></h1>
+    <nav id="t-menu">
+      <button class="fr" id="jugar"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M12 6 92 50 12 94Z"/></svg>Jugar</button>
+      <button class="fr" id="t-garaje"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z"/></svg>Garaje</button>
+      <button class="fr" id="t-ayuda"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M50 4a46 46 0 1 0 .01 0ZM50 22c13 0 22 8 22 19 0 9-5 13-11 17-4 3-5 4-5 9H43c0-9 3-13 9-17 5-3 7-5 7-9 0-5-4-8-9-8-6 0-10 4-10 10H27c0-13 9-21 23-21ZM43 72h14v13H43Z"/></svg>Cómo jugar</button>
+    </nav>
+    <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"></div>
+    <button class="engranaje" id="t-engranaje" aria-label="Opciones"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.4 39.6L95.1 40.9L95.1 59.1L82.4 60.4L80.2 65.6L88.3 75.4L75.4 88.3L65.6 80.2L60.4 82.4L59.1 95.1L40.9 95.1L39.6 82.4L34.4 80.2L24.6 88.3L11.7 75.4L19.8 65.6L17.6 60.4L4.9 59.1L4.9 40.9L17.6 39.6L19.8 34.4L11.7 24.6L24.6 11.7L34.4 19.8L39.6 17.6L40.9 4.9L59.1 4.9L60.4 17.6L65.6 19.8L75.4 11.7L88.3 24.6L80.2 34.4ZM50 35a15 15 0 1 0 .01 0Z"/></svg></button>
+  </div>
+  <div id="menu" hidden>
+    <button class="atras" id="menu-atras"><i></i>Atrás</button>
+    <h2 class="titulo-fr" id="menu-titulo"></h2>
+    <div id="menu-caja"><div id="menu-cuerpo"></div></div>
+    <button class="engranaje" id="menu-engranaje" aria-label="Opciones"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.4 39.6L95.1 40.9L95.1 59.1L82.4 60.4L80.2 65.6L88.3 75.4L75.4 88.3L65.6 80.2L60.4 82.4L59.1 95.1L40.9 95.1L39.6 82.4L34.4 80.2L24.6 88.3L11.7 75.4L19.8 65.6L17.6 60.4L4.9 59.1L4.9 40.9L17.6 39.6L19.8 34.4L11.7 24.6L24.6 11.7L34.4 19.8L39.6 17.6L40.9 4.9L59.1 4.9L60.4 17.6L65.6 19.8L75.4 11.7L88.3 24.6L80.2 34.4ZM50 35a15 15 0 1 0 .01 0Z"/></svg></button>
   </div>
   <div id="local" hidden>
-    <div id="orbita"><div id="local-resumen"></div></div>
-    <div id="local-panel">
-      <div id="local-cabeza"><button id="local-cerrar">◀ Salir</button><h2 id="local-titulo"></h2><span id="local-plata"></span></div>
+    <div id="g-barra"><span id="g-plata"></span><span id="g-nivel"></span><span id="g-estilo"></span><button class="atras" id="local-cerrar"><i></i>Atrás</button></div>
+    <div id="orbita">
+      <div id="g-ficha"><h2 id="g-nombre"></h2><p id="g-tag"></p><p id="g-cuenta"></p></div>
+      <dl id="g-datos"></dl>
+      <button class="flecha" id="g-ant" aria-label="Auto anterior"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M50 2 62 14 28 44 62 74 50 86 4 44Z"/></svg></button>
+      <button class="flecha" id="g-sig" aria-label="Auto siguiente"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M14 2 2 14 36 44 2 74 14 86 60 44Z"/></svg></button>
+      <div id="g-accion"></div>
+      <div id="g-tabs"></div>
+    </div>
+    <div id="local-panel" hidden>
+      <div id="local-cabeza"><h2 id="local-titulo"></h2></div>
       <div id="local-cuerpo"></div>
     </div>
   </div>
@@ -428,7 +573,7 @@ label{font-weight:700;display:block;margin-bottom:3px}
       <h2>Bandera a cuadros</h2>
       <p id="cobro"></p>
       <ol id="resultados"></ol>
-      <button id="gastar">Volver al barrio</button>
+      <div class="fila-fin"><button id="gastar">Continuar</button><button id="al-garaje">Garaje</button></div>
       <button id="seguir">Seguir en pista</button>
     </div>
   </div>
@@ -796,7 +941,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const pref=leer();
   if(pref.control==='deslizar')pref.control='volante';
   let color=Number.isInteger(pref.color)&&pref.color>=0&&pref.color<COLORES.length?pref.color:Math.floor(Math.random()*COLORES.length);
-  let modelo=Number.isInteger(pref.modelo)&&pref.modelo>=0&&pref.modelo<MODELOS.length?pref.modelo:0,visto=modelo,modo='titulo',evento=null,vueltas=LAPS;
+  let modelo=Number.isInteger(pref.modelo)&&pref.modelo>=0&&pref.modelo<MODELOS.length?pref.modelo:0,visto=modelo,modo='menu',evento=null,vueltas=LAPS;
   if(typeof pref.nombre==='string')$('nombre').value=pref.nombre.slice(0,12);
   // --- Carrera del piloto: se guarda en este dispositivo ---
   const PREMIOS=[1000,700,500,350,200],PREMIOS_MAQUINA=[600,400,250,150,100];
@@ -859,7 +1004,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const n=nivelPiloto(),de=NIVELES[n-1],a=NIVELES[n]??de+1,bn=$('b-nivel');
     bn.textContent='Nivel '+n;const i=document.createElement('i'),u=document.createElement('u');u.style.width=Math.min(100,(pref.rep-de)/(a-de)*100)+'%';i.append(u);bn.append(i);
     $('b-estilo').textContent=String(estrellas(modelo)).replace('.',',')+' ★';
-    $('local-plata').textContent=pesos(pref.plata);
+    $('g-plata').textContent=pesos(pref.plata);$('g-nivel').textContent='Nivel '+n;$('g-estilo').textContent=String(estrellas(modelo)).replace('.',',')+' ★';
   }
   function darRep(n){
     const a=nivelPiloto();pref.rep+=n;guardar(pref);
@@ -889,7 +1034,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     });
   }
   const removeBots=()=>{for(let i=cars.length-1;i>=0;i--)if(cars[i].kind==='bot')cars.splice(i,1)};
-  addBots();
   // --- Entradas ---
   const keys={};
   const touch={steer:0,analogico:false,gas:0,brake:0,mano:0,mirar:0,nitro:0};
@@ -1016,6 +1160,11 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   for(const t of ['touchstart','touchend','touchcancel'])addEventListener(t,repasarDedos,{passive:true,capture:true});
   addEventListener('touchmove',e=>{for(const p of pads.values())for(const t of e.changedTouches)if(Math.hypot(t.clientX-p.lx,t.clientY-p.ly)<90){p.lx=t.clientX;p.ly=t.clientY}},{passive:true,capture:true});
+  // En iPhone, mantener apretado abre la lupa de selección y corta el toque: los controles se quedan con el dedo
+  const sinGesto=e=>{if(e.cancelable)e.preventDefault()};
+  for(const t of ['touchstart','touchmove','touchend'])tactil.addEventListener(t,sinGesto,{passive:false});
+  for(const t of ['gesturestart','gesturechange','gestureend','dblclick'])document.addEventListener(t,sinGesto,{passive:false});
+  document.addEventListener('selectstart',e=>{if(e.target.tagName!=='INPUT')e.preventDefault()});
   tactil.addEventListener('lostpointercapture',soltar);
   addEventListener('pointerup',soltar);addEventListener('pointercancel',soltar);
   addEventListener('pagehide',soltarTodo);
@@ -1033,7 +1182,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const esTactil=()=>navigator.maxTouchPoints>0||matchMedia('(pointer:coarse)').matches;
   let giroOmitido=false;
   function vigilarGiro(){
-    const jugando=entered&&$('portada').hidden&&$('inicio').hidden;
+    const jugando=entered&&!$('hud').hidden&&$('portada').hidden;
     $('girar').hidden=!(esTactil()&&!giroOmitido&&innerHeight>innerWidth&&(jugando||!$('editor').hidden));
   }
   async function acostar(){
@@ -1066,6 +1215,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('sens').oninput=e=>{pref.sens=+e.target.value;$('sens-valor').textContent=textoSens();guardar(pref)};
   $('fijo').onchange=e=>{pref.volanteSuelto=!e.target.checked;guardar(pref)};
   const mesa=$('editor-mesa');
+  mesa.addEventListener('touchstart',sinGesto,{passive:false});
   mesa.addEventListener('pointerdown',e=>{
     const d=e.target.closest('.ed');if(!d)return;
     e.preventDefault();d.setPointerCapture(e.pointerId);
@@ -1227,7 +1377,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
     }
     const pista=TRACKS[trackIdx].name;let t;
-    if(!codigo)t='Práctica contra la máquina en '+pista+'.';
+    if(!codigo)t=pista+'.';
     else if(race)t='Hay una carrera en curso en '+pista+'.';
     else if(anfitrion)t=pista+'. Larga '+textoNombre(anfitrion.pr.n)+' cuando estén todos en pista.';
     else t=pista+'. Cuando estén todos en pista, tocá Largar carrera.';
@@ -1304,7 +1454,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const k of [...enSala.keys()])dropRemote(k);
     anfitrion=null;pintarCircuito();
     $('chip-partida').hidden=true;
-    irAlBarrio();
+    alMenu();
     salon();cuidarVitrina();
   }
   function aGaraje(uniendose){
@@ -1313,6 +1463,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const p=trackIdx===BARRIO?0:trackIdx;setCircuito(p);
       if(!remotes.size)addBots();
     }
+    salaVista=null;tapado=false;actual='juego';historia=['titulo','modos'];
     mostrarJuego(true);
     $('inicio').hidden=true;$('portada').hidden=false;
     $('rotulo-partida').textContent='Partida';$('ver-codigo').textContent=codigo.toUpperCase();
@@ -1325,11 +1476,11 @@ if(typeof module!=='undefined')module.exports=Sim;
   async function entrarA(cod,uniendose){
     $('estado-inicio').textContent='Conectando…';
     seUnio=uniendose;
-    if(!await conectar(cod)){$('estado-inicio').textContent='No pudimos conectarte. Probá de nuevo o practicá solo.';return}
+    if(!await conectar(cod)){$('estado-inicio').textContent='No pudimos conectarte. Probá de nuevo.';return}
     $('estado-inicio').textContent='';aGaraje(uniendose);cuidarVitrina();
   }
   $('crear').onclick=()=>entrarA(nuevoCodigo(),false);
-  $('solo').onclick=()=>{$('inicio').hidden=true;if(me)me.frozen=false;mostrarJuego(true)};
+  $('solo').onclick=()=>atras();
   $('dejar').onclick=dejarPartida;
   $('unirse').addEventListener('submit',e=>{
     e.preventDefault();
@@ -1347,7 +1498,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     try{base=window.claude&&window.claude.use?await window.claude.use('room'):null}catch{base=null}
     if(!base||!base.join){
       base=null;$('crear').disabled=true;$('con-codigo').hidden=true;
-      $('estado-inicio').textContent='Sin conexión en esta vista: podés jugar en el barrio.';return;
+      $('estado-inicio').textContent='Sin conexión en esta vista: podés jugar solo.';return;
     }
     $('abiertas').hidden=false;cuidarVitrina();
     const auto=(window.__salaUrl||location.hash.slice(1)).toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24);
@@ -1483,13 +1634,14 @@ if(typeof module!=='undefined')module.exports=Sim;
     pref.plata+=g;
     const sube=darRep(rep);pintarPlata();
     $('cobro').textContent=txt+(g?'. Ganaste '+pesos(g)+' y '+rep+' de reputación. Tenés '+pesos(pref.plata)+'.':'')+(sube?' ¡Subiste a nivel '+sube+'!':'');
-    $('gastar').hidden=modo!=='evento';$('seguir').hidden=modo==='evento';
+    $('gastar').hidden=$('al-garaje').hidden=modo!=='evento';$('seguir').hidden=modo==='evento';
     $('final').hidden=!entered;
     if(!remotes.size&&modo==='online')addBots();
   }
   $('seguir').onclick=()=>{$('final').hidden=true};
-  $('gastar').onclick=irAlBarrio;
-  $('abandonar').onclick=irAlBarrio;
+  $('gastar').onclick=()=>alMenu();
+  $('al-garaje').onclick=()=>{alMenu();ir('garaje')};
+  $('abandonar').onclick=()=>alMenu();
   $('largar').onclick=()=>{
     if(race)return;
     const now=performance.now();
@@ -1505,7 +1657,6 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('reponer').onclick=()=>{reponer();$('reponer').blur()};
   // --- Barrio y locales ---
   const G=9.81;
-  const fotosMod=MODELOS.map(m=>{const im=new Image();im.alt=m.nombre;return im});
   const punta=m=>{let v=20;for(let i=0;i<40;i++)v=Math.cbrt(Math.max(1,(m.power-30*v*v)/m.drag));return v};
   const datos=m=>({Velocidad:punta(m),Pique:Math.min(m.fmax,m.mu*m.m*G*.95)/m.m,Frenos:Math.min(m.brake,m.mu*m.m*G*.95)/m.m,Agarre:m.mu*m.rear,Derrape:m.slide*(1+m.awd*.6)*m.betaMax,Peso:m.m});
   const rangos={};
@@ -1524,14 +1675,17 @@ if(typeof module!=='undefined')module.exports=Sim;
   ];
   const idxLocal=k=>Math.round(track.N*(k+.5)/LOCALES.length);
   const el=(t,cl,tx)=>{const e=document.createElement(t);if(cl)e.className=cl;if(tx!=null)e.textContent=tx;return e};
-  let abierto=null,salaPendiente='',orbitaA=.7,cercaL=null;
+  let abierto=null,salaPendiente='',orbitaA=-2.5,cercaL=null,salaVista='titulo',tapado=false,actual='titulo',historia=[];
   const derrape={act:0,combo:1,tiempo:0,pausa:0,carrera:0,ver:0};
+  function piezasDe(i){
+    const f=fichaAuto(i),pz={};for(const g in PIEZAS)pz[g]=equipo(i,g);
+    pz.vc=f.vc;pz.lc=f.lc;pz.alt=Math.round((f.aj.alt||0)*10);pz.cam=Math.round((f.aj.cam||0)*10);
+    return pz;
+  }
   function aplicarAuto(){
     if(!me)return;
-    const f=fichaAuto(modelo);
+    const f=fichaAuto(modelo),pz=piezasDe(modelo);
     me.v=modelo;me.color=f.pinta;me.spec=specDe(modelo);
-    const pz={};for(const g in PIEZAS)pz[g]=equipo(modelo,g);
-    pz.vc=f.vc;pz.lc=f.lc;pz.alt=Math.round((f.aj.alt||0)*10);pz.cam=Math.round((f.aj.cam||0)*10);
     me.pz=pz;me.pzk=JSON.stringify(pz);me.pzRed=CAMPOS_PZ.map(k=>pz[k]||0);
     pintarControl();pintarPlata();
   }
@@ -1547,99 +1701,179 @@ if(typeof module!=='undefined')module.exports=Sim;
   function mostrarJuego(si){
     $('hud').hidden=!si;
     if(esTactil())tactil.hidden=!si;
-    if(si){posicionar();vigilarGiro()}else soltarTodo();
+    if(si)posicionar();else soltarTodo();
+    vigilarGiro();
   }
-  function jugar(){
+  // El primer toque en un botón sube al piloto: recién ahí se puede pedir sonido y pantalla completa
+  function subirAlAuto(){
+    acostar();
+    if(me)return;
     const name=$('nombre').value.trim().slice(0,12)||'Piloto';
     pref.nombre=name;guardar(pref);
-    acostar();
-    me=newCar({kind:'me',name,color:fichaAuto(modelo).pinta,v:modelo,spec:specDe(modelo),num:1+Math.floor(Math.random()*98)});
-    cars.push(me);entered=true;entroT=performance.now();
-    $('bienvenida').hidden=true;
+    me=newCar({kind:'me',name,color:fichaAuto(modelo).pinta,v:modelo,spec:specDe(modelo),num:1+Math.floor(Math.random()*98),frozen:true});
+    place(me,0,0);cars.push(me);entered=true;entroT=performance.now();
     audioOn();if(au&&au.a.state==='suspended')au.a.resume();
     try{navigator.wakeLock&&navigator.wakeLock.request('screen').catch(()=>{})}catch{}
-    irAlBarrio();
-    if(salaPendiente)entrarA(salaPendiente,true);
   }
-  $('jugar').onclick=jugar;
+  $('nombre').oninput=()=>{const n=$('nombre').value.trim().slice(0,12)||'Piloto';pref.nombre=n;guardar(pref);if(me)me.name=n};
+  // Pantallas: cada una recuerda de cuál viniste para que Atrás vuelva ahí
+  function mostrar(p){
+    actual=p;abierto=null;
+    for(const id of ['bienvenida','menu','local','inicio','mapa','final','portada'])$(id).hidden=true;
+    $('reserva').append($('panel-controles'));
+    if(p==='barrio'){salaVista=null;tapado=false;me.frozen=false;aplicarAuto();mostrarJuego(true);return}
+    if(me)me.frozen=true;
+    mostrarJuego(false);
+    salaVista=p==='titulo'||p==='garaje'?p:null;tapado=!salaVista;
+    if(p==='titulo'){visto=modelo;$('bienvenida').hidden=false}
+    else if(p==='garaje'){$('local').hidden=false;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje()}
+    else if(p==='online'){$('inicio').hidden=false;cuidarVitrina()}
+    else pintarMenu(p);
+    pintarPlata();
+  }
+  function ir(p){historia.push(actual);mostrar(p)}
+  function atras(){mostrar(historia.pop()||'titulo')}
+  function alMenu(){
+    modo='menu';evento=null;vueltas=LAPS;race=null;
+    removeBots();$('grande').hidden=true;$('aviso').hidden=true;
+    historia=['titulo'];mostrar('modos');
+  }
+  $('jugar').onclick=()=>{
+    subirAlAuto();
+    if(salaPendiente){const q=salaPendiente;salaPendiente='';historia=['titulo','modos'];mostrar('online');entrarA(q,true)}
+    else ir('modos');
+  };
+  $('t-garaje').onclick=()=>{subirAlAuto();visto=modelo;ir('garaje')};
+  $('t-ayuda').onclick=()=>{subirAlAuto();ir('ayuda')};
+  $('t-engranaje').onclick=$('menu-engranaje').onclick=()=>{subirAlAuto();if(actual!=='opciones')ir('opciones')};
+  $('menu-atras').onclick=()=>atras();
+  $('menu-barrio').onclick=()=>{$('menu-barrio').blur();alMenu()};
+  const MODOS=[['Circuito',()=>{elegirPista('circuito')}],['Derrape',()=>{elegirPista('derrape')}],['Práctica',()=>{elegirPista('practica')}],['El barrio',()=>irAlBarrio()],['Multijugador',()=>ir('online')],['Garaje',()=>{visto=modelo;ir('garaje')}]];
+  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
+  function elegirPista(t){
+    const e=pref.evento||(pref.evento={tipo:t,p:0});e.tipo=t;guardar(pref);ir('pistas');
+  }
+  function pintarMenu(p){
+    const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
+    $('menu').hidden=false;$('menu').classList.toggle('ancho',p==='pistas');
+    $('menu-engranaje').hidden=p!=='modos';
+    if(p==='modos'){
+      t.textContent='Seleccionar modo';
+      const g=el('div','grilla-modos');
+      for(const [n,f] of MODOS){const b=el('button','fr',n);b.type='button';b.onclick=f;g.append(b)}
+      c.append(g);
+    }else if(p==='pistas')pintarPistas(c,t);
+    else if(p==='opciones'){t.textContent='Opciones';c.append($('panel-controles'))}
+    else{
+      t.textContent='Cómo jugar';
+      const d=el('div','texto-menu');
+      for(const [h,x] of [
+        ['Manejar','Volante o flechas a la izquierda, freno y acelerador a la derecha. Podés mover y agrandar cada control en Opciones.'],
+        ['Derrapar','Soltá el acelerador, doblá y tocá el freno de mano un momento. Después acelerá y mantené la curva.'],
+        ['Ganar plata','Circuito paga por puesto. Derrape da medallas por puntos. Práctica y El barrio no pagan: sirven para entrenar.'],
+        ['Mejorar','En el Garaje comprás autos y les ponés piezas. Las piezas lindas suben tus estrellas, y cada estrella sube tus premios.'],
+        ['Con amigos','En Multijugador creá una partida. Aparece para todos en la lista y también podés pasar el enlace.']
+      ]){d.append(el('h3',null,h),el('p',null,x))}
+      c.append(d);
+    }
+    c.scrollTop=y;
+  }
+  function pintarPistas(c,t){
+    const e=pref.evento;
+    if(!(e.p>=0&&e.p<BARRIO))e.p=0;
+    t.textContent=TITULO_EVENTO[e.tipo]||'Circuito';
+    const izq=el('div'),der=el('div'),box=el('div','sel-pista'),bono=1+bonoEstilo()/100;
+    izq.append(el('p','pista-nombre',TRACKS[e.p].name));
+    if(e.tipo==='circuito'){
+      izq.append(el('p','nota','3 vueltas contra la máquina.'));
+      izq.append(el('p','nota',PREMIOS_MAQUINA.map((p,i)=>(i===4?'5º ':(i+1)+'º ')+pesos(p*bono)).join(' · ')));
+      izq.append(el('p','nota','Con tu estilo (+'+bonoEstilo()+'%). Cada 10 puntos de derrape pagan $1.'));
+    }else if(e.tipo==='derrape'){
+      Sim.setTrack(e.p);const med=medallas();Sim.setTrack(trackIdx);
+      izq.append(el('p','nota','Una vuelta de costado. Cerca del muro sumás +50%. Chocar pierde el combo.'));
+      izq.append(el('p','nota',med.map(m=>m.n+' '+m.min.toLocaleString('es-AR')+': '+pesos(m.p)).join(' · ')));
+    }else izq.append(el('p','nota','Solo en la pista, las vueltas que quieras. No paga plata.'));
+    const u=el('button','fr','¡A correr!');u.type='button';u.onclick=()=>correr(e.tipo,e.p);izq.append(u);
+    const g=el('div','pistas-ev');
+    TRACKS.forEach((tr,i)=>{
+      if(tr.barrio)return;
+      const b=el('button');b.type='button';b.setAttribute('aria-pressed',i===e.p);b.append(miniPista(i),el('span',null,tr.name));
+      b.onclick=()=>{const q=der.scrollTop;e.p=i;guardar(pref);pintarMenu('pistas');const d=$('menu-cuerpo').querySelector('.sel-pista>div:last-child');if(d)d.scrollTop=q};g.append(b);
+    });
+    der.append(g);box.append(izq,der);c.append(box);
+  }
   function irAlBarrio(){
     modo='barrio';evento=null;vueltas=LAPS;race=null;
     removeBots();freeze(false);
-    for(const id of ['final','grande','portada','inicio','mapa','local'])$(id).hidden=true;
-    abierto=null;setCircuito(BARRIO);
-    if(me){aplicarAuto();place(me,idxLocal(0)-8,0);me.ghost=1.2;me.frozen=false}
-    derrape.act=0;derrape.combo=1;mostrarJuego(true);
+    historia=['titulo','modos'];
+    setCircuito(BARRIO);
+    if(me){place(me,idxLocal(0)-8,0);me.ghost=1.2}
+    derrape.act=0;derrape.combo=1;mostrar('barrio');
   }
   function abrirLocal(id){
-    if(id==='online'){me.frozen=true;mostrarJuego(false);$('inicio').hidden=false;cuidarVitrina();return}
-    const L=LOCALES.find(l=>l.id===id)||{n:'Controles',c:'#ffd23f'};
-    abierto=id;me.frozen=true;visto=modelo;mostrarJuego(false);
-    $('local').hidden=false;$('local').style.setProperty('--ac',L.c);$('local-titulo').textContent=L.n;
+    if(id==='online'){ir('online');return}
+    if(id==='eventos'){ir('modos');return}
+    if(id==='controles'){ir('opciones');return}
+    visto=modelo;
+    if(id==='concesionaria'){const q=ordenGaraje().find(i=>!esMio(i));if(q!=null)visto=q}
+    ir('garaje');
+    if(PINTORES[id])abrirPanel(id);
+  }
+  // Garaje: las flechas recorren tus autos y después los que están en venta
+  const ordenGaraje=()=>[...pref.autos,...MODELOS.map((m,i)=>i).filter(i=>!esMio(i)).sort((a,b)=>precioDe(a)-precioDe(b))];
+  const TABS=[['mecanico','Mecánico'],['chapa','Chapería'],['pintura','Pintura'],['accesorios','Accesorios'],['ajuste','Ajustes']];
+  for(const [id,n] of TABS){const b=el('button','fr',n);b.type='button';b.onclick=()=>abrirPanel(id);$('g-tabs').append(b)}
+  function cambiarAuto(d){
+    const l=ordenGaraje(),n=l.length;
+    visto=l[(l.indexOf(visto)+d+n)%n];
+    if(esMio(visto)){modelo=visto;pref.modelo=modelo;guardar(pref);aplicarAuto()}
+    pintarGaraje();pintarPlata();
+  }
+  $('g-ant').onclick=()=>cambiarAuto(-1);$('g-sig').onclick=()=>cambiarAuto(1);
+  function pintarGaraje(){
+    const l=ordenGaraje(),i=visto,m=MODELOS[i],mio=esMio(i),sp=mio?specDe(i):m,d=datos(sp);
+    $('g-nombre').textContent=m.nombre;$('g-tag').textContent=m.tag;
+    $('g-cuenta').textContent=(l.indexOf(i)+1)+' de '+l.length+(mio?' · Tuyo':' · En venta');
+    const dl=$('g-datos');dl.textContent='';
+    for(const [a,b] of [['Tracción:',m.awd?'4x4':'Trasera'],['Potencia:',Math.round(sp.power/745.7)+' HP'],['Punta:',Math.round(d.Velocidad*3.6)+' km/h'],['Peso:',Math.round(sp.m)+' kg'],mio?['Estilo:',textoEstrellas(estrellas(i))]:['Nivel:',nivelAuto(i)+' o más']]){
+      const f=el('div');f.append(el('dt',null,a),el('dd',null,b));dl.append(f);
+    }
+    $('g-tabs').hidden=!mio;
+    const q=$('g-accion');q.textContent='';q.hidden=mio;
+    if(!mio){
+      const p=precioDe(i),lv=nivelAuto(i),u=el('button','fr azul');u.type='button';
+      u.append(el('span',null,'Comprar'),el('span',null,pesos(p)));
+      if(nivelPiloto()<lv){u.disabled=true;u.firstChild.textContent='Nivel '+lv}
+      else if(pref.plata<p){u.disabled=true;u.firstChild.textContent='Te faltan '+pesos(p-pref.plata)}
+      u.onclick=()=>{if(pref.plata<p||nivelPiloto()<lv)return;pref.plata-=p;pref.autos.push(i);modelo=i;pref.modelo=i;guardar(pref);aplicarAuto();pintarGaraje();pintarPlata()};
+      q.append(u);
+    }
+  }
+  function abrirPanel(id){
+    abierto=id;
+    const T=TABS.find(x=>x[0]===id);$('local-titulo').textContent=T?T[1]:'';
+    $('local').classList.add('con-panel');$('local-panel').hidden=false;
     pintarLocal();
   }
   function cerrarLocal(){
-    abierto=null;$('local').hidden=true;
-    $('reserva').append($('panel-controles'));
-    if(me){aplicarAuto();me.frozen=false}
-    mostrarJuego(true);
+    if(abierto){abierto=null;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje();pintarPlata();return}
+    aplicarAuto();atras();
   }
   $('local-cerrar').onclick=cerrarLocal;
-  function resumen(){
-    const m=specDe(modelo),d=datos(m);
-    $('local-resumen').textContent=MODELOS[modelo].nombre+' · '+Math.round(d.Velocidad*3.6)+' km/h · Estilo '+textoEstrellas(estrellas(modelo))+' (+'+bonoEstilo()+'% en premios)';
-  }
   function pintarLocal(){
     const c=$('local-cuerpo'),y=c.scrollTop;
-    $('reserva').append($('panel-controles'));c.textContent='';
+    c.textContent='';
     PINTORES[abierto](c);
-    c.scrollTop=y;aplicarAuto();resumen();
+    c.scrollTop=y;aplicarAuto();pintarGaraje();
   }
-  function barrasDe(m,c){
+    function barrasDe(m,c){
     const d=datos(m);
     for(const k of ['Velocidad','Pique','Frenos','Agarre','Derrape']){
       const f=el('div','barra-d'),b=el('div'),i=el('i'),[lo,hi]=rangos[k];
       i.style.width=clamp(10+90*(d[k]-lo)/(hi-lo),4,100)+'%';b.append(i);f.append(el('span',null,k),b);c.append(f);
     }
   }
-  function tarjetaAuto(i,sub,c,gris){
-    const b=el('button','tarjeta'+(gris?' gris':''));b.type='button';b.setAttribute('aria-pressed',i===visto);
-    b.append(fotosMod[i],el('b',null,MODELOS[i].nombre),el('small',null,sub));
-    b.onclick=()=>{visto=i;if(me){me.v=i;me.pz=null;me.pzk=esMio(i)?'v'+i:'';if(esMio(i)){const k=modelo;modelo=i;aplicarAuto();modelo=k}}pintarVista()};
-    c.append(b);
-  }
-  let pintarVista=()=>{};
   const PINTORES={
-    garaje(c){
-      const l=el('div','lista-tarjetas');for(const i of pref.autos)tarjetaAuto(i,i===modelo?'Lo estás usando':'Estilo '+textoEstrellas(estrellas(i)),l);
-      c.append(el('p','nota','Tus autos. Cada uno guarda sus piezas y mejoras.'),l);
-      const q=el('div','grupo');c.append(q);
-      pintarVista=()=>{
-        for(const b of l.children)b.setAttribute('aria-pressed',false);
-        const n=pref.autos.indexOf(visto);if(l.children[n])l.children[n].setAttribute('aria-pressed',true);
-        q.textContent='';barrasDe(specDe(visto),q);
-        const u=el('button','boton-p',visto===modelo?'Lo estás usando':'Usar este auto');u.disabled=visto===modelo;
-        u.onclick=()=>{modelo=visto;pref.modelo=modelo;guardar(pref);pintarLocal()};q.append(u);
-      };
-      pintarVista();
-    },
-    concesionaria(c){
-      const lista=MODELOS.map((m,i)=>i).filter(i=>!esMio(i)).sort((a,b)=>precioDe(a)-precioDe(b));
-      if(!lista.length){c.append(el('p','nota','Ya compraste todos los autos.'));return}
-      if(!lista.includes(visto))visto=lista[0];
-      const l=el('div','lista-tarjetas'),q=el('div','grupo');
-      for(const i of lista){const lv=nivelPiloto()>=nivelAuto(i);tarjetaAuto(i,pesos(precioDe(i))+(lv?'':' · Nivel '+nivelAuto(i)),l,!lv)}
-      c.append(l,q);
-      pintarVista=()=>{
-        for(const [k,b] of [...l.children].entries())b.setAttribute('aria-pressed',lista[k]===visto);
-        q.textContent='';q.append(el('b',null,MODELOS[visto].nombre+': '+MODELOS[visto].tag),el('p','nota',MODELOS[visto].txt));barrasDe(MODELOS[visto],q);
-        const p=precioDe(visto),lv=nivelAuto(visto),u=el('button','boton-p','Comprar por '+pesos(p));
-        if(nivelPiloto()<lv){u.disabled=true;u.textContent='Se desbloquea en nivel '+lv}
-        else if(pref.plata<p){u.disabled=true;u.textContent='Te faltan '+pesos(p-pref.plata)}
-        u.onclick=()=>{if(pref.plata<p||nivelPiloto()<lv)return;pref.plata-=p;pref.autos.push(visto);modelo=visto;pref.modelo=visto;guardar(pref);abrirLocal('garaje');$('local-titulo').textContent='Tu garaje';const L=LOCALES[0];$('local').style.setProperty('--ac',L.c)};
-        q.append(u);
-      };
-      pintarVista();
-    },
     mecanico(c){
       c.append(el('p','nota','Mejoras para tu '+MODELOS[modelo].nombre+'. Cambian cómo anda el auto.'));
       for(const q of MEJORAS){
@@ -1673,39 +1907,11 @@ if(typeof module!=='undefined')module.exports=Sim;
       for(const [k,n,lo,hi,mn,mx] of S){
         const f=el('div','deslizar'),l=el('label',null,n),i=el('input'),t=el('small');
         i.type='range';i.min=mn;i.max=mx;i.step=.1;i.value=a[k]||0;i.setAttribute('aria-label',n);
-        i.oninput=()=>{a[k]=+i.value;guardar(pref);aplicarAuto();resumen();barras.textContent='';barrasDe(specDe(modelo),barras)};
+        i.oninput=()=>{a[k]=+i.value;guardar(pref);aplicarAuto();pintarGaraje();barras.textContent='';barrasDe(specDe(modelo),barras)};
         t.append(el('span',null,lo),el('span',null,hi));f.append(l,i,t);c.append(f);
       }
       const barras=el('div','grupo');barrasDe(specDe(modelo),barras);c.append(barras);
     },
-    eventos(c){
-      const e=pref.evento||(pref.evento={tipo:'circuito',p:0});
-      if(!(e.p>=0&&e.p<BARRIO))e.p=0;
-      const t=el('div','pastillas');
-      for(const [k,n] of [['circuito','Circuito · 3 vueltas'],['derrape','Derrape · 1 vuelta']]){
-        const b=el('button',null,n);b.type='button';b.setAttribute('aria-pressed',e.tipo===k);b.onclick=()=>{e.tipo=k;guardar(pref);pintarLocal()};t.append(b);
-      }
-      c.append(t);
-      const bono=1+bonoEstilo()/100,info=el('div','grupo');
-      if(e.tipo==='circuito'){
-        info.append(el('p','nota','Contra la máquina. Premio por llegar: '+PREMIOS_MAQUINA.map((p,i)=>(i===4?'5º ':(i+1)+'º ')+pesos(p*bono)).join(' · ')+'.'));
-        info.append(el('p','nota','Incluye tu bono de estilo (+'+bonoEstilo()+'%). Además, cada 10 puntos de derrape pagan $1.'));
-      }else{
-        Sim.setTrack(e.p);const med=medallas();Sim.setTrack(BARRIO);
-        info.append(el('p','nota','Sumá puntos de costado. Más ángulo y velocidad dan más; cerca del muro sumás +50%. Chocar pierde el combo.'));
-        info.append(el('p','nota',med.map(m=>m.n+' '+m.min.toLocaleString('es-AR')+' pts: '+pesos(m.p)).join(' · ')+'. Además, cada 10 puntos pagan $1.'));
-      }
-      c.append(info);
-      const g=el('div','pistas-ev');
-      TRACKS.forEach((tr,i)=>{
-        if(tr.barrio)return;
-        const b=el('button');b.type='button';b.setAttribute('aria-pressed',i===e.p);b.append(miniPista(i),el('span',null,tr.name));
-        b.onclick=()=>{e.p=i;guardar(pref);pintarLocal()};g.append(b);
-      });
-      c.append(g);
-      const u=el('button','boton-p','¡A correr!');u.onclick=()=>correr(e.tipo,e.p);c.append(u);
-    },
-    controles(c){const p=$('panel-controles');c.append(p)}
   };
   function muestras(c,actual,fn){
     const m=el('div','muestras');
@@ -1732,13 +1938,16 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
   }
   function correr(tipo,pista){
+    for(const id of ['menu','local','inicio','mapa','final','portada','bienvenida'])$(id).hidden=true;
     $('reserva').append($('panel-controles'));
-    abierto=null;$('local').hidden=true;
-    modo='evento';evento={tipo,pista};vueltas=tipo==='derrape'?1:LAPS;
+    abierto=null;salaVista=null;tapado=false;actual='juego';
+    const pr=tipo==='practica';
+    modo=pr?'practica':'evento';evento={tipo,pista};vueltas=tipo==='derrape'?1:LAPS;
     aplicarAuto();me.frozen=false;
     setCircuito(pista);
     if(tipo==='circuito')addBots();
     mostrarJuego(true);
+    if(pr)return;
     const now=performance.now();
     adopt(Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36),now+3000,now);
   }
@@ -1761,17 +1970,18 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   $('abrir-mapa').onclick=()=>{$('abrir-mapa').blur();abrirMapa()};
   $('mapa-cerrar').onclick=()=>{$('mapa').hidden=true};
-  $('abrir-controles').onclick=()=>{$('abrir-controles').blur();abrirLocal('controles')};
+  $('abrir-controles').onclick=()=>{$('abrir-controles').blur();ir('opciones')};
   $('entrar-local').onclick=()=>{if(cercaL)abrirLocal(cercaL.id)};
-  addEventListener('keydown',e=>{if(e.code==='Enter'&&cercaL&&modo==='barrio'&&!abierto&&e.target.tagName!=='INPUT')abrirLocal(cercaL.id)});
-  // Girar el auto con el dedo dentro de un local
+  addEventListener('keydown',e=>{if(e.code==='Enter'&&cercaL&&modo==='barrio'&&me&&!me.frozen&&e.target.tagName!=='INPUT')abrirLocal(cercaL.id)});
+  // Girar el auto con el dedo en el garaje
   let orbitaX=null;
   $('orbita').addEventListener('pointerdown',e=>{orbitaX=e.clientX});
-  addEventListener('pointermove',e=>{if(orbitaX!=null&&abierto){orbitaA+=(e.clientX-orbitaX)*.012;orbitaX=e.clientX}});
+  $('orbita').addEventListener('touchstart',e=>{if(e.target===$('orbita'))sinGesto(e)},{passive:false});
+  addEventListener('pointermove',e=>{if(orbitaX!=null&&salaVista==='garaje'){orbitaA+=(e.clientX-orbitaX)*.012;orbitaX=e.clientX}});
   addEventListener('pointerup',()=>{orbitaX=null});
   function vigilarLocal(){
     let hay=null;
-    if(modo==='barrio'&&me&&!abierto&&$('inicio').hidden&&$('mapa').hidden)for(const [k,L] of LOCALES.entries()){
+    if(modo==='barrio'&&me&&!me.frozen&&$('mapa').hidden)for(const [k,L] of LOCALES.entries()){
       const d=Math.abs(me.idx-idxLocal(k)),q=Math.min(d,track.N-d)*track.sp;
       if(q<12){hay=L;break}
     }
@@ -1783,7 +1993,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Puntos de derrape: suman ángulo y velocidad, crecen con el combo y se pierden al chocar
   function guardarCombo(){derrape.carrera+=derrape.act;derrape.act=0;derrape.combo=1;derrape.tiempo=0}
   function puntuar(dt){
-    if(!me||me.frozen||abierto)return;
+    if(!me||me.frozen)return;
     const v=Math.hypot(me.vx,me.vy),b=v>4?Math.abs(Math.atan2(me.vr,Math.abs(me.vf)))*57.3:0;
     if(b>12&&v>8&&!me.grass&&me.vf>0){
       const cerca=Math.abs(me.off)>WALL-3?1.5:1;
@@ -1835,9 +2045,89 @@ if(typeof module!=='undefined')module.exports=Sim;
     g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
     return new THREE.Mesh(g,new THREE.MeshBasicMaterial({vertexColors:true,side:THREE.DoubleSide}));
   }
+  const CON_LLANTAS=new Set(['El Poroto','La Serpentina','La Herradura','El Rulo','El Médano','La Nocturna','La Víbora','El Trébol','Las Sierras','La Montaña Rusa']);
+  // Curva con signo: positiva si dobla hacia el lado izquierdo de la marcha
+  function curvas(){
+    const t=track,N=t.N,c=new Float64Array(N);
+    for(let i=0;i<N;i++){const a=(i+N-4)%N,b=(i+4)%N;c[i]=(t.tx[a]*t.ty[b]-t.ty[a]*t.tx[b])/(8*t.sp)}
+    return c;
+  }
+  function suavizar(v,r,pasadas){
+    const N=v.length,r2=Math.max(1,Math.round(r));
+    for(let p=0;p<pasadas;p++){
+      const o=v.slice();
+      for(let i=0;i<N;i++){let q=0;for(let k=-r2;k<=r2;k++)q+=o[(i+k+N*2)%N];v[i]=q/(2*r2+1)}
+    }
+  }
+  // Goma gastada: una textura a lo largo de toda la pista, más oscura sobre la línea que usan los autos.
+  // Entra por afuera, toca la cuerda en el vértice y se marca más en las curvas y antes de frenar.
+  function gomaGastada(semilla){
+    const t=track,N=t.N,W=128,H=1024,k=curvas(),l=new Float64Array(N),s=Float64Array.from(k,v=>clamp(v*70,-1,1));
+    suavizar(s,12/t.sp,3);
+    const lejos=Math.round(34/t.sp),m=HALF-2.4;
+    for(let i=0;i<N;i++)l[i]=clamp((s[i]-.55*(s[(i+lejos)%N]+s[(i+N-lejos)%N]))*m*1.25,-m,m);
+    suavizar(l,6/t.sp,2);
+    const fuerza=Float64Array.from(k,(v,i)=>.62+.38*Math.min(1,Math.abs(v)*60)+.3*Math.min(1,Math.abs(k[(i+Math.round(18/t.sp))%N])*60));
+    suavizar(fuerza,5/t.sp,2);
+    const c=document.createElement('canvas');c.width=W;c.height=H;
+    const x=c.getContext('2d'),im=x.createImageData(W,H),d=im.data,rnd=()=>(semilla=(semilla*16807)%2147483647)/2147483647;
+    const f1=rnd()*6.3,f2=rnd()*6.3,veta=new Float64Array(64);for(let i=0;i<64;i++)veta[i]=.7+rnd()*.6;
+    const campana=(u,a)=>Math.exp(-u*u/(2*a*a));
+    for(let r=0;r<H;r++){
+      const q=r/H*N,i=Math.floor(q)%N,f=q-Math.floor(q),b=(i+1)%N,li=l[i]+(l[b]-l[i])*f,fz=(fuerza[i]+(fuerza[b]-fuerza[i])*f)*(1+.16*Math.sin(r*.021+f1)+.1*Math.sin(r*.0073+f2));
+      for(let u=0;u<W;u++){
+        const of=(u+.5)/W*HALF*2-HALF,e=of-li;
+        if(Math.abs(e)>6.5)continue;
+        const v=veta[((e+6.5)*6|0)&63],e2=e-Math.sign(li||1)*1.25;
+        const a=.42*campana(e,1.9)+.62*v*(campana(e-.92,.36)+campana(e+.92,.36))+.3*v*(campana(e2-.92,.42)+campana(e2+.92,.42));
+        d[(r*W+u)*4+3]=Math.min(255,a*fz*58);
+      }
+    }
+    x.putImageData(im,0,0);
+    const tx=new THREE.CanvasTexture(c);tx.flipY=false;tx.wrapS=THREE.ClampToEdgeWrapping;tx.wrapT=THREE.RepeatWrapping;tx.anisotropy=4;
+    const p=new Float32Array((N+1)*6),uv=new Float32Array((N+1)*4),idx=[];
+    for(let i=0;i<=N;i++){
+      const j=i%N;
+      p.set([t.x[j]-t.nx[j]*HALF,.04,t.y[j]-t.ny[j]*HALF,t.x[j]+t.nx[j]*HALF,.04,t.y[j]+t.ny[j]*HALF],i*6);
+      uv.set([0,i/N,1,i/N],i*4);
+      if(i<N){const a=i*2;idx.push(a,a+1,a+2,a+1,a+3,a+2)}
+    }
+    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('uv',new THREE.BufferAttribute(uv,2));g.setIndex(idx);
+    const me2=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:tx,color:'#0a0a0a',transparent:true,depthWrite:false,side:THREE.DoubleSide}));
+    me2.renderOrder=-1;me2.frustumCulled=false;circuito.add(me2);
+  }
+  let texLlanta=null;
+  function texturaLlanta(){
+    if(texLlanta)return texLlanta;
+    const c=document.createElement('canvas');c.width=16;c.height=96;
+    const x=c.getContext('2d');
+    for(let i=0;i<3;i++){
+      const y=i*32,g=x.createLinearGradient(0,y,0,y+32);
+      g.addColorStop(0,'#2a2a2a');g.addColorStop(.18,'#d0d0d0');g.addColorStop(.5,'#ffffff');g.addColorStop(.82,'#b4b4b4');g.addColorStop(1,'#222');
+      x.fillStyle=g;x.fillRect(0,y,16,32);
+    }
+    return texLlanta=new THREE.CanvasTexture(c);
+  }
+  // Pilas de llantas contra el muro de afuera de las curvas, pintadas con los colores de la pista
+  function muroLlantas(T,instancias,d){
+    const t=track,N=t.N,k=curvas(),zona=new Int8Array(N),m=Math.round(20/t.sp),lista=[];
+    for(let i=0;i<N;i++)if(Math.abs(k[i])>.011)for(let o=-m;o<=m;o++)zona[(i+o+N)%N]=k[i]>0?1:-1;
+    let n=0;
+    for(let i=0;i<N&&lista.length<1500;i++){
+      if(!zona[i])continue;
+      const o=-zona[i]*(WALL+.55),b=(i+1)%N,x0=t.x[i]+t.nx[i]*o,y0=t.y[i]+t.ny[i]*o,x1=t.x[b]+t.nx[b]*o,y1=t.y[b]+t.ny[b]*o,q=Math.ceil(Math.hypot(x1-x0,y1-y0)/.98);
+      for(let e=0;e<q;e++,n++)lista.push({x:x0+(x1-x0)*e/q,y:y0+(y1-y0)*e/q,g:Math.floor(n/5)%2});
+    }
+    if(!lista.length)return;
+    d.rotation.set(0,0,0);d.scale.setScalar(1);
+    const mesh=instancias(new THREE.CylinderGeometry(.5,.5,1.26,9),new THREE.MeshLambertMaterial({map:texturaLlanta()}),lista,a=>d.position.set(a.x,.63,a.y));
+    const ca=colorHex(T.mA),cb=colorHex(T.mB);
+    lista.forEach((a,i)=>mesh.setColorAt(i,a.g?ca:cb));
+    mesh.instanceColor.needsUpdate=true;
+  }
   function armarCircuito(){
     if(!gl)return;
-    if(circuito){scene.remove(circuito);circuito.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material)o.material.dispose()})}
+    if(circuito){scene.remove(circuito);circuito.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){if(o.material.map)o.material.map.dispose();o.material.dispose()}})}
     circuito=new THREE.Group();
     const t=track,N=t.N,q=[];
     const T=TEMAS[track.tema];pintarSuelo(T);
@@ -1863,6 +2153,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       q.push([P(u,v),P(u+1.5,v),P(u+1.5,v+cs),P(u,v+cs),(a+b)%2?blanco:marino]);
     }
     circuito.add(mallaCuads(q));
+    gomaGastada(11+trackIdx*97);
     let s=7+trackIdx*31;const rnd=()=>(s=(s*16807)%2147483647)/2147483647;
     const ar=[];
     for(let i=0;i<130;i++){
@@ -1873,8 +2164,9 @@ if(typeof module!=='undefined')module.exports=Sim;
     const instancias=(geo,color,lista,ubicar)=>{
       const m=new THREE.InstancedMesh(geo,color.isMaterial?color:new THREE.MeshLambertMaterial({color}),lista.length);
       lista.forEach((a,i)=>{ubicar(a);d.updateMatrix();m.setMatrixAt(i,d.matrix)});
-      circuito.add(m);return m;
+      m.frustumCulled=false;circuito.add(m);return m;
     };
+    if(CON_LLANTAS.has(TRACKS[trackIdx].name))muroLlantas(T,instancias,d);
     const pinos=(copa,tronco)=>{
       instancias(new THREE.ConeGeometry(2.8,6.2,7),copa,ar,a=>{d.rotation.y=a.r;d.scale.setScalar(a.e);d.position.set(a.x,4.3*a.e,a.y)});
       instancias(new THREE.CylinderGeometry(.4,.5,1.5,6),tronco,ar,a=>{d.scale.setScalar(a.e);d.position.set(a.x,.75*a.e,a.y)});
@@ -1906,7 +2198,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       for(const lado of [-1,1]){const p=new THREE.Mesh(new THREE.BoxGeometry(.7,8,.7),neon.clone());p.position.set(lado*(HALF+1.5),4,0);arco.add(p)}
       const c=document.createElement('canvas');c.width=512;c.height=96;
       const x=c.getContext('2d');x.fillStyle='#0b0f1c';x.fillRect(0,0,512,96);x.strokeStyle=L.c;x.lineWidth=8;x.strokeRect(4,4,504,88);
-      x.fillStyle=L.c;x.font='400 54px "Alfa Slab One",Georgia,serif';x.textAlign='center';x.textBaseline='middle';x.fillText(L.n.toUpperCase(),256,50,480);
+      x.fillStyle=L.c;x.font='400 50px "Bowlby One","Arial Black",sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(L.n.toUpperCase(),256,50,480);
       const cartel=new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),fog:false,side:THREE.DoubleSide});
       const pl=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2+3.6,3.4),cartel);pl.position.y=8.6;arco.add(pl);
       const piso=new THREE.Mesh(new THREE.PlaneGeometry(HALF*2,20),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.28,depthWrite:false,fog:false}));
@@ -2042,28 +2334,68 @@ if(typeof module!=='undefined')module.exports=Sim;
     m.g.scale.setScalar(c.stale?.92:1);
   }
   function quitarAuto(c,m){scene.remove(m.g);m.pint.dispose();m.frenoMat.dispose();m.tex.dispose();for(const e of m.extra)e.dispose();autos.delete(c)}
-  // Imágenes del garaje: cada modelo real, en el color elegido
-  let estudio=null;
-  function fotos(){
-    if(!gl)return;
-    if(!estudio){
-      const r=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
-      r.setPixelRatio(1);r.setSize(248,160,false);
-      const esc=new THREE.Scene();esc.background=colorHex('#cfd8d6');
-      esc.add(new THREE.HemisphereLight('#ffffff','#8d9490',.86));
-      const luz=new THREE.DirectionalLight('#fff4dc',.75);luz.position.set(20,40,30);esc.add(luz);
-      const piso=new THREE.Mesh(new THREE.PlaneGeometry(400,400),new THREE.MeshBasicMaterial({color:'#6b6962'}));piso.rotation.x=-Math.PI/2;esc.add(piso);
-      const cam=new THREE.PerspectiveCamera(19,248/160,1,120);cam.position.set(8.6,5,9.4);cam.lookAt(-.1,.65,0);
-      estudio={r,esc,cam};
+  // Sala: portada sobre asfalto marcado y garaje a oscuras con reflejo; el auto es el de verdad
+  let sala=null;
+  const lienzoTex=(w,h,f)=>{const c=document.createElement('canvas');c.width=w;c.height=h;f(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.anisotropy=4;return t};
+  function armarSala(){
+    const esc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,1,.5,260);
+    esc.background=colorHex('#000000');
+    esc.add(new THREE.HemisphereLight('#ffffff','#7c7f86',.9));
+    const luz=new THREE.DirectionalLight('#fff4e4',.8);luz.position.set(-6,14,10);esc.add(luz);
+    const garaje=new THREE.Group(),portada=new THREE.Group();
+    const piso=new THREE.Mesh(new THREE.CircleGeometry(70,48),new THREE.MeshBasicMaterial({transparent:true,opacity:.86,map:lienzoTex(512,512,x=>{
+      const g=x.createRadialGradient(256,256,6,256,256,256);g.addColorStop(0,'#4a4a4e');g.addColorStop(.06,'#38383c');g.addColorStop(.075,'#1a1a1d');g.addColorStop(.3,'#0c0c0e');g.addColorStop(1,'#050506');x.fillStyle=g;x.fillRect(0,0,512,512);
+    })}));
+    piso.rotation.x=-Math.PI/2;piso.renderOrder=-1;garaje.add(piso);
+    const cono=new THREE.Mesh(new THREE.CylinderGeometry(1.5,4.7,13,40,1,true),new THREE.MeshBasicMaterial({transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending,color:'#ffffff',map:lienzoTex(8,128,x=>{
+      const g=x.createLinearGradient(0,0,0,128);g.addColorStop(0,'rgba(120,120,125,.02)');g.addColorStop(1,'rgba(120,120,125,.2)');x.fillStyle=g;x.fillRect(0,0,8,128);
+    })}));
+    cono.position.y=6.5;cono.renderOrder=2;garaje.add(cono);
+    let sem=4242;const rnd=()=>(sem=(sem*16807)%2147483647)/2147483647;
+    const asf=new THREE.Mesh(new THREE.PlaneGeometry(240,240),new THREE.MeshBasicMaterial({map:lienzoTex(1024,1024,x=>{
+      x.fillStyle='#8f9398';x.fillRect(0,0,1024,1024);
+      for(let i=0;i<900;i++){x.fillStyle=rnd()<.5?'rgba(255,255,255,.05)':'rgba(30,32,36,.06)';x.fillRect(rnd()*1024-300,rnd()*1024,180+rnd()*700,1+rnd()*5)}
+      x.lineCap='round';
+      for(let i=0;i<16;i++){
+        x.strokeStyle='rgba(40,42,46,'+(.14+rnd()*.2)+')';x.lineWidth=3+rnd()*6;
+        const a=rnd()*1024,b=rnd()*1024,o=rnd()*14+8;
+        for(const e of [0,o]){x.beginPath();x.moveTo(a-420,b+e);x.bezierCurveTo(a-120,b-140+e,a+160,b+170+e,a+460,b-30+e);x.stroke()}
+      }
+    })}));
+    asf.rotation.x=-Math.PI/2;portada.add(asf);
+    const naranja=new THREE.MeshLambertMaterial({color:'#e8451f'}),blanco=new THREE.MeshLambertMaterial({color:'#f4f1e6'}),base=new THREE.MeshLambertMaterial({color:'#2a2a2d'});
+    for(const [x,z] of [[-7.5,-7],[-3.5,-8],[.5,-9],[4.5,-8],[8.5,-7],[-9,-2.5]]){
+      const k=new THREE.Group();k.position.set(x,0,z);
+      const b=new THREE.Mesh(new THREE.BoxGeometry(.9,.08,.9),base);b.position.y=.04;
+      const a=new THREE.Mesh(new THREE.ConeGeometry(.34,.95,14),naranja);a.position.y=.55;
+      const m=new THREE.Mesh(new THREE.CylinderGeometry(.16,.24,.2,14),blanco);m.position.y=.5;
+      k.add(b,a,m);portada.add(k);
     }
-    MODELOS.forEach((m,i)=>{
-      const a=armarAuto({color,v:i,num:i+1},estudio.esc);
-      estudio.r.render(estudio.esc,estudio.cam);
-      fotosMod[i].src=estudio.r.domElement.toDataURL('image/jpeg',.82);
-      estudio.esc.remove(a.g);a.pint.dispose();a.frenoMat.dispose();a.tex.dispose();for(const e of a.extra)e.dispose();
-    });
+    esc.add(garaje,portada);
+    sala={esc,cam,garaje,portada,auto:null,espejo:null,k:null};
   }
-  const puntos=gl&&(()=>{
+  const soltarSala=m=>{m.g.parent.remove(m.g);m.pint.dispose();m.frenoMat.dispose();m.tex.dispose();for(const e of m.extra)e.dispose()};
+  function dibujarSala(dt){
+    if(!sala)armarSala();
+    const tit=salaVista==='titulo',mio=esMio(visto),c=mio?{v:visto,color:fichaAuto(visto).pinta,pz:piezasDe(visto),num:me?me.num:7}:{v:visto,color:0,pz:{},num:7},k=[c.v,c.color,JSON.stringify(c.pz)].join('|');
+    if(k!==sala.k){
+      if(sala.auto){soltarSala(sala.auto);soltarSala(sala.espejo)}
+      sala.auto=armarAuto(c,sala.esc);sala.espejo=armarAuto(c,sala.esc);sala.espejo.g.scale.y=-1;sala.k=k;
+    }
+    sala.esc.background.set(tit?'#8f9398':'#000000');sala.garaje.visible=!tit;sala.portada.visible=tit;sala.espejo.g.visible=!tit;
+    if(abierto)orbitaA-=dt*.18;
+    sala.auto.g.rotation.y=sala.espejo.g.rotation.y=tit?-2.5:orbitaA;
+    const ancho=W>H,asp=W/H,panel=!!abierto&&!tit;
+    let dx=0,dy=0,ef=asp;
+    if(tit){if(ancho){dx=-W*.17;ef=asp*.62}else dy=-H*.02}
+    else if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else dy=H*.26}
+    else dy=H*.03;
+    const d=Math.max(8.4,6.2/(2*Math.tan(15*Math.PI/180)*ef));
+    sala.cam.position.set(0,tit?3.5:2.1,d);sala.cam.lookAt(0,.55,0);
+    sala.cam.aspect=asp;sala.cam.setViewOffset(W,H,dx,dy,W,H);
+    gl.render(sala.esc,sala.cam);
+  }
+    const puntos=gl&&(()=>{
     const g=new THREE.BufferGeometry();
     g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(140*3),3));
     g.setAttribute('color',new THREE.BufferAttribute(new Float32Array(140*3),3));
@@ -2117,15 +2449,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     const k=1-Math.exp(-dt*22);cam.x+=(c.x-cam.x)*k;cam.y+=(c.y-cam.y)*k;
     cam.d+=(7.6+clamp(sp/45,0,1)*2.6-cam.d)*(1-Math.exp(-dt*2.5));
     if(!gl)return;
-    if(abierto){
-      orbitaA+=dt*.18;
-      const d=7.4,W=innerWidth,H=innerHeight,ancho=W>H;
-      camara.position.set(c.x+Math.cos(orbitaA)*d,2.5,c.y+Math.sin(orbitaA)*d);camara.lookAt(c.x,.75,c.y);
-      // El panel tapa un costado: la imagen se corre para que el auto quede en la parte libre
-      camara.setViewOffset(W,H,ancho?Math.min(W*.52,440)/2:0,ancho?0:H*.31,W,H);
-      return;
-    }
-    if(camara.view&&camara.view.enabled)camara.clearViewOffset();
     // Mirar atrás da vuelta la cámara sin moverla del auto
     const atras=touch.mirar||keys.KeyC,ang=cam.a+(atras?Math.PI:0),fx=Math.cos(ang),fy=Math.sin(ang),sh=camShake*.45;
     camara.position.set(cam.x-fx*cam.d+(Math.random()-.5)*sh,3.05+(Math.random()-.5)*sh,cam.y-fy*cam.d);
@@ -2140,6 +2463,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     mapa={p,cx:(a+b)/2,cy:(c+d)/2,w:b-a,h:d-c};
   }
   function draw(now,dt){
+    if(tapado||salaVista){
+      if(gl&&salaVista)dibujarSala(dt);
+      ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
+      return;
+    }
     if(gl){
       for(const [c,m] of autos)if(!cars.includes(c))quitarAuto(c,m);
       for(const c of cars)ponerAuto(c,dt);
@@ -2199,7 +2527,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
       rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
     }
-    $('garaje').hidden=!!race||modo!=='online';$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento';
+    $('garaje').hidden=!!race||modo!=='online';$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';
     const enB=modo==='barrio';$('barra').hidden=!enB;$('sonido').hidden=enB;$('posicion').hidden=$('reloj').hidden=enB;if(enB)$('tabla').hidden=true;
     $('nitro-chip').hidden=!conNitro();if(conNitro())$('nitro-u').style.width=me.nos*100+'%';
     $('espera').hidden=!!race||!anfitrion||modo!=='online';
@@ -2229,7 +2557,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(c.idx>=0&&Sim.progress(c)){
         if(c.lapStart&&!(race&&c.laps<1)){const lap=now-c.lapStart;c.lastLap=lap;if(!c.bestLap||lap<c.bestLap)c.bestLap=lap}
         c.lapStart=now;
-        if(c===me&&c.lastLap&&c.laps>0&&!race&&modo==='online')aviso('Vuelta '+tiempo(c.lastLap));
+        if(c===me&&c.lastLap&&c.laps>0&&!race&&(modo==='online'||modo==='practica'))aviso('Vuelta '+tiempo(c.lastLap));
       }
       if(!c.frozen&&(c.slip>3||((c.brk||c.mano)&&Math.hypot(c.vx,c.vy)>6))&&!c.grass)marca(c);else c.l=c.r=null;
       humo(c);
@@ -2260,14 +2588,14 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(au){
       const s=me?Math.hypot(me.vx,me.vy):0,gear=(s%13)/13;
       au.o.frequency.setTargetAtTime(55+s*2.1+gear*34,au.a.currentTime,.03);
-      au.g.gain.setTargetAtTime(me&&me.gas?.07:.035,au.a.currentTime,.05);
+      au.g.gain.setTargetAtTime(tapado||salaVista?0:me&&me.gas?.07:.035,au.a.currentTime,.05);
       const pat=me&&!me.grass&&s>4?clamp((me.slip-2.5)/9,0,1):0;
       au.rg.gain.setTargetAtTime(pat*.16,au.a.currentTime,.04);au.rf.frequency.setTargetAtTime(1150+pat*650,au.a.currentTime,.06);
     }
     draw(now,dt);hud(now);
     requestAnimationFrame(frame);
   }
-  armarCircuito();pintarCircuito();fotos();pintarPlata();
+  armarCircuito();pintarCircuito();pintarPlata();
   requestAnimationFrame(frame);
   window.__juego={cars,remotes,get me(){return me},get race(){return race}};
 })();
