@@ -765,6 +765,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     Object.keys(d).forEach((k,i)=>{const [lo,hi]=rangos[k];b.children[i].querySelector('i').style.width=(14+86*(d[k]-lo)/(hi-lo))+'%'});
     for(const [i,n] of [...$('modelos').children].entries())n.setAttribute('aria-pressed',i===modelo);
+    const sel=$('modelos').children[modelo];
+    if(sel)$('modelos').scrollLeft=sel.offsetLeft-$('modelos').offsetLeft-($('modelos').clientWidth-sel.offsetWidth)/2;
   }
   MODELOS.forEach((m,i)=>{
     const b=document.createElement('button'),t=document.createElement('b'),u=document.createElement('span');
@@ -773,6 +775,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('modelos').append(b);
   });
   pintarFicha();
+  $('garaje').addEventListener('click',()=>pintarFicha());
   $('cartel').addEventListener('submit',e=>{
     e.preventDefault();
     const name=$('nombre').value.trim().slice(0,12)||'Piloto';
