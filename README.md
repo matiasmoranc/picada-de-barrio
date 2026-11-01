@@ -6,9 +6,9 @@ Carrera online de autitos en 3D, con física de choques en tiempo real y control
 
 Abrí el enlace de GitHub Pages y compartilo. No hace falta cuenta ni instalar nada.
 
-- **Celular:** elegí volante fijo o flechas para doblar. A la derecha tenés acelerador, freno para bajar la velocidad y freno de mano para derrapar.
+- **Celular:** elegí volante fijo o flechas en la pestaña Controles. También podés activar «Acelerar solo». A la derecha tenés acelerador, freno y freno de mano.
 - **Teclado:** flechas o WASD. Espacio es el freno de mano y la tecla R te devuelve a la pista.
-- **Partidas:** tocá «Crear partida» y pasá el código o el enlace. Los demás entran con «Unirme».
+- **Partidas:** al entrar ves las partidas abiertas y te unís con un toque. También podés crear la tuya o entrar con un código o un enlace.
 
 Hay diecisiete pistas sobre pasto, desierto, hielo, noche y ciudad. Quien crea la partida elige la pista y larga la carrera; si se va, pasa al que lleva más tiempo.
 
