@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvy86io6"></script>
+<script src="room.js?v=mvy8idol"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -355,8 +355,6 @@ html,body{background:#000;touch-action:manipulation}
 #g-nombre{margin:0;font:400 clamp(1.3rem,8vh,2.1rem)/1 var(--display);color:#fff;text-shadow:var(--borde);text-transform:uppercase}
 #g-tag{margin:6px 0 0;font-weight:700;font-size:1rem;line-height:1.1;text-shadow:1px 1px 2px #000}
 #g-cuenta{margin:2px 0 0;font-weight:500;font-size:.95rem;color:#d7d7de;text-shadow:1px 1px 2px #000}
-#g-accion{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);z-index:3;min-width:190px}
-#g-accion .fr{width:100%;flex-direction:column;gap:4px;font-size:clamp(1rem,5vh,1.3rem);min-height:62px}
 #g-tabs{position:absolute;left:max(14px,env(safe-area-inset-left,0px));right:max(14px,env(safe-area-inset-right,0px));bottom:10px;z-index:3;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
 #g-tabs .fr{font-size:clamp(.72rem,min(3.7vh,2.6vw),1rem);min-height:46px;padding:4px;box-shadow:3px 3px 0 #000;text-shadow:1.5px 0 #000,-1.5px 0 #000,0 1.5px #000,0 -1.5px #000,2px 2px 0 #000}
 #local-panel{position:absolute;right:0;top:58px;bottom:0;width:min(52%,440px);background:rgba(10,10,14,.94);border:0;border-left:4px solid var(--oro);z-index:3}
@@ -369,11 +367,11 @@ html,body{background:#000;touch-action:manipulation}
 @media (orientation:portrait){
   #local{display:block}
   #local-panel{left:0;right:0;width:auto;top:44%;border-left:0;border-top:4px solid var(--oro)}
-  #g-datos{top:auto;bottom:132px;right:14px}#g-ficha{max-width:92%}#g-estilo{display:none}#g-barra{padding-right:112px}#menu-titulo{margin-top:40px;max-width:100%}#g-tabs .fr{font-size:.8rem}#g-accion{bottom:14px}
+  #g-datos{top:auto;bottom:132px;right:14px}#g-ficha{max-width:92%}#g-estilo{display:none}#g-barra{padding-right:112px}#menu-titulo{margin-top:40px;max-width:100%}#g-tabs .fr{font-size:.8rem}
   #g-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}
   .flecha{top:36%;width:48px}
 }
-#local.con-panel .flecha,#local.con-panel #g-datos,#local.con-panel #g-tabs,#local.con-panel #g-accion{display:none}
+#local.con-panel .flecha,#local.con-panel #g-datos,#local.con-panel #g-tabs{display:none}
 #local.con-panel #g-ficha{max-width:44%}
 /* Multijugador y resultados con la misma cara */
 #inicio{z-index:16;background:#000 var(--patron) center/min(62vw,520px) auto}
@@ -514,7 +512,6 @@ html,body{background:#000;touch-action:manipulation}
       <dl id="g-datos"></dl>
       <button class="flecha" id="g-ant" aria-label="Auto anterior"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M50 2 62 14 28 44 62 74 50 86 4 44Z"/></svg></button>
       <button class="flecha" id="g-sig" aria-label="Auto siguiente"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M14 2 2 14 36 44 2 74 14 86 60 44Z"/></svg></button>
-      <div id="g-accion"></div>
       <div id="g-tabs"></div>
     </div>
     <div id="local-panel" hidden>
@@ -914,7 +911,6 @@ if(typeof module!=='undefined')module.exports=Sim;
   if(typeof pref.nombre==='string')$('nombre').value=pref.nombre.slice(0,12);
   // --- Carrera del piloto: se guarda en este dispositivo ---
   const PREMIOS=[1000,700,500,350,200],PREMIOS_MAQUINA=[600,400,250,150,100];
-  const AUTOS_TIENDA={Rural:[0,1],Picudo:[0,1],Pluma:[0,1],Pegote:[1500,2],Clavado:[1800,2],Crucero:[2000,2],Flecha:[2200,2],Tanque:[2500,2],Deriva:[3000,3],'Bólido':[3500,3],Zorro:[4500,4],'Patrón':[5500,4],Puma:[6500,5],Rayo:[8000,5],Lince:[9500,6],'Cóndor':[11000,6],Cometa:[14000,7],Leoncito:[1200,1]};
   const NIVELES=[0,200,500,1000,1800,3000,5000,8000];
   const COSTO_MEJORA=[500,1000,1800];
   const MEJORAS=[
@@ -938,10 +934,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   };
   const NEONES=[null,'#2f8cff','#2fe07a','#ff3347','#b05cff','#ffd23f'];
   const pesos=n=>'$'+Math.round(n).toLocaleString('es-AR');
-  const precioDe=i=>(AUTOS_TIENDA[MODELOS[i].nombre]||[0,1])[0],nivelAuto=i=>(AUTOS_TIENDA[MODELOS[i].nombre]||[0,1])[1];
   if(!Number.isFinite(pref.plata)||pref.plata<0)pref.plata=0;
   if(!Number.isFinite(pref.rep)||pref.rep<0)pref.rep=0;
-  if(!Array.isArray(pref.autos))pref.autos=MODELOS.flatMap((m,i)=>precioDe(i)===0?[i]:[]);
   if(!pref.garaje||typeof pref.garaje!=='object')pref.garaje={};
   // Modo de prueba: ?prueba da plata sin límite y ?prueba=0 devuelve la partida como estaba
   {
@@ -958,6 +952,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     if(pref.prueba)pref.rep=Math.max(pref.rep,NIVELES[NIVELES.length-1]);
   }
+  // Todos los autos son gratis y están disponibles desde el principio
+  pref.autos=MODELOS.map((m,i)=>i);
   const esMio=i=>pref.autos.includes(i);
   function fichaAuto(i){
     const g=pref.garaje;
@@ -1731,7 +1727,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         ['Manejar','Volante o flechas a la izquierda, freno y acelerador a la derecha. Podés mover y agrandar cada control en Opciones.'],
         ['Derrapar','Soltá el acelerador, doblá y tocá el freno de mano un momento. Después acelerá y mantené la curva.'],
         ['Ganar plata','Circuito paga por puesto. Derrape da medallas por puntos. Práctica no paga: sirve para entrenar.'],
-        ['Mejorar','En el Garaje comprás autos y les ponés piezas. Las piezas lindas suben tus estrellas, y cada estrella sube tus premios.'],
+        ['Mejorar','En el Garaje elegís cualquier auto gratis y le comprás piezas. Las piezas lindas suben tus estrellas, y cada estrella sube tus premios.'],
         ['Con amigos','En Multijugador creá una partida. Aparece para todos en la lista y también podés pasar el enlace.']
       ]){d.append(el('h3',null,h),el('p',null,x))}
       c.append(d);
@@ -1762,7 +1758,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     der.append(g);box.append(izq,der);c.append(box);
   }
   // Garaje: las flechas recorren tus autos y después los que están en venta
-  const ordenGaraje=()=>[...pref.autos,...MODELOS.map((m,i)=>i).filter(i=>!esMio(i)).sort((a,b)=>precioDe(a)-precioDe(b))];
+  const ordenGaraje=()=>pref.autos;
   const TABS=[['mecanico','Mecánico'],['chapa','Chapería'],['pintura','Pintura'],['accesorios','Accesorios'],['ajuste','Ajustes']];
   for(const [id,n] of TABS){const b=el('button','fr',n);b.type='button';b.onclick=()=>abrirPanel(id);$('g-tabs').append(b)}
   function cambiarAuto(d){
@@ -1775,20 +1771,10 @@ if(typeof module!=='undefined')module.exports=Sim;
   function pintarGaraje(){
     const l=ordenGaraje(),i=visto,m=MODELOS[i],mio=esMio(i),sp=mio?specDe(i):m,d=datos(sp);
     $('g-nombre').textContent=m.nombre;$('g-tag').textContent=m.tag;
-    $('g-cuenta').textContent=(l.indexOf(i)+1)+' de '+l.length+(mio?' · Tuyo':' · En venta');
+    $('g-cuenta').textContent=(l.indexOf(i)+1)+' de '+l.length+'';
     const dl=$('g-datos');dl.textContent='';
-    for(const [a,b] of [['Tracción:',m.awd?'4x4':'Trasera'],['Potencia:',Math.round(sp.power/745.7)+' HP'],['Punta:',Math.round(d.Velocidad*3.6)+' km/h'],['Peso:',Math.round(sp.m)+' kg'],mio?['Estilo:',textoEstrellas(estrellas(i))]:['Nivel:',nivelAuto(i)+' o más']]){
+    for(const [a,b] of [['Tracción:',m.awd?'4x4':'Trasera'],['Potencia:',Math.round(sp.power/745.7)+' HP'],['Punta:',Math.round(d.Velocidad*3.6)+' km/h'],['Peso:',Math.round(sp.m)+' kg'],['Estilo:',textoEstrellas(estrellas(i))]]){
       const f=el('div');f.append(el('dt',null,a),el('dd',null,b));dl.append(f);
-    }
-    $('g-tabs').hidden=!mio;
-    const q=$('g-accion');q.textContent='';q.hidden=mio;
-    if(!mio){
-      const p=precioDe(i),lv=nivelAuto(i),u=el('button','fr azul');u.type='button';
-      u.append(el('span',null,'Comprar'),el('span',null,pesos(p)));
-      if(nivelPiloto()<lv){u.disabled=true;u.firstChild.textContent='Nivel '+lv}
-      else if(pref.plata<p){u.disabled=true;u.firstChild.textContent='Te faltan '+pesos(p-pref.plata)}
-      u.onclick=()=>{if(pref.plata<p||nivelPiloto()<lv)return;pref.plata-=p;pref.autos.push(i);modelo=i;pref.modelo=i;guardar(pref);aplicarAuto();pintarGaraje();pintarPlata()};
-      q.append(u);
     }
   }
   function abrirPanel(id){
