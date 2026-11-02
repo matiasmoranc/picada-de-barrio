@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvydx4d2"></script>
+<script src="room.js?v=mvyleh56"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -511,6 +511,192 @@ html,body{background:#000;touch-action:manipulation}
 #cine-tarjeta{position:absolute;left:14px;bottom:14%;max-width:calc(100% - 28px);background:rgba(10,11,15,.8);border-left:5px solid var(--oro);padding:8px 16px;color:#fff;transition:opacity .2s}
 #cine-tarjeta small{display:block;font-size:.95rem;color:var(--suave);font-weight:700}
 #cine-tarjeta b{display:block;font:400 1.5rem var(--display)}
+/* Casco: la plata siempre arriba y las secciones siempre abajo */
+:root{--barra:calc(58px + env(safe-area-inset-top,0px));--tabs:calc(66px + env(safe-area-inset-bottom,0px));--verde:#46d98a}
+.prog{display:block;height:7px;border-radius:4px;background:#2c2f3a;overflow:hidden}
+.prog u{display:block;height:100%;border-radius:4px;background:var(--oro);transition:width .5s ease-out}
+#barra{position:absolute;z-index:25;top:0;left:0;right:0;height:var(--barra);box-sizing:border-box;padding:env(safe-area-inset-top,0px) 12px 0;display:flex;align-items:center;gap:8px;background:rgba(10,11,15,.94);border-bottom:1px solid var(--linea)}
+#b-plata{display:flex;align-items:center;gap:7px;min-width:0;background:#20222c;color:var(--oro);padding:4px 13px 4px 5px;border-radius:999px;min-height:42px;border:1px solid #4a3f12}
+#b-plata b{font:400 1.08rem var(--display);white-space:nowrap}
+.moneda{flex:none;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff2a8,#ffd51a 58%,#c89700);display:grid;place-items:center;font:400 .95rem var(--display);font-style:normal;color:#6b5100}
+#b-nivel{flex:1;min-width:0;background:none;color:#fff;display:grid;gap:4px;text-align:left;padding:4px 6px;min-height:42px;align-content:center}
+#b-niv{font-weight:700;font-size:.95rem;line-height:1}
+.b-icono{flex:none;width:42px;height:42px;border-radius:50%;background:#20222c;color:#d7d9e0;font:700 1.25rem var(--texto);display:grid;place-items:center;padding:0}
+.b-icono svg{width:22px;height:22px}
+#tabs{position:absolute;z-index:25;left:0;right:0;bottom:0;height:var(--tabs);box-sizing:border-box;padding-bottom:env(safe-area-inset-bottom,0px);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#0d0e13;border-top:1px solid var(--linea)}
+#tabs button{position:relative;background:none;color:#8f94a3;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.92rem;line-height:1;padding:0}
+#tabs svg{width:25px;height:25px;display:block;transition:transform .15s}
+#tabs [aria-current=page]{color:var(--oro)}
+#tabs [aria-current=page] svg{transform:translateY(-1px) scale(1.1)}
+#tabs [aria-current=page]::before{content:"";position:absolute;top:-1px;left:24%;right:24%;height:3px;border-radius:0 0 3px 3px;background:var(--oro)}
+#toast{position:absolute;z-index:26;top:calc(var(--barra) + 10px);left:50%;transform:translateX(-50%);max-width:calc(100% - 28px);box-sizing:border-box;background:#fff;color:#14151a;font-weight:700;padding:9px 16px;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 6px 18px rgba(0,0,0,.45);animation:toast .22s ease-out}
+@keyframes toast{from{opacity:0;transform:translate(-50%,-8px)}}
+.bajada{margin:0;color:var(--suave);font-weight:500;font-size:1.02rem;line-height:1.2}
+/* Inicio */
+#bienvenida{display:flex;flex-direction:column;gap:9px;box-sizing:border-box;padding:calc(var(--barra) + 8px) 14px calc(var(--tabs) + 12px);pointer-events:none;background:linear-gradient(rgba(10,11,15,.55),transparent 22%,transparent 46%,rgba(10,11,15,.9) 68%)}
+#bienvenida>*{width:100%;max-width:560px;margin-inline:auto;box-sizing:border-box}
+#bienvenida button,#bienvenida input{pointer-events:auto}
+#bienvenida .logo{position:static;flex:none;flex-direction:row;justify-content:center;font-size:min(7.6vw,36px);transform:rotate(-2deg) skewX(-10deg)}
+#i-relleno{flex:1;min-height:0}
+#t-piloto{position:static;display:flex;align-items:center;gap:8px;background:none;padding:0}
+#t-piloto label{font:700 .95rem var(--texto);color:#fff;text-shadow:0 1px 3px #000}
+#bienvenida #nombre{flex:1;min-width:0;width:auto;background:rgba(10,11,15,.72);color:#fff;border-radius:10px;padding:7px 10px;min-height:38px}
+#i-auto{flex:none;background:rgba(10,11,15,.72);color:var(--oro);font-weight:700;border-radius:10px;padding:7px 12px;min-height:38px}
+#i-carrera{background:var(--carta);border:1px solid var(--linea);border-radius:18px;padding:12px 14px;display:grid;gap:3px;color:#fff}
+.i-fila{display:flex;justify-content:space-between;align-items:center}
+#i-modo{color:var(--oro);font-weight:700;font-size:.98rem;letter-spacing:.05em;text-transform:uppercase}
+#i-cambiar{background:#2a2d38;color:#fff;font-weight:700;border-radius:999px;padding:5px 14px;min-height:34px}
+#i-pista{margin:0;font:400 1.5rem/1.1 var(--display)}
+#i-meta,#i-premio{margin:0;font-size:1.05rem;font-weight:500;color:var(--suave)}
+#i-premio{color:#fff;font-weight:700}
+#jugar{width:100%;margin-top:8px;font-size:1.3rem;min-height:56px}
+#i-mejora{display:flex;align-items:center;gap:12px;text-align:left;background:var(--carta);border:1px solid var(--linea);border-radius:14px;padding:9px 14px;color:#fff}
+#i-mejora>span{flex:1;min-width:0;display:grid;gap:3px}
+#i-mejora small{color:var(--suave);font-size:.9rem;font-weight:700}
+#i-mejora b{font-size:1.08rem;line-height:1.05}
+#i-mejora em{flex:none;font-style:normal;font-weight:700;color:var(--suave)}
+#i-mejora.lista{border-color:var(--oro)}
+#i-mejora.lista em{color:var(--oro)}
+/* Correr y premios */
+#menu{padding:calc(var(--barra) + 8px) 14px calc(var(--tabs) + 10px)}
+#menu.sub{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+#menu-titulo{margin:0;max-width:100%}
+#menu .atras{top:calc(var(--barra) + 6px);right:14px;left:auto;position:absolute;border-radius:10px;padding:6px 12px;min-height:38px}
+.sel-pista{gap:8px}
+.sel-pista>.bajada{min-height:0}
+.dock{flex:none;display:grid;gap:8px;background:var(--carta);border:1px solid var(--linea);border-radius:16px;padding:10px 12px 12px}
+.dock-t h3{margin:0;font:400 1.15rem/1.1 var(--display)}
+.dock-t p{margin:2px 0 0;color:var(--suave);font-weight:500}
+.dock .premios-p{display:flex;gap:6px}
+.dock .premios-p span{background:#101116}
+#menu .pistas-ev button{border:2px solid transparent}
+#menu .pistas-ev button[aria-pressed="true"]{outline:0;border-color:var(--oro)}
+.premios-caja{display:grid;gap:10px}
+.p-hero{background:linear-gradient(150deg,#2a2610,#1a1c24 62%);border:1px solid #4a3f12;border-radius:18px;padding:14px;display:grid;gap:2px}
+.p-hero>small{color:var(--suave);font-size:1rem;font-weight:700}
+.p-hero>b{font:400 2.3rem/1.1 var(--display);color:var(--oro)}
+.p-nivel{margin-top:8px;display:grid;gap:4px}
+.p-nivel span{font-weight:700}
+.p-nivel small{color:var(--suave);font-size:.98rem;font-weight:500;line-height:1.15}
+.p-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.p-stats span{background:var(--carta);border-radius:12px;padding:8px 2px;text-align:center}
+.p-stats b{display:block;font:400 1.3rem var(--display)}
+.p-stats small{color:var(--suave);font-size:.92rem;font-weight:500}
+.p-titulo{margin:8px 0 0;font:400 1.08rem var(--display)}
+.p-carta{background:var(--carta);border-radius:14px;padding:11px 13px;display:grid;gap:6px}
+.p-carta h4{margin:0;font-size:1.15rem}
+.p-carta p{margin:0;color:var(--suave);font-weight:500;line-height:1.2}
+.p-filas{display:grid;gap:4px}
+.p-filas div{display:flex;justify-content:space-between;gap:12px;padding:3px 0;border-top:1px solid var(--linea)}
+.p-filas div:first-child{border-top:0}
+.p-filas b{color:var(--oro);white-space:nowrap}
+.p-filas b.gasto{color:#ff9a8a}
+.p-carta .boton-p{grid-column:auto;grid-row:auto;background:#2a2d38;color:#fff;border-radius:10px}
+/* Garaje */
+#orbita{position:absolute;inset:var(--barra) 0 var(--tabs) 0;display:flex;flex-direction:column;padding:10px 14px;box-sizing:border-box;gap:8px}
+#local.con-panel #orbita{bottom:0}
+#g-ficha,#g-datos,#g-estilo,#g-tabs{position:static;left:auto;right:auto;top:auto;bottom:auto;max-width:560px;width:100%;margin-inline:auto;box-sizing:border-box}
+#local.con-panel #g-ficha{max-width:100%}
+#g-cuenta{margin:0;color:var(--oro);font-weight:700;font-size:1rem;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+#g-nombre{font-size:1.6rem;margin-top:1px}
+#g-tag{margin:2px 0 0;font-size:1.02rem}
+.flecha{top:42%!important;width:46px;height:64px;background:rgba(10,11,15,.5);border-radius:12px;padding:10px 12px;box-sizing:border-box;margin-top:-32px}
+#g-ant{left:8px}#g-sig{right:8px}
+#g-estilo{display:block;order:1;margin:auto auto 0;text-align:center;font-weight:700;color:#fff;background:rgba(10,11,15,.78);border-radius:999px;padding:4px 14px;width:auto}
+#g-datos{order:2}#g-tabs{order:3}
+#g-ficha{background:rgba(10,11,15,.62);border-radius:14px;padding:8px 12px;pointer-events:none}
+#local.con-panel #g-estilo{display:none}
+#g-datos{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;background:rgba(14,15,20,.9);padding:9px 12px;font-size:.92rem}
+#g-datos .barra-d{grid-template-columns:62px 1fr}
+.g-resumen{grid-column:1/-1;margin:0}
+#g-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px}
+#g-tabs button{background:var(--carta);border:1px solid var(--linea);color:#fff;border-radius:12px;display:grid;justify-items:center;gap:3px;padding:7px 1px 6px;font-weight:700;font-size:.86rem;line-height:1}
+#g-tabs svg{width:23px;height:23px;color:var(--oro)}
+#g-tabs button:active{border-color:var(--oro)}
+#local-panel{top:calc(var(--barra) + 26%);left:0;right:0;width:auto;bottom:0;border:0;border-radius:18px 18px 0 0}
+#local-cabeza{padding:10px 14px 6px}
+#local-cabeza h2{font-size:1.2rem}
+#local-cerrar{background:var(--oro);color:#14151a;border-radius:10px;min-height:40px;padding:6px 16px}
+#local-cats{display:flex;gap:6px;overflow-x:auto;padding:0 14px 8px;flex:none;touch-action:pan-x}
+#local-cats button{flex:none;background:#20222c;color:#fff;font-weight:700;border-radius:999px;padding:6px 13px;min-height:36px}
+#local-cats [aria-pressed=true]{background:#fff;color:#14151a}
+#local-cuerpo{padding:2px 14px calc(14px + env(safe-area-inset-bottom,0px))}
+.fila-p{border-radius:12px;padding:9px 11px;background:var(--carta)}
+.fila-p button,.boton-p{border-radius:10px;background:var(--oro);color:#14151a;min-width:112px}
+.fila-p button.instalar{background:#fff}
+.fila-p button:disabled{background:#2a2d38;color:#a4a9b6}
+.niveles{grid-column:1;display:flex;gap:4px;margin-top:4px}
+.niveles i{width:24px;height:7px;border:0;border-radius:4px;background:#3a3d48}
+.niveles i.lleno{background:var(--oro)}
+.fila-p .niveles+button{grid-row:1/span 3}
+/* Multijugador */
+#inicio{display:block;padding:calc(var(--barra) + 8px) 14px calc(var(--tabs) + 10px);box-sizing:border-box}
+#tapa{background:none;padding:0;margin:0 auto;width:100%;max-width:560px;gap:10px}
+#tapa h1{font-size:1.5rem}
+#tapa h2{margin:0 0 6px;font:400 1.02rem var(--display);color:#fff}
+#crear{width:100%;font-size:1.25rem;min-height:58px;background:var(--oro);box-shadow:0 5px 0 #a98a00}
+#con-codigo{background:var(--carta);border-radius:14px;padding:11px 13px}
+.grande.secundario{background:#fff;color:#14151a}
+#codigo{border:0;border-radius:10px;background:#101116;color:#fff;min-height:44px;box-sizing:border-box}
+#abiertas{background:var(--carta);border-radius:14px;padding:11px 13px}
+#lista-abiertas{max-height:none}
+.partida{background:#101116;color:#fff;border:0;border-radius:12px;box-shadow:none}
+.partida em{border-radius:10px;color:#14151a}
+/* Sala */
+#portada{z-index:18;padding:0;background:linear-gradient(170deg,#1b1d27,#0b0c10)}
+#cartel{width:100%;max-width:560px;margin:0 auto;min-height:100%;border-radius:0;background:none;padding:max(12px,env(safe-area-inset-top,0px)) 0 0;gap:8px}
+#invitar{background:var(--carta);margin:0 14px;border-radius:16px;padding:12px 14px}
+#ver-codigo{display:block;font-size:2rem;color:var(--oro)}
+#rotulo-partida{font-size:.95rem;color:var(--suave)}
+#copiar{min-height:46px;border-radius:10px;background:var(--oro)}
+.titulo-sala{margin:4px 14px 0;font:400 1.02rem var(--display);color:#fff}
+.panel .titulo-sala{margin:4px 0 0}
+#lista-sala li{background:var(--carta);color:#fff;border-radius:12px;padding:7px 10px}
+#lista-sala i{border-color:#fff}
+#lista-sala small{color:var(--suave)}
+#panel-pista{min-height:0}
+#lista-sala{grid-template-columns:1fr}
+#circuitos{max-height:min(46vh,340px);overflow:auto;touch-action:pan-y;align-content:start;grid-auto-rows:max-content}
+#resultados:empty{display:none}
+#circuitos button{background:var(--carta);color:#fff;border:2px solid transparent;border-radius:10px}
+#circuitos button[aria-pressed="true"]{border-color:var(--oro);box-shadow:none}
+#pie{background:#0d0e13;border-top:1px solid var(--linea);padding:10px 14px max(12px,env(safe-area-inset-bottom,0px));margin-top:auto}
+#entrar{background:var(--oro);font-size:1.2rem;min-height:54px}
+#proximo{color:var(--suave);font-weight:500}
+.plata{display:none}
+@media (max-height:720px){
+  .sel-pista{gap:6px}.sel-pista>.bajada{display:none}
+  .dock{gap:5px;padding:7px 10px 9px}
+  .dock .fr{min-height:46px}
+  .dock .seg button,.sel-pista>.seg button{min-height:34px;padding:3px 4px}
+  .dock .premios-p span{padding:2px 6px}
+  .dock .premios-p small{display:inline;margin-right:5px}
+}
+/* Resultados */
+#final{z-index:28;padding:0;background:linear-gradient(170deg,#1b1d27,#0b0c10);place-items:start center}
+#planilla{width:100%;max-width:560px;min-height:100%;background:none;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));gap:9px;align-content:start}
+#f-cab{display:flex;align-items:center;gap:14px}
+#f-puesto{flex:none;min-width:74px;height:74px;padding:0 10px;box-sizing:border-box;display:grid;place-items:center;border-radius:18px;background:#2a2d38;color:#fff;font:400 1.9rem var(--display)}
+#f-puesto.p0,#f-puesto.mOro{background:linear-gradient(150deg,#fff2a8,#ffd51a 55%,#c89700);color:#5a4400}
+#f-puesto.p1,#f-puesto.mPlata{background:linear-gradient(150deg,#fff,#c6ccd6 60%,#8f97a5);color:#39404c}
+#f-puesto.p2,#f-puesto.mBronce{background:linear-gradient(150deg,#f6c79e,#cd7f32 60%,#8a5219);color:#3e2208}
+#f-puesto[class^=m]{font-size:1.25rem}
+#planilla #titulo-final{font-size:1.75rem;color:#fff;line-height:1.05}
+#f-sub{margin:2px 0 0;color:var(--suave);font-size:1.05rem;font-weight:500}
+#f-gano{background:linear-gradient(150deg,#2a2610,#1a1c24 70%);border:1px solid #4a3f12;border-radius:16px;padding:9px 14px;display:flex;align-items:center;justify-content:space-between}
+#f-gano small{font-size:1.05rem;font-weight:700;color:var(--suave)}
+#f-gano b{font:400 2rem var(--display);color:var(--oro)}
+#cobro{background:var(--carta)}
+#cobro div b{color:#fff}
+#f-nivel{display:grid;gap:4px;font-weight:700}
+#f-tip{margin:0;color:var(--oro);font-weight:700}
+#resultados{background:var(--carta);border-radius:12px;padding:8px 12px}
+#resultados li{border-bottom-color:var(--linea);padding:2px 0}
+#resultados li:last-child{border-bottom:0}
+#planilla .fila-fin{grid-template-columns:1fr 1fr}
+#planilla .fila-fin button,#seguir{min-height:48px}
+#otra{min-height:56px!important;font-size:1.2rem}
+#seguir{background:var(--oro)!important;color:#14151a}
 </style>
 <div id="juego">
   <canvas id="tres" aria-hidden="true" hidden></canvas>
@@ -554,25 +740,23 @@ html,body{background:#000;touch-action:manipulation}
   <div id="inicio" hidden>
     <div id="tapa">
       <h1>Multijugador</h1>
-      <p id="plata-inicio"></p>
-      <section id="abiertas" aria-labelledby="t-abiertas" hidden>
-        <h2 id="t-abiertas">Partidas abiertas</h2>
-        <ul id="lista-abiertas"></ul>
-        <p id="sin-abiertas" role="status">Buscando partidas…</p>
-      </section>
+      <p class="bajada">Corré contra tus amigos en línea. El que crea la partida elige la pista.</p>
       <button id="crear" class="grande">Crear partida</button>
-      <details id="con-codigo">
-        <summary>Tengo un código</summary>
+      <div id="con-codigo">
+        <h2>¿Te pasaron un código?</h2>
         <form id="unirse">
           <div class="fila-codigo">
             <input id="codigo" maxlength="24" autocomplete="off" autocapitalize="characters" placeholder="Ej: KBTZ" aria-label="Código de partida">
             <button type="submit" class="grande secundario">Unirme</button>
           </div>
         </form>
-      </details>
-      <button id="solo">◀ Atrás</button>
+      </div>
       <p id="estado-inicio" role="status"></p>
-      <p class="premios" style="grid-column:1/-1"></p>
+      <section id="abiertas" aria-labelledby="t-abiertas" hidden>
+        <h2 id="t-abiertas">Partidas abiertas</h2>
+        <ul id="lista-abiertas"></ul>
+        <p id="sin-abiertas" role="status">Buscando partidas…</p>
+      </section>
     </div>
   </div>
   <div id="portada" hidden>
@@ -584,17 +768,18 @@ html,body{background:#000;touch-action:manipulation}
         <p id="texto-invitar"></p>
       </div>
       <p id="salon"></p>
+      <h3 class="titulo-sala">Jugadores</h3>
       <ul id="lista-sala"></ul>
       <div class="panel" id="panel-pista">
+        <div id="bots-sala"><span>Bots en la partida</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
+        <h3 class="titulo-sala">Pista</h3>
         <div class="titulo-eleccion" id="quien-pista"></div>
         <div class="seg" id="serie-sala"><button type="button" id="serie-f1">Fórmula 1</button><button type="button" id="serie-juego">Del juego</button></div>
         <div id="circuitos" role="group" aria-label="Pista"></div>
-        <div id="bots-sala"><span>Bots en la partida</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
       </div>
       <div id="pie">
-        <p class="premios"></p>
         <p id="proximo"></p>
-        <button id="entrar" type="submit">Salir a pista</button>
+        <button id="entrar" type="submit">Entrar a la pista</button>
       </div>
     </form>
   </div>
@@ -612,35 +797,45 @@ html,body{background:#000;touch-action:manipulation}
   </div>
   <div id="bienvenida">
     <h1 class="logo" aria-label="Picada de Barrio"><span data-t="PICADA"><b>PICADA</b></span><span data-t="DE BARRIO"><b>DE BARRIO</b></span></h1>
-    <nav id="t-menu">
-      <button class="fr" id="jugar"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M12 6 92 50 12 94Z"/></svg>Jugar</button>
-      <button class="fr" id="t-garaje"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z"/></svg>Garaje</button>
-      <button class="fr" id="t-ayuda"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M50 4a46 46 0 1 0 .01 0ZM50 22c13 0 22 8 22 19 0 9-5 13-11 17-4 3-5 4-5 9H43c0-9 3-13 9-17 5-3 7-5 7-9 0-5-4-8-9-8-6 0-10 4-10 10H27c0-13 9-21 23-21ZM43 72h14v13H43Z"/></svg>Cómo jugar</button>
-    </nav>
-    <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"></div>
-    <button class="engranaje" id="t-engranaje" aria-label="Opciones"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.4 39.6L95.1 40.9L95.1 59.1L82.4 60.4L80.2 65.6L88.3 75.4L75.4 88.3L65.6 80.2L60.4 82.4L59.1 95.1L40.9 95.1L39.6 82.4L34.4 80.2L24.6 88.3L11.7 75.4L19.8 65.6L17.6 60.4L4.9 59.1L4.9 40.9L17.6 39.6L19.8 34.4L11.7 24.6L24.6 11.7L34.4 19.8L39.6 17.6L40.9 4.9L59.1 4.9L60.4 17.6L65.6 19.8L75.4 11.7L88.3 24.6L80.2 34.4ZM50 35a15 15 0 1 0 .01 0Z"/></svg></button>
+    <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"><button type="button" id="i-auto"></button></div>
+    <div id="i-relleno"></div>
+    <section id="i-carrera" aria-label="Próxima carrera">
+      <div class="i-fila"><small id="i-modo"></small><button type="button" id="i-cambiar">Cambiar</button></div>
+      <h2 id="i-pista"></h2>
+      <p id="i-meta"></p>
+      <p id="i-premio"></p>
+      <button class="fr" id="jugar"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M12 6 92 50 12 94Z"/></svg><span id="i-cta">Correr</span></button>
+    </section>
+    <button type="button" id="i-mejora"><span><small>Próxima mejora</small><b id="i-m-n"></b><i class="prog"><u id="i-m-u"></u></i></span><em id="i-m-t"></em></button>
   </div>
   <div id="menu" hidden>
     <button class="atras" id="menu-atras"><i></i>Atrás</button>
     <h2 class="titulo-fr" id="menu-titulo"></h2>
     <div id="menu-caja"><div id="menu-cuerpo"></div></div>
-    <button class="engranaje" id="menu-engranaje" aria-label="Opciones"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.4 39.6L95.1 40.9L95.1 59.1L82.4 60.4L80.2 65.6L88.3 75.4L75.4 88.3L65.6 80.2L60.4 82.4L59.1 95.1L40.9 95.1L39.6 82.4L34.4 80.2L24.6 88.3L11.7 75.4L19.8 65.6L17.6 60.4L4.9 59.1L4.9 40.9L17.6 39.6L19.8 34.4L11.7 24.6L24.6 11.7L34.4 19.8L39.6 17.6L40.9 4.9L59.1 4.9L60.4 17.6L65.6 19.8L75.4 11.7L88.3 24.6L80.2 34.4ZM50 35a15 15 0 1 0 .01 0Z"/></svg></button>
   </div>
   <div id="local" hidden>
-    <div id="g-barra"><span id="g-plata"></span><span id="g-nivel"></span><span id="g-estilo"></span><button class="atras" id="local-cerrar"><i></i>Atrás</button></div>
     <div id="orbita">
-      <div id="g-ficha"><h2 id="g-nombre"></h2><p id="g-tag"></p><p id="g-cuenta"></p></div>
+      <div id="g-ficha"><p id="g-cuenta"></p><h2 id="g-nombre"></h2><p id="g-tag"></p></div>
       <dl id="g-datos"></dl>
       <button class="flecha" id="g-ant" aria-label="Auto anterior"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M50 2 62 14 28 44 62 74 50 86 4 44Z"/></svg></button>
       <button class="flecha" id="g-sig" aria-label="Auto siguiente"><svg viewBox="0 0 64 88" aria-hidden="true"><path fill="currentColor" d="M14 2 2 14 36 44 2 74 14 86 60 44Z"/></svg></button>
-      <p id="g-pista">Tocá las flechas para cambiar de auto. Ya queda elegido.</p>
+      <p id="g-estilo"></p>
       <div id="g-tabs"></div>
     </div>
     <div id="local-panel" hidden>
-      <div id="local-cabeza"><h2 id="local-titulo"></h2></div>
+      <div id="local-cabeza"><h2 id="local-titulo"></h2><button type="button" id="local-cerrar">Listo</button></div>
+      <div id="local-cats"></div>
       <div id="local-cuerpo"></div>
     </div>
   </div>
+  <header id="barra" hidden>
+    <button type="button" id="b-plata" aria-label="Tu plata"><i class="moneda">$</i><b id="b-monto"></b></button>
+    <button type="button" id="b-nivel" aria-label="Tu nivel"><span id="b-niv"></span><i class="prog"><u id="b-prog"></u></i></button>
+    <button type="button" class="b-icono" id="b-ayuda" aria-label="Cómo jugar">?</button>
+    <button type="button" class="b-icono" id="b-op" aria-label="Opciones"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M82.4 39.6L95.1 40.9L95.1 59.1L82.4 60.4L80.2 65.6L88.3 75.4L75.4 88.3L65.6 80.2L60.4 82.4L59.1 95.1L40.9 95.1L39.6 82.4L34.4 80.2L24.6 88.3L11.7 75.4L19.8 65.6L17.6 60.4L4.9 59.1L4.9 40.9L17.6 39.6L19.8 34.4L11.7 24.6L24.6 11.7L34.4 19.8L39.6 17.6L40.9 4.9L59.1 4.9L60.4 17.6L65.6 19.8L75.4 11.7L88.3 24.6L80.2 34.4ZM50 35a15 15 0 1 0 .01 0Z"/></svg></button>
+  </header>
+  <nav id="tabs" aria-label="Secciones" hidden></nav>
+  <div id="toast" role="status" hidden></div>
   <div id="reserva" hidden>
     <div id="panel-controles"><div class="panel-c">
       <div class="grupo-op"><h3>Doblar con</h3>
@@ -660,10 +855,13 @@ html,body{background:#000;touch-action:manipulation}
   </div>
   <div id="final" hidden>
     <div id="planilla">
-      <h2 id="titulo-final">Bandera a cuadros</h2>
+      <div id="f-cab"><b id="f-puesto"></b><div><h2 id="titulo-final">Bandera a cuadros</h2><p id="f-sub"></p></div></div>
+      <div id="f-gano"><small>Ganaste</small><b id="f-monto"></b></div>
       <div id="cobro"></div>
+      <div id="f-nivel"><span id="f-nivel-t"></span><i class="prog"><u id="f-nivel-u"></u></i></div>
+      <p id="f-tip"></p>
       <ol id="resultados"></ol>
-      <div class="fila-fin"><button id="otra">Correr otra vez</button><button id="gastar">Menú</button><button id="al-garaje">Garaje</button></div>
+      <div class="fila-fin"><button id="otra">Correr otra vez</button><button id="al-garaje">Mejorar auto</button><button id="gastar">Cambiar pista</button></div>
       <button id="seguir">Seguir en pista</button>
     </div>
   </div>
@@ -699,7 +897,7 @@ const Sim=(()=>{
     {nombre:'Patrón',tag:'Trasero, puro derrape',txt:'Mucha fuerza atrás. Con el acelerador lo llevás cruzado toda la curva.',rear:1.06,slide:.92,tcsSuelto:1,betaMax:.95,tiempoSuelto:1.3,mu:1.78,power:240000,fmax:11500,brake:21000,forma:{h:.8,ala:1,franja:1,cl:.68,cx:-.25,ch:.84,tipo:'cuna'}},
     {nombre:'Leoncito',tag:'Chiquito y picante',txt:'Hatchback de barrio: liviano, doblador y fácil de tirar de costado.',m:960,power:118000,fmax:8200,brake:17000,mu:1.68,slide:.88,tcsSuelto:.55,forma:{tipo:'h206',via:.8,pinta:18,llanta:'#17181c'}}
   ].map(modelo);
-  const HALF=9,VERGE=4.5,WALL=HALF+VERGE;
+  const HALF=9,VERGE=4.5,WALL=HALF+VERGE,LEJOS=44;
   // Pista: curva cerrada Catmull-Rom remuestreada a paso constante
   // Trazados de los 24 circuitos del calendario 2026 de Fórmula 1, adaptados al ancho de pista del juego.
   // Datos: bacinger/f1-circuits (MIT, © Tomislav Bacinger).
@@ -785,8 +983,92 @@ const Sim=(()=>{
     for(let i=0;i<N;i++)l[i]=clamp((s[i]-.55*(s[(i+lejos)%N]+s[(i+N-lejos)%N]))*m*1.25,-m,m);
     alisar(l,6/t.sp,2);t.curva=sc;t.linea=l;return t;
   }
-  const track=Object.assign(conLinea(build(TRACKS[0].ctrl)),{grip:1,tema:'pasto'});
-  const setTrack=i=>Object.assign(track,conLinea(build(TRACKS[i].ctrl)),{grip:TRACKS[i].grip||1,tema:TRACKS[i].tema||'pasto'});
+  // Hasta dónde llega cada lado antes de quedar más cerca de otro tramo de la pista que del propio
+  function holguras(t){
+    const N=t.N,I=new Float32Array(N).fill(LEJOS),D=new Float32Array(N).fill(LEJOS),cerca=Math.round(90/t.sp),p=2;
+    for(let i=0;i<N;i+=p)for(const e of [-1,1]){
+      let tope=LEJOS;
+      for(let o=HALF+1;o<LEJOS&&tope===LEJOS;o+=2){
+        const px=t.x[i]+t.nx[i]*o*e,py=t.y[i]+t.ny[i]*o*e,q=o*o;
+        for(let j=0;j<N;j+=2){
+          const g=Math.abs(j-i);if(g<cerca||N-g<cerca)continue;
+          const dx=px-t.x[j],dy=py-t.y[j];
+          if(dx*dx+dy*dy<q){tope=o;break}
+        }
+      }
+      for(let k=0;k<p;k++)(e<0?I:D)[(i+k)%N]=tope;
+    }
+    return [I,D];
+  }
+  // Ensancha lo marcado y descarta los pedazos muy cortos
+  function zonas(v,minimo){
+    const N=v.length,o=v.slice();let ini=-1;
+    for(let i=0;i<N;i++)if(!o[i]&&o[(i+N-1)%N]){ini=i;break}
+    if(ini<0)return;
+    let i=0;
+    while(i<N){
+      const a=(ini+i)%N,val=o[a];let n=0;
+      while(n<N-i&&o[(ini+i+n)%N]===val)n++;
+      if(n<minimo)for(let k=0;k<n;k++)v[(ini+i+k)%N]=val?0:1;
+      i+=n;
+    }
+  }
+  // Pianos, grava y muros de cada lado. I es el lado negativo de la normal, D el positivo.
+  function conBordes(t,tema){
+    const N=t.N,sp=t.sp,c=t.curva,ciudad=tema==='ciudad',paso=m=>Math.max(1,Math.round(m/sp));
+    const [hI,hD]=holguras(t),salida=c[N-10]>0?-1:1;
+    const adentro=e=>Float32Array.from(c,v=>Math.max(0,v*e)),radio=v=>1/Math.max(v,.002);
+    const lado=(e,hol)=>{
+      const pro=adentro(e),con=adentro(-e),k=new Float32Array(N),g=new Float32Array(N),m=new Uint8Array(N),w=new Float32Array(N);
+      // Piano: ancho del lado de adentro según lo cerrada que sea la curva, y finito del lado de afuera
+      for(let i=0;i<N;i++){
+        if(pro[i]>.0095)k[i]=Math.min(1.9+3.3*clamp((pro[i]-.0095)/.032,0,1),radio(pro[i])-HALF-1.5);
+        else if(con[i]>.012)k[i]=1.1;
+      }
+      alisar(k,5/sp,2);
+      for(let i=0;i<N;i++)if(k[i]<.45)k[i]=0;
+      // Grava afuera de las curvas cerradas
+      for(let i=0;i<N;i++)if(con[i]>.02)g[i]=15;
+      alisar(g,9/sp,3);
+      for(let i=0;i<N;i++)if(g[i]<3)g[i]=0;
+      // Muros: afuera de las curvas rápidas, entre tramos vecinos y en la recta principal
+      const pasto=ciudad?20:27,marca=new Uint8Array(N);
+      for(let i=0;i<N;i++){
+        if(ciudad?pro[i]<.018&&(i*sp+(e>0?150:0))%300>110:con[i]>.0085)marca[i]=1;
+        if(hol[i]<pasto&&hol[i]>HALF+3)marca[i]=1;
+      }
+      // Cada curva tira la moneda: algunas quedan abiertas, con pasto hasta donde quieras irte
+      if(!ciudad){
+        let n=0,sem=(t.N*7+(e>0?11:3))%97;
+        for(let i=1;i<N;i++){
+          if(marca[i]&&!marca[i-1]){n++;sem=(sem*31+n*17)%97}
+          if(marca[i]&&sem%5<3&&hol[i]>=pasto)marca[i]=0;
+        }
+      }
+      const r=paso(24);
+      for(let i=0;i<N;i++)if(marca[i])for(let o=-r;o<=r;o++){const q=(i+o+N)%N;if(hol[q]>HALF+3)m[q]=1}
+      zonas(m,paso(40));
+      if(e===salida)for(let o=-paso(190);o<paso(30);o++){const q=(o+N)%N;if(hol[q]>HALF+3)m[q]=1}
+      for(let i=0;i<N;i++){
+        // Del lado de adentro de una curva el muro se cruzaría consigo mismo
+        if(radio(pro[i])<pasto+3)m[i]=0;
+        w[i]=Math.min(pasto,hol[i]-.5);
+      }
+      const b=w.slice(),h=paso(14);
+      for(let i=0;i<N;i++){let v=1e9;for(let o=-h;o<=h;o++)v=Math.min(v,b[(i+o+N)%N]);w[i]=v}
+      alisar(w,8/sp,2);
+      zonas(m,paso(30));
+      for(let i=0;i<N;i++){w[i]=m[i]?Math.max(w[i],HALF+3):0;if(g[i]&&w[i])g[i]=Math.min(g[i],w[i]-HALF-1.5);if(g[i]<3)g[i]=0}
+      return {k,g,w};
+    };
+    const a=lado(-1,hI),b=lado(1,hD);
+    t.kI=a.k;t.kD=b.k;t.gI=a.g;t.gD=b.g;t.mI=a.w;t.mD=b.w;t.salida=salida;
+    return t;
+  }
+  const armadas=[];
+  const armar=i=>armadas[i]||(armadas[i]=conBordes(conLinea(build(TRACKS[i].ctrl)),TRACKS[i].tema||'pasto'));
+  const track=Object.assign(armar(0),{grip:TRACKS[0].grip||1,tema:TRACKS[0].tema||'pasto'});
+  const setTrack=i=>Object.assign(track,armar(i),{grip:TRACKS[i].grip||1,tema:TRACKS[i].tema||'pasto'});
   const outline=i=>build(TRACKS[i].ctrl);
   let locI=0,locD=0;
   function locate(px,py,hint){
@@ -827,13 +1109,22 @@ const Sim=(()=>{
     return (u+dt/M*(F+kv))/(1+dt/M*k);
   }
   const frenarEje=(u,d)=>Math.abs(u)<=d?0:u-Math.sign(u)*d;
+  function rescatar(c,i,o){place(c,i,o);c.ghost=1.8;c.rescates=(c.rescates||0)+1}
   function stepCar(c,inp,dt){
     if(c.frozen){c.vx=c.vy=c.w=c.uf=c.ur=c.lax=c.lay=0;c.steer=c.delta=0;c.gas=c.brk=c.mano=0;return}
     const P=c.spec,cs=Math.cos(c.a),sn=Math.sin(c.a);
     const vf=c.vx*cs+c.vy*sn,vr=-c.vx*sn+c.vy*cs,speed=Math.hypot(vf,vr);
-    locate(c.x,c.y,c.idx);c.idx=locI;c.off=locD;
-    const out=clamp((Math.abs(locD)-HALF)/1.2,0,1);c.grass=out;
-    const mu=P.mu*track.grip*(1-out*.55),mano=inp.mano>0;
+    const antes=c.idx;
+    locate(c.x,c.y,c.idx);
+    const fuera=Math.abs(locD),der=locD>0,borde=HALF+(der?track.kD:track.kI)[locI],out=clamp((fuera-borde)/1.2,0,1);
+    // Cortar por el pasto hasta otro tramo o irse demasiado lejos te devuelve a la pista
+    if(antes>=0&&out>0){
+      const g=Math.abs(locI-antes),salto=Math.min(g,track.N-g)*track.sp;
+      if(salto>40||fuera>LEJOS){rescatar(c,salto>40?antes:locI,salto>40?0:clamp(locD,-5,5));return}
+    }
+    c.idx=locI;c.off=locD;c.grass=out;c.piano=fuera>HALF-.3&&fuera<=borde?1:0;
+    const grava=out*(fuera<HALF+(der?track.gD:track.gI)[locI]?1:0);
+    const mu=P.mu*track.grip*(1-out*.5)*(1-c.piano*.05),mano=inp.mano>0;
     // Cola suelta: después del freno de mano la goma de atrás resbala de forma pareja y recupera de a poco,
     // así el derrape se sostiene con el acelerador y la salida no da un latigazo
     const beta=speed>4?Math.abs(Math.atan2(vr,Math.abs(vf))):0;
@@ -903,8 +1194,8 @@ const Sim=(()=>{
       const e=P.m*P.mu*6.33*P.empuje*c.cola*track.grip*(1-out)/speed;
       Fxb+=e*vf;Fyb+=e*vr;
     }
-    Fxb-=vf*(30+out*1400)+P.drag*vf*Math.abs(vf);
-    Fyb-=vr*(12+out*700);
+    Fxb-=vf*(30+out*320+grava*760)+P.drag*vf*Math.abs(vf);
+    Fyb-=vr*(12+out*260+grava*420);
     const ax=Fxb/P.m,ay=Fyb/P.m,lp=1-Math.exp(-dt*12);
     c.lax+=(ax-c.lax)*lp;c.lay+=(ay-c.lay)*lp;
     c.vx+=(ax*cs-ay*sn)*dt;c.vy+=(ax*sn+ay*cs)*dt;
@@ -933,8 +1224,8 @@ const Sim=(()=>{
     for(let i=0;i<4;i++){
       const lx=i<2?hl:-hl,ly=i%2?hw:-hw,px=c.x+lx*cs-ly*sn,py=c.y+lx*sn+ly*cs;
       locate(px,py,c.idx);
-      const over=Math.abs(locD)-WALL;
-      if(over<=0)continue;
+      const w=(locD>0?track.mD:track.mI)[locI],over=Math.abs(locD)-w;
+      if(!w||over<=0||over>2.5)continue;
       const s=locD>0?-1:1,nx=track.nx[locI]*s,ny=track.ny[locI]*s;
       c.x+=nx*over;c.y+=ny*over;
       const rx=px-c.x,ry=py-c.y,pvx=c.vx-c.w*ry,pvy=c.vy+c.w*rx,vn=pvx*nx+pvy*ny;
@@ -1021,7 +1312,7 @@ const Sim=(()=>{
     dt*=3;
     const t=track,N=t.N,speed=Math.hypot(c.vx,c.vy);
     if(speed<1.2)c.stuck+=dt;else c.stuck=0;
-    if(c.stuck>2.5){place(c,c.idx,0);c.ghost=1.5;c.stuck=0}
+    if(c.stuck>2.5){rescatar(c,c.idx,0);c.stuck=0}
     const look=(c.idx+Math.round((7+speed*.55)/t.sp))%N,cs=Math.cos(c.a),sn=Math.sin(c.a);
     // De base va por la línea de carrera, cada uno con su mañana
     let meta=t.linea[look]*.8+c.lane*.35,gasOk=true;
@@ -1087,7 +1378,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const COLORES=['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34','#dde1e6'];
   const LAPS=2,vueltasDe=i=>TRACKS[i].juego?3:LAPS,LS='picada-piloto';
   const TEMAS={
-    pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#5ea9d0',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72],cielo:'#a9d8f0'},
+    pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#d8412f',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72],cielo:'#a9d8f0'},
     medano:{s1:'#dcbb7c',s2:'#d3b06f',ban:'#c9a264',asf:'#a57c52',kA:'#f4e6c8',kB:'#c9622f',mA:'#8a5a34',mB:'#e8d3a7',top:'#b58f62',linea:'#caa67a',prop:'cactus',luz:[.86,.76],cielo:'#f3dcae'},
     glaciar:{s1:'#e9f1f6',s2:'#e0eaf1',ban:'#cfe0ea',asf:'#a7c3d4',kA:'#ffffff',kB:'#3f7fb0',mA:'#2f6c9c',mB:'#f4f9fc',top:'#d7e5ee',linea:'#e7f2f8',prop:'nevado',luz:[.9,.68],cielo:'#d5e7f3'},
     noche:{s1:'#1a2838',s2:'#172331',ban:'#23384a',asf:'#33363d',kA:'#ffd23f',kB:'#f4f1e6',mA:'#e0a526',mB:'#3a4453',top:'#4a5563',linea:'#f4f1e6',prop:'farol',luz:[.62,.5],cielo:'#101a27'},
@@ -1174,9 +1465,74 @@ if(typeof module!=='undefined')module.exports=Sim;
   const nivelPiloto=()=>{let n=1;while(n<NIVELES.length&&pref.rep>=NIVELES[n])n++;return n};
   function pintarPlata(){
     if(pref.prueba)pref.plata=9999999;
-    $('plata-inicio').textContent='Tu plata: '+pesos(pref.plata);$('plata-sala').textContent=pesos(pref.plata);
-    const n=nivelPiloto();
-    $('g-plata').textContent=pref.prueba?'∞ Prueba':pesos(pref.plata);$('g-nivel').textContent='Nivel '+n;$('g-estilo').textContent=String(estrellas(modelo)).replace('.',',')+' ★';
+    $('plata-sala').textContent=pesos(pref.plata);
+    const n=progresoNivel(),m=$('b-monto');
+    if(pref.prueba)m.textContent='∞';
+    else if(plataVista==null||!m.textContent||plataVista===pref.plata)m.textContent=pesos(pref.plata);
+    else contar(m,plataVista,pref.plata);
+    plataVista=pref.plata;
+    $('b-niv').textContent='Nivel '+n.n;$('b-prog').style.width=n.f*100+'%';
+    if(!$('bienvenida').hidden)pintarInicio();
+  }
+  let plataVista=null;
+  // Cuenta de un monto a otro, para que se note cuánta plata entró o salió
+  function contar(e,a,b,prefijo=''){
+    const t0=performance.now(),dur=matchMedia('(prefers-reduced-motion:reduce)').matches?0:650,yo=e.cuenta=(e.cuenta||0)+1;
+    const paso=now=>{
+      if(e.cuenta!==yo)return;
+      const u=dur?clamp((now-t0)/dur,0,1):1;
+      e.textContent=prefijo+pesos(a+(b-a)*(1-(1-u)*(1-u)));
+      if(u<1)requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  }
+  function progresoNivel(){
+    const n=nivelPiloto(),a=NIVELES[n-1],b=NIVELES[n];
+    return {n,f:b==null?1:clamp((pref.rep-a)/(b-a),0,1),falta:b==null?0:b-pref.rep};
+  }
+  // Movimientos de plata: se guardan los últimos para que siempre se sepa de dónde salió cada peso
+  function mov(t,m){const l=pref.movs||(pref.movs=[]);l.unshift([t,Math.round(m)]);l.length=Math.min(l.length,12)}
+  function pagar(p,t){
+    if(pref.plata<p)return false;
+    pref.plata-=p;mov(t,-p);toast(t+' · −'+pesos(p));
+    return true;
+  }
+  let toastT=0;
+  function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{e.hidden=true},1900)}
+  // La compra más barata que le queda al auto elegido
+  function proximaCompra(){
+    let m=null;
+    for(const q of MEJORAS){
+      const n=nivel(modelo,q.k);
+      if(n<COSTO_MEJORA.length&&(!m||COSTO_MEJORA[n]<m.p))m={n:q.nombre+' nivel '+(n+1),p:COSTO_MEJORA[n]};
+    }
+    return m;
+  }
+  const eventoActual=()=>{
+    const e=pref.evento||(pref.evento={tipo:'circuito',p:0});
+    if(!TITULO_EVENTO[e.tipo])e.tipo='circuito';
+    if(!(e.p>=0&&e.p<TRACKS.length))e.p=0;
+    return e;
+  };
+  function textoPremio(e){
+    if(e.tipo==='circuito')return '1º gana '+pesos(PREMIOS_MAQUINA[0]*(1+bonoEstilo()/100)*dificultad().paga);
+    if(e.tipo==='derrape')return 'Medalla de oro: '+pesos(1300);
+    return 'No paga: corrés contra tu mejor vuelta';
+  }
+  function pintarInicio(){
+    const e=eventoActual(),m=proximaCompra();
+    $('i-modo').textContent=TITULO_EVENTO[e.tipo];$('i-pista').textContent=TRACKS[e.p].name;
+    $('i-meta').textContent=(e.tipo==='circuito'?dificultad().n+' · '+vueltasDe(e.p)+' vueltas':e.tipo==='derrape'?'1 vuelta':'Vueltas libres');
+    $('i-premio').textContent=textoPremio(e);
+    $('i-cta').textContent=salaPendiente?'Entrar a la partida':'Correr';
+    $('i-auto').textContent=MODELOS[modelo].nombre;
+    $('i-mejora').hidden=!m;
+    if(m){
+      const f=clamp(pref.plata/m.p,0,1);
+      $('i-m-n').textContent=m.n;$('i-m-u').style.width=f*100+'%';
+      $('i-m-t').textContent=f>=1?'Comprar '+pesos(m.p):'Faltan '+pesos(m.p-pref.plata);
+      $('i-mejora').classList.toggle('lista',f>=1);
+    }
   }
   function darRep(n){
     const a=nivelPiloto();pref.rep+=n;guardar(pref);
@@ -1648,7 +2004,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const k of [...enSala.keys()])dropRemote(k);
     anfitrion=null;botsSala=0;removeBots();pintarCircuito();
     $('chip-partida').hidden=true;
-    alMenu();
+    alMenu('online');
     salon();cuidarVitrina();
   }
   function aGaraje(uniendose){
@@ -1657,7 +2013,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       setCircuito(trackIdx);
       addBots();
     }
-    salaVista=null;tapado=false;actual='juego';historia=['titulo','modos'];
+    salaVista=null;tapado=false;actual='juego';historia=[];pintarCasco();
     mostrarJuego(true);
     $('inicio').hidden=true;$('portada').hidden=false;
     $('rotulo-partida').textContent='Partida';$('ver-codigo').textContent=codigo.toUpperCase();
@@ -1674,7 +2030,6 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('estado-inicio').textContent='';aGaraje(uniendose);cuidarVitrina();
   }
   $('crear').onclick=()=>entrarA(nuevoCodigo(),false);
-  $('solo').onclick=()=>atras();
   $('dejar').onclick=dejarPartida;
   $('unirse').addEventListener('submit',e=>{
     e.preventDefault();
@@ -1696,7 +2051,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     $('abiertas').hidden=false;cuidarVitrina();
     const auto=(window.__salaUrl||location.hash.slice(1)).toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,24);
-    salaPendiente=auto;
+    salaPendiente=auto;pintarInicio();
   })();
   // --- Carrera ---
   function resetRun(c){c.laps=-1;c.sector=3;c.finT=null;c.lapStart=0;c.lastLap=null}
@@ -1861,7 +2216,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     doneRaces.add(race.id);race=null;
     guardarCombo();
     const ol=$('resultados');ol.textContent='';
-    const conGente=remotes.size>0,tabla=conGente?PREMIOS:PREMIOS_MAQUINA.map(p=>p*dificultad().paga),bono=1+bonoEstilo()/100;
+    const conGente=personas()>0,mul=conGente?1:dificultad().paga,tabla=(conGente?PREMIOS:PREMIOS_MAQUINA).map(p=>p*mul),bono=1+bonoEstilo()/100;
     const premio=i=>Math.round(tabla[Math.min(i,tabla.length-1)]*bono);
     const deDerrape=evento&&evento.tipo==='derrape',pts=Math.round(derrape.carrera),porPuntos=Math.floor(pts/10);
     if(!deDerrape)lista.forEach((x,i)=>{
@@ -1877,22 +2232,46 @@ if(typeof module!=='undefined')module.exports=Sim;
       g=(med?med.p:0)+porPuntos;rep=Math.round(pts/40);
       titulo=med?'Medalla de '+med.n:'Sin medalla';filas.push([pts.toLocaleString('es-AR')+' puntos de derrape',pesos(porPuntos)]);if(med)filas.unshift(['Medalla de '+med.n,pesos(med.p)]);
     }else if(mio&&mio.fin!=null){
-      g=premio(pos)+porPuntos;rep=[120,80,50,30][Math.min(pos,3)]+Math.round(pts/60);
-      titulo=pos===0?'¡Ganaste!':'Llegaste '+(pos+1)+'º';filas.push(['Premio por llegar '+(pos+1)+'º'+(bonoEstilo()?' (+'+bonoEstilo()+'% de estilo)':''),pesos(premio(pos))]);
+      const base=(conGente?PREMIOS:PREMIOS_MAQUINA)[Math.min(pos,4)],conDif=Math.round(base*mul),tot=premio(pos);
+      g=tot+porPuntos;rep=[120,80,50,30][Math.min(pos,3)]+Math.round(pts/60);
+      titulo=pos===0?'¡Ganaste!':'Llegaste '+(pos+1)+'º';filas.push(['Premio por llegar '+(pos+1)+'º',pesos(base)]);
+      if(mul!==1)filas.push(['Dificultad '+dificultad().n+' ×'+String(mul).replace('.',','),signo(conDif-base)]);
+      if(tot!==conDif)filas.push(['Estilo de tu auto +'+bonoEstilo()+'%',signo(tot-conDif)]);
+      if(porPuntos)filas.push(['Derrapes',signo(porPuntos)]);
     }else{titulo='No llegaste';filas.push(['Sin llegar a la meta no hay premio','$0'])}
+    if(evento||conGente){
+      const st=pref.stats||(pref.stats={c:0,v:0,p:0,o:0});
+      st.c++;
+      if(deDerrape){if(medallas().filter(m=>pts>=m.min).length===3)st.o++}
+      else if(mio&&mio.fin!=null){if(pos===0)st.v++;if(pos<3)st.p++}
+    }
+    if(g)mov((deDerrape?'Derrape':'Carrera')+' en '+TRACKS[trackIdx].name,g);
     pref.plata+=g;
     const sube=darRep(rep);pintarPlata();
     $('titulo-final').textContent=titulo;
-    {const co=$('cobro');co.textContent='';for(const [a,b] of filas){const d=el('div');d.append(el('span',null,a),el('b',null,b));co.append(d)}
-     const d=el('div','total');d.append(el('span',null,'Ganaste'),el('b',null,pesos(g)));co.append(d);
-     if(rep)co.append(el('p',null,'+'+rep+' de reputación'+(sube?' · ¡Subiste a nivel '+sube+'!':'')+' · Tenés '+(pref.prueba?'∞':pesos(pref.plata))))}
+    $('f-sub').textContent=TRACKS[trackIdx].name;
+    const med=deDerrape&&medallas().filter(m=>pts>=m.min).pop(),fp=$('f-puesto');
+    fp.textContent=deDerrape?(med?med.n:'—'):mio&&mio.fin!=null?(pos+1)+'º':'—';
+    fp.className=deDerrape?(med?'m'+med.n:''):mio&&mio.fin!=null&&pos<3?'p'+pos:'';
+    {const co=$('cobro');co.textContent='';for(const [a,b] of filas){const d=el('div');d.append(el('span',null,a),el('b',null,b));co.append(d)}}
+    if(!pref.prueba)contar($('f-monto'),0,g,'+');else $('f-monto').textContent='+'+pesos(g);
+    $('f-gano').hidden=!g;
+    {
+      const n=progresoNivel();
+      $('f-nivel').hidden=!rep;$('f-nivel-u').style.width=n.f*100+'%';
+      $('f-nivel-t').textContent=(sube?'¡Subiste a nivel '+sube+'!':'+'+rep+' puntos')+(n.falta?' · Faltan '+n.falta.toLocaleString('es-AR')+' para nivel '+(n.n+1):'');
+      const m=proximaCompra(),tip=$('f-tip');
+      tip.hidden=!m;
+      if(m)tip.textContent=pref.plata>=m.p?'Ya te alcanza para '+m.n+' ('+pesos(m.p)+')':'Te faltan '+pesos(m.p-pref.plata)+' para '+m.n;
+    }
     $('otra').hidden=$('gastar').hidden=$('al-garaje').hidden=modo!=='evento';$('seguir').hidden=modo==='evento';
     $('final').hidden=!entered;
   }
   $('seguir').onclick=()=>{$('final').hidden=true};
+  const signo=n=>(n<0?'−':'+')+pesos(Math.abs(n));
   $('gastar').onclick=()=>alMenu();
   $('otra').onclick=()=>{const q=evento;alMenu();correr(q.tipo,q.pista)};
-  $('al-garaje').onclick=()=>{alMenu();ir('garaje')};
+  $('al-garaje').onclick=()=>alMenu('garaje');
   $('abandonar').onclick=()=>alMenu();
   $('largar').onclick=()=>{
     if(race)return;
@@ -1900,7 +2279,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     adopt(Date.now().toString(36)+Math.floor(Math.random()*1296).toString(36),now+7500,now);
     $('largar').blur();
   };
-  let avisoT=0;
+  let avisoT=0,vistos=0;
   function aviso(t){const a=$('aviso');a.textContent=t;a.hidden=false;avisoT=performance.now()+2200}
   function reponer(){
     if(!me||me.frozen)return;
@@ -1957,71 +2336,69 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('nombre').oninput=()=>{const n=$('nombre').value.trim().slice(0,12)||'Piloto';pref.nombre=n;guardar(pref);if(me)me.name=n};
   // Pantallas: cada una recuerda de cuál viniste para que Atrás vuelva ahí
   function mostrar(p){
-    actual=p;abierto=null;
+    actual=p;abierto=null;visto=modelo;
     for(const id of ['bienvenida','menu','local','inicio','final','portada'])$(id).hidden=true;
     $('reserva').append($('panel-controles'));
     if(me)me.frozen=true;
     mostrarJuego(false);
     salaVista=p==='titulo'||p==='garaje'?p:null;tapado=!salaVista;
-    if(p==='titulo'){visto=modelo;$('bienvenida').hidden=false}
+    if(p==='titulo'){$('bienvenida').hidden=false;aplicarAuto();pintarInicio()}
     else if(p==='garaje'){$('local').hidden=false;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje()}
     else if(p==='online'){$('inicio').hidden=false;cuidarVitrina()}
     else pintarMenu(p);
-    pintarPlata();
+    pintarPlata();pintarCasco();
+  }
+  function pintarCasco(){
+    const hub=['titulo','correr','garaje','online','premios'].includes(actual);
+    $('tabs').hidden=!hub||!!abierto;$('barra').hidden=!(hub||actual==='opciones'||actual==='ayuda');
+    for(const b of $('tabs').children){if(b.dataset.p===actual)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}
   }
   function ir(p){historia.push(actual);mostrar(p)}
+  function tab(p){historia=[];mostrar(p)}
   function atras(){mostrar(historia.pop()||'titulo')}
-  function alMenu(){
+  function alMenu(p='correr'){
     modo='menu';evento=null;vueltas=LAPS;race=null;
     removeBots();$('grande').hidden=true;$('aviso').hidden=true;
-    historia=['titulo'];mostrar('modos');
+    tab(p);
   }
   $('jugar').onclick=()=>{
     subirAlAuto();
-    if(salaPendiente){const q=salaPendiente;salaPendiente='';historia=['titulo','modos'];mostrar('online');entrarA(q,true)}
-    else ir('modos');
+    if(salaPendiente){const q=salaPendiente;salaPendiente='';tab('online');entrarA(q,true)}
+    else{const e=eventoActual();correr(e.tipo,e.p)}
   };
-  $('t-garaje').onclick=()=>{subirAlAuto();visto=modelo;ir('garaje')};
-  $('t-ayuda').onclick=()=>{subirAlAuto();ir('ayuda')};
-  $('t-engranaje').onclick=$('menu-engranaje').onclick=()=>{subirAlAuto();if(actual!=='opciones')ir('opciones')};
+  $('i-cambiar').onclick=()=>{subirAlAuto();tab('correr')};
+  $('i-auto').onclick=()=>{subirAlAuto();tab('garaje')};
+  $('i-mejora').onclick=()=>{subirAlAuto();tab('garaje');abrirPanel('mecanico')};
+  $('b-plata').onclick=$('b-nivel').onclick=()=>{subirAlAuto();tab('premios')};
+  $('b-op').onclick=()=>{subirAlAuto();if(actual!=='opciones')ir('opciones')};
+  $('b-ayuda').onclick=()=>{subirAlAuto();if(actual!=='ayuda')ir('ayuda')};
   $('menu-atras').onclick=()=>atras();
-  const ICONOS={"bandera":"<path d=\"M18 8v84\" stroke=\"currentColor\" stroke-width=\"9\"/><path fill=\"currentColor\" d=\"M24 12h60v44H24zM24 12h20v15H24z\"/><path fill=\"#14151a\" d=\"M24 12h15v11H24zM54 12h15v11H54zM39 23h15v11H39zM69 23h15v11H69zM24 34h15v11H24zM54 34h15v11H54zM39 45h15v11H39zM69 45h15v11H69z\"/>","derrape":"<path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" d=\"M14 84C20 40 48 26 86 18\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"2 18\" d=\"M36 88C42 58 60 46 88 38\"/>","reloj":"<circle cx=\"50\" cy=\"52\" r=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\"/><path d=\"M50 30v24l16 10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"9\" stroke-linecap=\"round\"/>","gente":"<circle cx=\"34\" cy=\"34\" r=\"17\" fill=\"currentColor\"/><circle cx=\"70\" cy=\"40\" r=\"13\" fill=\"currentColor\"/><path fill=\"currentColor\" d=\"M6 88c2-26 14-36 28-36s26 10 28 36zM60 56c16-2 30 8 33 32H68c0-12-3-22-8-32z\"/>","taller":"<path fill=\"currentColor\" d=\"M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z\"/>"};
-  const MODOS=[
-    ['Circuito','Corré contra 3 rivales. Gana plata.','bandera',()=>elegirPista('circuito')],
-    ['Derrape','Una vuelta de costado. Ganá medallas.','derrape',()=>elegirPista('derrape')],
-    ['Práctica','Corré contra tu mejor vuelta.','reloj',()=>elegirPista('practica')],
-    ['Multijugador','Corré con amigos en línea.','gente',()=>ir('online')],
-    ['Garaje','Elegí tu auto y mejoralo.','taller',()=>{visto=modelo;ir('garaje')}]
-  ];
-  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
-  function elegirPista(t){
-    const e=pref.evento||(pref.evento={tipo:t,p:0});e.tipo=t;guardar(pref);ir('pistas');
+  const ICONOS={"bandera":"<path d=\"M18 8v84\" stroke=\"currentColor\" stroke-width=\"9\"/><path fill=\"currentColor\" d=\"M24 12h60v44H24zM24 12h20v15H24z\"/><path fill=\"#14151a\" d=\"M24 12h15v11H24zM54 12h15v11H54zM39 23h15v11H39zM69 23h15v11H69zM24 34h15v11H24zM54 34h15v11H54zM39 45h15v11H39zM69 45h15v11H69z\"/>","derrape":"<path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" d=\"M14 84C20 40 48 26 86 18\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"2 18\" d=\"M36 88C42 58 60 46 88 38\"/>","reloj":"<circle cx=\"50\" cy=\"52\" r=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\"/><path d=\"M50 30v24l16 10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"9\" stroke-linecap=\"round\"/>","gente":"<circle cx=\"34\" cy=\"34\" r=\"17\" fill=\"currentColor\"/><circle cx=\"70\" cy=\"40\" r=\"13\" fill=\"currentColor\"/><path fill=\"currentColor\" d=\"M6 88c2-26 14-36 28-36s26 10 28 36zM60 56c16-2 30 8 33 32H68c0-12-3-22-8-32z\"/>","taller":"<path fill=\"currentColor\" d=\"M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z\"/>","casa":"<path fill=\"currentColor\" d=\"M50 8 96 48H82V92H58V64H42V92H18V48H4Z\"/>","copa":"<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M26 8H74V16H94V30C94 44 84 52 71 54 67 62 61 66 56 68V78H68V92H32V78H44V68C39 66 33 62 29 54 16 52 6 44 6 30V16H26ZM14 24V30C14 38 19 43 26 45V24ZM86 24H74V45C81 43 86 38 86 30Z\"/>","motor":"<path fill=\"currentColor\" d=\"M58 2 16 56H44L34 98 84 40H54Z\"/>","chapa":"<path fill=\"currentColor\" d=\"M4 66V50L20 46 34 26H68L84 46 96 50V66H86A13 13 0 0 0 60 66H40A13 13 0 0 0 14 66ZM27 79A9 9 0 1 1 27 61 9 9 0 0 1 27 79ZM73 79A9 9 0 1 1 73 61 9 9 0 0 1 73 79Z\"/>","pintura":"<path fill=\"currentColor\" d=\"M50 6C50 6 18 44 18 64A32 32 0 0 0 82 64C82 44 50 6 50 6Z\"/>","extras":"<path fill=\"currentColor\" d=\"M50 4 63 36 97 38 70 60 80 94 50 75 20 94 30 60 3 38 37 36Z\"/>","ajustes":"<path fill=\"currentColor\" d=\"M8 20H52V10H68V20H92V32H68V42H52V32H8ZM8 68H24V58H40V68H92V80H40V90H24V80H8Z\"/>"};
+  const svgDe=ic=>{const v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.setAttribute('viewBox','0 0 100 100');v.setAttribute('aria-hidden','true');v.innerHTML=ICONOS[ic];return v};
+  for(const [p,n,ic] of [['titulo','Inicio','casa'],['correr','Correr','bandera'],['garaje','Garaje','taller'],['online','Online','gente'],['premios','Premios','copa']]){
+    const b=el('button');b.type='button';b.dataset.p=p;b.append(svgDe(ic),el('span',null,n));
+    b.onclick=()=>{subirAlAuto();if(actual!==p)tab(p)};$('tabs').append(b);
   }
+  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
+  const DESC_EVENTO={circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
   function pintarMenu(p){
     const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
-    $('menu').hidden=false;$('menu').classList.toggle('ancho',p==='pistas');
-    $('menu-engranaje').hidden=p!=='modos';
-    if(p==='modos'){
-      t.textContent='¿Qué querés jugar?';
-      const g=el('div','grilla-modos');
-      for(const [n,d,ic,f] of MODOS){
-        const b=el('button','modo');b.type='button';b.onclick=f;
-        const sv=document.createElementNS('http://www.w3.org/2000/svg','svg');sv.setAttribute('viewBox','0 0 100 100');sv.innerHTML=ICONOS[ic];
-        const tx=el('span');tx.append(el('b',null,n),el('small',null,d));b.append(sv,tx);g.append(b);
-      }
-      c.append(g);
-    }else if(p==='pistas')pintarPistas(c,t);
+    $('menu').hidden=false;$('menu').classList.toggle('sub',p==='opciones'||p==='ayuda');
+    $('menu-atras').hidden=!(p==='opciones'||p==='ayuda');
+    if(p==='correr')pintarCorrer(c,t);
+    else if(p==='premios')pintarPremios(c,t);
     else if(p==='opciones'){t.textContent='Opciones';c.append($('panel-controles'))}
     else{
       t.textContent='Cómo jugar';
       const d=el('div','texto-menu');
       [
         ['Manejá','Flechas para doblar, o elegí Deslizar en Opciones. Abajo a la derecha, freno y acelerador.'],
+        ['Usá los pianos','Pasar por el piano es rápido. En el pasto y la grava perdés velocidad, y si te alejás mucho volvés a la pista.'],
         ['Derrapá','Soltá el acelerador, doblá y tocá Mano un momento. Después acelerá y mantené la curva.'],
             ['Largá bien','Soltá el acelerador con el semáforo. Tocalo justo cuando se apagan las luces: si te adelantás, salís tarde.'],
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
-        ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás piezas y sube tu estilo: más estilo, más premios.'],
-        ['Jugá con amigos','En Multijugador creá una partida y pasales el enlace.']
+        ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
+        ['Jugá con amigos','En Online creá una partida y pasales el enlace.']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -2033,41 +2410,76 @@ if(typeof module!=='undefined')module.exports=Sim;
     const g=suma/(o.length/1000);
     return {km:(o.length/1000).toFixed(1).replace('.',','),curvas,nivel:g>3.4?3:g>2.2?2:1};
   };
-  function pintarPistas(c,t){
-    const e=pref.evento;
-    if(!(e.p>=0&&e.p<TRACKS.length))e.p=0;
-    t.textContent=TITULO_EVENTO[e.tipo]||'Circuito';
-    const delJuego=!!TRACKS[e.p].juego,serie=el('div','seg');
-    for(const [n,q] of [['Fórmula 1',false],['Del juego',true]]){
-      const b=el('button',null,n);b.type='button';b.setAttribute('aria-pressed',q===delJuego);
-      b.onclick=()=>{if(q===delJuego)return;e.p=TRACKS.findIndex(x=>!!x.juego===q);guardar(pref);pintarMenu('pistas')};serie.append(b);
-    }
-    const box=el('div','sel-pista'),ficha=el('div','pista-ficha'),info=el('div'),d=datosPista(e.p),bono=1+bonoEstilo()/100;
-    info.append(el('h3',null,TRACKS[e.p].name),el('p',null,d.km+' km · '+d.curvas+' curvas'+(e.tipo==='circuito'?' · '+vueltasDe(e.p)+' vueltas':'')),el('p','dific','Dificultad '+['fácil','media','difícil'][d.nivel-1]));
-    ficha.append(miniPista(e.p),info);
-    const pr=el('div','premios-p');
-    const tag=(a,b)=>{const q=el('span');q.append(el('small',null,a),el('b',null,b));pr.append(q)};
-    let difi=null;
-    if(e.tipo==='circuito'){
-      PREMIOS_MAQUINA.slice(0,3).forEach((p,i)=>tag((i+1)+'º',pesos(p*bono*dificultad().paga)));
-      difi=el('div','seg');
-      for(const k in DIFICULTADES){const b=el('button',null,DIFICULTADES[k].n);b.type='button';b.setAttribute('aria-pressed',(pref.dif||'normal')===k);b.onclick=()=>{pref.dif=k;guardar(pref);pintarMenu('pistas')};difi.append(b)}
-    }
-    else if(e.tipo==='derrape'){Sim.setTrack(e.p);const med=medallas();Sim.setTrack(trackIdx);med.forEach(m=>tag(m.n+' · '+m.min.toLocaleString('es-AR')+' pts',pesos(m.p)))}
-    else{const f=(pref.fantasmas||{})[TRACKS[e.p].name];tag('Tu récord',f?tiempo(f.t):'Sin vueltas');tag('Fantasma',f?'Listo':'Hacé una vuelta')}
+  function pintarCorrer(c,t){
+    const e=eventoActual();
+    t.textContent='Elegí tu carrera';
+    const rehacer=()=>{guardar(pref);pintarMenu('correr')};
+    const seg=(op,act,fn)=>{
+      const q=el('div','seg');
+      for(const [n,v] of op){const b=el('button',null,n);b.type='button';b.setAttribute('aria-pressed',v===act);b.onclick=()=>{if(v!==act)fn(v)};q.append(b)}
+      return q;
+    };
+    const box=el('div','sel-pista');
+    box.append(seg(Object.keys(TITULO_EVENTO).map(k=>[TITULO_EVENTO[k],k]),e.tipo,v=>{e.tipo=v;rehacer()}),el('p','bajada',DESC_EVENTO[e.tipo]));
+    const delJuego=!!TRACKS[e.p].juego;
+    box.append(seg([['Fórmula 1',false],['Del juego',true]],delJuego,v=>{e.p=TRACKS.findIndex(x=>!!x.juego===v);rehacer()}));
     const lista=el('div','pistas-ev');
     TRACKS.forEach((tr,i)=>{
       if(!!tr.juego!==delJuego)return;
       const b=el('button');b.type='button';b.setAttribute('aria-pressed',i===e.p);b.append(miniPista(i),el('span',null,tr.name));
-      b.onclick=()=>{const q=lista.scrollTop;e.p=i;guardar(pref);pintarMenu('pistas');const n=$('menu-cuerpo').querySelector('.pistas-ev');if(n)n.scrollTop=q};lista.append(b);
+      b.onclick=()=>{const q=lista.scrollTop;e.p=i;rehacer();const n=$('menu-cuerpo').querySelector('.pistas-ev');if(n)n.scrollTop=q};lista.append(b);
     });
+    const dock=el('div','dock'),d=datosPista(e.p),info=el('div','dock-t');
+    info.append(el('h3',null,TRACKS[e.p].name),el('p',null,d.km+' km · '+d.curvas+' curvas'+(e.tipo==='circuito'?' · '+vueltasDe(e.p)+' vueltas':'')+' · '+['fácil','media','difícil'][d.nivel-1]));
+    dock.append(info);
+    if(e.tipo==='circuito')dock.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
+    const pr=el('div','premios-p'),tag=(a,b)=>{const q=el('span');q.append(el('small',null,a),el('b',null,b));pr.append(q)},bono=1+bonoEstilo()/100;
+    if(e.tipo==='circuito')PREMIOS_MAQUINA.slice(0,3).forEach((p,i)=>tag((i+1)+'º',pesos(p*bono*dificultad().paga)));
+    else if(e.tipo==='derrape'){Sim.setTrack(e.p);const med=medallas();Sim.setTrack(trackIdx);med.forEach(m=>tag(m.n+' · '+m.min.toLocaleString('es-AR'),pesos(m.p)))}
+    else{const f=(pref.fantasmas||{})[TRACKS[e.p].name];tag('Tu récord',f?tiempo(f.t):'Sin vueltas');tag('Fantasma',f?'Listo':'Hacé una vuelta')}
     const u=el('button','fr grande-c','¡A correr!');u.type='button';u.onclick=()=>correr(e.tipo,e.p);
-    box.append(serie,ficha);if(difi)box.append(difi);box.append(pr,lista,u);c.append(box);
+    dock.append(pr,u);box.append(lista,dock);c.append(box);
+  }
+  function pintarPremios(c,t){
+    t.textContent='Tus premios';
+    const n=progresoNivel(),st=pref.stats||{c:0,v:0,p:0,o:0},bono=bonoEstilo(),D=dificultad();
+    const caja=el('div','premios-caja'),hero=el('section','p-hero');
+    hero.append(el('small',null,'Tu plata'),el('b',null,pref.prueba?'∞':pesos(pref.plata)));
+    const nv=el('div','p-nivel');
+    nv.append(el('span',null,'Nivel '+n.n));
+    const pg=el('i','prog'),pu=el('u');pu.style.width=n.f*100+'%';pg.append(pu);
+    nv.append(pg,el('small',null,n.falta?'Te faltan '+n.falta.toLocaleString('es-AR')+' puntos para el nivel '+(n.n+1)+'. Cada carrera suma.':'Llegaste al nivel máximo.'));
+    hero.append(nv);caja.append(hero);
+    const fs=el('div','p-stats');
+    for(const [a,b] of [['Carreras',st.c],['Victorias',st.v],['Podios',st.p],['Oros',st.o]]){const q=el('span');q.append(el('b',null,b),el('small',null,a));fs.append(q)}
+    caja.append(fs,el('h3','p-titulo','Cuánto paga cada carrera'));
+    const tabla=(tit,sub,filas)=>{
+      const q=el('section','p-carta');q.append(el('h4',null,tit));if(sub)q.append(el('p',null,sub));
+      const g=el('div','p-filas');for(const [a,b] of filas){const f=el('div');f.append(el('span',null,a),el('b',null,b));g.append(f)}
+      q.append(g);caja.append(q);
+    };
+    const pos=l=>l.map((p,i)=>[i===4?'5º o peor':(i+1)+'º',pesos(p*(1+bono/100))]);
+    tabla('Circuito','Con dificultad '+D.n+(bono?' y tu estilo':'')+'.',pos(PREMIOS_MAQUINA.map(p=>p*D.paga)));
+    tabla('Online','Si corrés con otras personas.',pos(PREMIOS));
+    tabla('Derrape','Además, $1 cada 10 puntos.',[['Bronce',pesos(300)],['Plata',pesos(700)],['Oro',pesos(1300)]]);
+    caja.append(el('h3','p-titulo','Cómo ganar más'));
+    tabla('Dificultad','Cambiala en Correr.',Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,'×'+String(DIFICULTADES[k].paga).replace('.',',')]));
+    const es=el('section','p-carta');
+    es.append(el('h4',null,'Estilo de tu auto'),el('p',null,'Las piezas de Carrocería, Pintura y Extras suben el estilo. Hoy tenés '+textoEstrellas(estrellas(modelo))+': '+(bono?'+'+bono+'% en cada premio.':'sin bono todavía.')));
+    const ga=el('button','boton-p','Ir al garaje');ga.type='button';ga.onclick=()=>tab('garaje');es.append(ga);caja.append(es);
+    caja.append(el('h3','p-titulo','Últimos movimientos'));
+    const l=el('section','p-carta'),mv=pref.movs||[];
+    if(!mv.length)l.append(el('p',null,'Todavía no hay. Corré una carrera y tu primer premio aparece acá.'));
+    else{const g=el('div','p-filas');for(const [a,b] of mv){const f=el('div');f.append(el('span',null,a),el('b',b<0?'gasto':null,signo(b)));g.append(f)}l.append(g)}
+    caja.append(l);c.append(caja);
   }
   // Garaje: las flechas recorren tus autos y después los que están en venta
   const ordenGaraje=()=>pref.autos;
-  const TABS=[['mecanico','Mecánico'],['chapa','Chapería'],['pintura','Pintura'],['accesorios','Accesorios'],['ajuste','Ajustes']];
-  for(const [id,n] of TABS){const b=el('button','fr',n);b.type='button';b.onclick=()=>abrirPanel(id);$('g-tabs').append(b)}
+  const TABS=[['mecanico','Motor','motor'],['chapa','Carrocería','chapa'],['pintura','Pintura','pintura'],['accesorios','Extras','extras'],['ajuste','Ajustes','ajustes']];
+  for(const [id,n,ic] of TABS){
+    const b=el('button');b.type='button';b.append(svgDe(ic),el('span',null,n));b.onclick=()=>abrirPanel(id);$('g-tabs').append(b);
+    const q=el('button',null,n);q.type='button';q.dataset.id=id;q.onclick=()=>abrirPanel(id);$('local-cats').append(q);
+  }
   function cambiarAuto(d){
     const l=ordenGaraje(),n=l.length;
     visto=l[(l.indexOf(visto)+d+n)%n];
@@ -2078,20 +2490,22 @@ if(typeof module!=='undefined')module.exports=Sim;
   function pintarGaraje(){
     const l=ordenGaraje(),i=visto,m=MODELOS[i],mio=esMio(i),sp=mio?specDe(i):m,d=datos(sp);
     $('g-nombre').textContent=m.nombre;$('g-tag').textContent=m.txt;
-    $('g-cuenta').textContent=(l.indexOf(i)+1)+' de '+l.length+'';
+    $('g-cuenta').textContent='Auto '+(l.indexOf(i)+1)+' de '+l.length+(i===modelo?' · Elegido':'');
+    $('g-estilo').textContent=textoEstrellas(estrellas(i))+(bonoEstilo()?' · +'+bonoEstilo()+'% en premios':' · Sumá estilo con piezas');
     const dl=$('g-datos');dl.textContent='';
     barrasDe(sp,dl);
-    dl.append(el('p','g-resumen',(m.awd?'4x4':'Tracción trasera')+' · '+Math.round(sp.power/745.7)+' HP · '+Math.round(d.Velocidad*3.6)+' km/h · '+textoEstrellas(estrellas(i))));
+    dl.append(el('p','g-resumen',(m.awd?'4x4':'Tracción trasera')+' · '+Math.round(sp.power/745.7)+' HP · '+Math.round(d.Velocidad*3.6)+' km/h'));
   }
   function abrirPanel(id){
     abierto=id;
     const T=TABS.find(x=>x[0]===id);$('local-titulo').textContent=T?T[1]:'';
     $('local').classList.add('con-panel');$('local-panel').hidden=false;
+    for(const b of $('local-cats').children)b.setAttribute('aria-pressed',b.dataset.id===id);
+    $('local-cuerpo').scrollTop=0;pintarCasco();
     pintarLocal();
   }
   function cerrarLocal(){
-    if(abierto){abierto=null;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje();pintarPlata();return}
-    aplicarAuto();atras();
+    if(abierto){abierto=null;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje();pintarPlata();pintarCasco()}
   }
   $('local-cerrar').onclick=cerrarLocal;
   function pintarLocal(){
@@ -2109,27 +2523,30 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   const PINTORES={
     mecanico(c){
-      c.append(el('p','nota','Mejoras para tu '+MODELOS[modelo].nombre+'. Cambian cómo anda el auto.'));
+      c.append(el('p','nota','Hacen andar mejor a tu '+MODELOS[modelo].nombre+'. Mirá las barras de abajo: cambian cuando comprás.'));
       for(const q of MEJORAS){
-        const n=nivel(modelo,q.k),f=el('div','fila-p'),b=el('button');b.type='button';
-        f.append(el('b',null,q.nombre+' · Nivel '+n+' de '+COSTO_MEJORA.length),el('small',null,q.txt),b);
+        const n=nivel(modelo,q.k),f=el('div','fila-p'),b=el('button'),pts=el('span','niveles');b.type='button';
+        for(let i=0;i<COSTO_MEJORA.length;i++)pts.append(el('i',i<n?'lleno':null));
+        f.append(el('b',null,q.nombre),el('small',null,q.txt),pts,b);
         if(n>=COSTO_MEJORA.length){b.textContent='Completo';b.disabled=true}
         else{
-          const p=COSTO_MEJORA[n];b.textContent=pesos(p);b.disabled=pref.plata<p;
-          b.onclick=()=>{if(pref.plata<p)return;pref.plata-=p;fichaAuto(modelo).mec[q.k]=n+1;guardar(pref);pintarLocal()};
+          const p=COSTO_MEJORA[n];precio(b,p);
+          b.onclick=()=>{if(!pagar(p,q.nombre+' nivel '+(n+1)))return;fichaAuto(modelo).mec[q.k]=n+1;guardar(pref);pintarLocal()};
         }
         c.append(f);
       }
       const g=el('div','grupo');barrasDe(specDe(modelo),g);c.append(g);
     },
-    chapa(c){grupoPiezas(c,['kit','aleron','capo'])},
+    chapa(c){notaEstilo(c);grupoPiezas(c,['kit','aleron','capo'])},
     pintura(c){
+      notaEstilo(c);
       c.append(el('h3',null,'Color'));
       muestras(c,fichaAuto(modelo).pinta,i=>{fichaAuto(modelo).pinta=i;guardar(pref);pintarLocal()});
       grupoPiezas(c,['ter','vinilo']);
       if(equipo(modelo,'vinilo')){c.append(el('h3',null,'Color del vinilo'));muestras(c,fichaAuto(modelo).vc,i=>{fichaAuto(modelo).vc=i;guardar(pref);pintarLocal()})}
     },
     accesorios(c){
+      notaEstilo(c);
       grupoPiezas(c,['llanta']);
       if(equipo(modelo,'llanta')){c.append(el('h3',null,'Color de llantas'));muestras(c,fichaAuto(modelo).lc,i=>{fichaAuto(modelo).lc=i;guardar(pref);pintarLocal()})}
       grupoPiezas(c,['neon','polar','escape']);
@@ -2147,6 +2564,10 @@ if(typeof module!=='undefined')module.exports=Sim;
       const barras=el('div','grupo');barrasDe(specDe(modelo),barras);c.append(barras);
     },
   };
+  const notaEstilo=c=>c.append(el('p','nota','Estas piezas son de lucir: suben tu estilo y cada premio paga más. Hoy: '+textoEstrellas(estrellas(modelo))+(bonoEstilo()?', +'+bonoEstilo()+'%.':'.')));
+  function precio(b,p){
+    b.disabled=pref.plata<p;b.textContent=b.disabled?'Faltan '+pesos(p-pref.plata):'Comprar '+pesos(p);
+  }
   function muestras(c,actual,fn){
     const m=el('div','muestras');
     COLORES.forEach((col,i)=>{const b=el('button');b.type='button';b.style.background=col;b.setAttribute('aria-label','Color '+(i+1));b.setAttribute('aria-pressed',i===actual);b.onclick=()=>fn(i);m.append(b)});
@@ -2159,12 +2580,12 @@ if(typeof module!=='undefined')module.exports=Sim;
       PIEZAS[g].o.forEach(([n,p,e],i)=>{
         const puesta=equipo(modelo,g)===i,tiene=p===0||(f.comp[g]||[]).includes(i);
         const r=el('div','fila-p'+(puesta?' puesta':'')),b=el('button');b.type='button';
-        r.append(el('b',null,n),el('small',null,e?'Estilo +'+e:'Sin estilo'),b);
+        r.append(el('b',null,n),el('small',null,e?'+'+e+' de estilo':'Sin estilo'),b);
         if(puesta){b.textContent='Puesto';b.disabled=true}
         else if(tiene){b.textContent='Poner';b.className='instalar';b.onclick=()=>{f.eq[g]=i;guardar(pref);pintarLocal()}}
         else{
-          b.textContent=pesos(p);b.disabled=pref.plata<p;
-          b.onclick=()=>{if(pref.plata<p)return;pref.plata-=p;(f.comp[g]||(f.comp[g]=[])).push(i);f.eq[g]=i;guardar(pref);pintarLocal()};
+          precio(b,p);
+          b.onclick=()=>{if(!pagar(p,n))return;(f.comp[g]||(f.comp[g]=[])).push(i);f.eq[g]=i;guardar(pref);pintarLocal()};
         }
         box.append(r);
       });
@@ -2174,7 +2595,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function correr(tipo,pista){
     for(const id of ['menu','local','inicio','final','portada','bienvenida'])$(id).hidden=true;
     $('reserva').append($('panel-controles'));
-    abierto=null;salaVista=null;tapado=false;actual='juego';
+    abierto=null;salaVista=null;tapado=false;actual='juego';pintarCasco();
     const pr=tipo==='practica';
     modo=pr?'practica':'evento';evento={tipo,pista};vueltas=tipo==='derrape'?1:LAPS;
     aplicarAuto();me.frozen=false;
@@ -2198,7 +2619,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!evento||evento.tipo!=='derrape'){$('derrape-box').hidden=true;return}
     const v=Math.hypot(me.vx,me.vy),b=v>4?Math.abs(Math.atan2(me.vr,Math.abs(me.vf)))*57.3:0;
     if(b>12&&v>8&&!me.grass&&me.vf>0){
-      const cerca=Math.abs(me.off)>WALL-3?1.5:1;
+      const cerca=Math.abs(me.off)>HALF-1.5?1.5:1;
       derrape.tiempo+=dt;derrape.pausa=0;derrape.combo=Math.min(5,1+Math.floor(derrape.tiempo/1.5));
       derrape.act+=dt*b*v*.06*derrape.combo*cerca;
     }else if(derrape.act>0){
@@ -2740,11 +3161,11 @@ if(typeof module!=='undefined')module.exports=Sim;
       sala.auto=armarAuto(c,sala.esc);sala.espejo=armarAuto(c,sala.esc);sala.espejo.g.scale.y=-1;sala.k=k;
     }
     sala.esc.background.set(mio?'#9aa0a5':'#000000');sala.garaje.visible=!mio;sala.taller.visible=mio;
-    if(abierto)orbitaA-=dt*.18;
+    if(abierto||salaVista==='titulo')orbitaA-=dt*.18;
     sala.auto.g.rotation.y=sala.espejo.g.rotation.y=orbitaA;
     const ancho=W>H,asp=W/H,panel=!!abierto;
     let dx=0,dy=0,ef=asp;
-    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else dy=H*.26}else dy=H*.03;
+    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else dy=H*.27}else dy=H*(salaVista==='titulo'?.2:.12);
     const d=Math.max(7.6,5.8/(2*Math.tan(15*Math.PI/180)*ef));
     sala.cam.position.set(0,1.7,d);sala.cam.lookAt(0,.55,0);
     sala.cam.aspect=asp;sala.cam.setViewOffset(W,H,dx,dy,W,H);
@@ -2769,9 +3190,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(let i=-atras;i<adelante;i++){
       const d=Math.floor(i*t.sp/3)&1,m=Math.floor(i*t.sp/2.5)&1;
       tira(i,-WALL-.4,.01,WALL+.4,.01,ban);tira(i,-HALF,.02,HALF,.02,asf);
-      tira(i,-HALF-.6,.03,-HALF+.6,.03,d?kA:kB);tira(i,HALF-.6,.03,HALF+.6,.03,d?kA:kB);
+      const ki=t.kI[(i+N*2)%N],kd=t.kD[(i+N*2)%N];
+      if(ki)tira(i,-HALF-ki,.03,-HALF,.03,d?kA:kB);
+      if(kd)tira(i,HALF,.03,HALF+kd,.03,d?kA:kB);
       if(Math.floor(i*t.sp/8)&1)tira(i,-.13,.03,.13,.03,lin);
-      for(const e of [-1,1]){tira(i,e*(WALL+.4),0,e*(WALL+.4),1.1,m?mA:mB);tira(i,e*(WALL+.4),1.1,e*(WALL+1),1.1,mB)}
+      for(const e of [-1,1]){const w=(e<0?t.mI:t.mD)[(i+N*2)%N];if(!w)continue;tira(i,e*w,0,e*w,1.1,m?mA:mB);tira(i,e*w,1.1,e*(w+.6),1.1,mB)}
     }
     // Rayas de la grilla y línea de largada
     const c0=[t.x[0],0,t.y[0]],tx=t.tx[0],ty=t.ty[0],nx=t.nx[0],ny=t.ny[0],P=(u,v,y=.04)=>[c0[0]+tx*u+nx*v,y,c0[2]+ty*u+ny*v],cs=HALF*2/12;
@@ -2890,23 +3313,18 @@ if(typeof module!=='undefined')module.exports=Sim;
     x.fillStyle='#d8412f';x.fillRect(0,0,414,5);
     return figTribuna=c;
   }
+  const LEJOS_DIBUJO=34;
   function armarCircuito(){
     const t=track,N=t.N,T=TEMAS[track.tema];
     const lazo=f=>{const p=new Path2D();for(let i=0;i<=N;i++){const k=i%N,o=f(k);i?p.lineTo(t.x[k]+t.nx[k]*o,t.y[k]+t.ny[k]*o):p.moveTo(t.x[k]+t.nx[k]*o,t.y[k]+t.ny[k]*o)}p.closePath();return p};
     const curva=new Float64Array(N);
     for(let i=0;i<N;i++){const a=(i+N-4)%N,b=(i+4)%N;curva[i]=(t.tx[a]*t.ty[b]-t.ty[a]*t.tx[b])/(8*t.sp)}
     const l=track.linea;
-    // Llantas y arena afuera de las curvas
-    let llantas=null;
-    if(track.tema!=='ciudad'){
-      llantas=new Int8Array(N);const a=Math.round(20/t.sp);
-      for(let i=0;i<N;i++)if(Math.abs(curva[i])>.011)for(let o=-a;o<=a;o++)llantas[(i+o+N)%N]=curva[i]>0?1:-1;
-    }
     // Escenario: se arma una vez por pista y solo se dibuja lo que está cerca de la cámara
     let sem=7+trackIdx*31;const rnd=()=>(sem=(sem*16807)%2147483647)/2147483647,props=[];
     for(let i=0;i<190;i++){
-      const k=Math.floor(rnd()*N),o=(rnd()<.5?-1:1)*(WALL+4+rnd()*46),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o;
-      if(Math.abs(Sim.locate(px,py,-1).d)>WALL+3)props.push({x:px,y:py,e:.8+rnd()*.9,r:rnd()*6.3,w:rnd()});
+      const k=Math.floor(rnd()*N),o=(rnd()<.5?-1:1)*(WALL+6+rnd()*50),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o,m=(o>0?t.mD:t.mI)[k];
+      if(Math.abs(o)>m+3&&Math.abs(Sim.locate(px,py,-1).d)>WALL+4)props.push({x:px,y:py,e:.8+rnd()*.9,r:rnd()*6.3,w:rnd()});
     }
     const carteles=[];
     for(let i=0;i<N;i++){
@@ -2915,7 +3333,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         carteles.push({x:t.x[j]+t.nx[j]*o,y:t.y[j]+t.ny[j]*o,a:Math.atan2(t.ty[j],t.tx[j])});
       }
     }
-    const lado=curva[N-10]>0?-1:1,k0=N-Math.round(16/t.sp),tribuna={x:t.x[k0]+t.nx[k0]*lado*(WALL+7),y:t.y[k0]+t.ny[k0]*lado*(WALL+7),a:Math.atan2(t.ty[k0],t.tx[k0])};
+    const lado=t.salida,k0=N-Math.round(16/t.sp),tribO=Math.max(WALL,(lado>0?t.mD:t.mI)[k0])+6.5,tribuna={x:t.x[k0]+t.nx[k0]*lado*tribO,y:t.y[k0]+t.ny[k0]*lado*tribO,a:Math.atan2(t.ty[k0],t.tx[k0])};
     // La pista se corta en tramos: en cada cuadro solo se dibujan los que están a la vista
     const PASO=24,tramos=[];
     for(let a=0;a<N;a+=PASO){
@@ -2923,12 +3341,32 @@ if(typeof module!=='undefined')module.exports=Sim;
       const trozo=(f,extra)=>{const p=new Path2D(),fin=Math.min(N,b+extra);for(let i=a;i<=fin;i++){const k=i%N,o=f(k),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o;i===a?p.moveTo(px,py):p.lineTo(px,py)}return p};
       let cx=0,cy=0;for(let i=a;i<b;i++){cx+=t.x[i];cy+=t.y[i]}cx/=b-a;cy/=b-a;
       let r=0;for(let i=a;i<=b;i++){const k=i%N;r=Math.max(r,Math.hypot(t.x[k]-cx,t.y[k]-cy))}
-      const q={cx,cy,r:r+WALL+3,d:a*t.sp,centro:trozo(()=>0,1),raya:trozo(()=>0,0),kerbI:trozo(()=>-HALF,0),kerbD:trozo(()=>HALF,0),muroI:trozo(()=>-WALL-.4,0),muroD:trozo(()=>WALL+.4,0),goma:trozo(i=>l[i],0),gomaA:trozo(i=>l[i]-.92,0),gomaB:trozo(i=>l[i]+.92,0),bordeI:trozo(()=>-HALF+.55,0),bordeD:trozo(()=>HALF-.55,0),llantas:null,grava:null};
-      for(let i=a;i<b&&llantas;i++){
-        if(!llantas[i])continue;
-        const c=(i+1)%N,o=-llantas[i]*(WALL+.5),og=-llantas[i]*(WALL-2.1);
-        (q.llantas||(q.llantas=new Path2D())).moveTo(t.x[i]+t.nx[i]*o,t.y[i]+t.ny[i]*o);q.llantas.lineTo(t.x[c]+t.nx[c]*o,t.y[c]+t.ny[c]*o);
-        (q.grava||(q.grava=new Path2D())).moveTo(t.x[i]+t.nx[i]*og,t.y[i]+t.ny[i]*og);q.grava.lineTo(t.x[c]+t.nx[c]*og,t.y[c]+t.ny[c]*og);
+      const q={cx,cy,r:r+LEJOS_DIBUJO,d:a*t.sp,centro:trozo(()=>0,1),raya:trozo(()=>0,0),goma:trozo(i=>l[i],0),gomaA:trozo(i=>l[i]-.92,0),gomaB:trozo(i=>l[i]+.92,0),bordeI:trozo(()=>-HALF+.2,0),bordeD:trozo(()=>HALF-.2,0),muroI:null,muroD:null,llantas:null,grava:null,pianoA:null,pianoB:null};
+      const cuad=(p,i,e,o0,o1)=>{
+        const c=(i+1)%N,u=(k,o)=>[t.x[k]+t.nx[k]*o*e,t.y[k]+t.ny[k]*o*e];
+        p.moveTo(...u(i,o0(i)));p.lineTo(...u(c,o0(c)));p.lineTo(...u(c,o1(c)));p.lineTo(...u(i,o1(i)));p.closePath();
+      };
+      for(const [e,k,g,m,clave] of [[-1,t.kI,t.gI,t.mI,'muroI'],[1,t.kD,t.gD,t.mD,'muroD']]){
+        let antes=false;
+        for(let i=a;i<b;i++){
+          const c=(i+1)%N,hay=m[i]>0&&m[c]>0;
+          if(k[i]||k[c]){
+            const p0=()=>HALF-.1,p1=q=>HALF+k[q];
+            cuad(q.pianoA||(q.pianoA=new Path2D()),i,e,p0,p1);
+            if(Math.floor(i*t.sp/2.8)&1)cuad(q.pianoB||(q.pianoB=new Path2D()),i,e,p0,p1);
+          }
+          if(g[i]||g[c])cuad(q.grava||(q.grava=new Path2D()),i,e,w=>HALF+Math.max(k[w],.6)+.2,w=>HALF+g[w]);
+          if(hay){
+            const P=q[clave]||(q[clave]=new Path2D()),ax=t.x[i]+t.nx[i]*m[i]*e,ay=t.y[i]+t.ny[i]*m[i]*e;
+            if(!antes)P.moveTo(ax,ay);
+            P.lineTo(t.x[c]+t.nx[c]*m[c]*e,t.y[c]+t.ny[c]*m[c]*e);
+            if(track.tema!=='ciudad'&&Math.abs(curva[i])>.0085&&curva[i]*e<0){
+              const L=q.llantas||(q.llantas=new Path2D());
+              L.moveTo(ax,ay);L.lineTo(t.x[c]+t.nx[c]*m[c]*e,t.y[c]+t.ny[c]*m[c]*e);
+            }
+          }
+          antes=hay;
+        }
       }
       tramos.push(q);
     }
@@ -2946,17 +3384,15 @@ if(typeof module!=='undefined')module.exports=Sim;
     const vis=p.vis;vis.length=0;
     for(const q of p.tramos){const dx=q.cx-cam.x,dy=q.cy-cam.y,m=R+q.r;if(dx*dx+dy*dy<m*m)vis.push(q)}
     const traza=(k,dash)=>{for(const q of vis){if(!q[k])continue;if(dash)x.lineDashOffset=q.d;x.stroke(q[k])}};
+    const llena=k=>{for(const q of vis)if(q[k])x.fill(q[k])};
     x.lineJoin='round';x.lineCap='butt';x.setLineDash([]);
     x.strokeStyle=T.ban;x.lineWidth=(WALL+.4)*2;traza('centro');
-    if(T.prop!=='nevado'){x.lineCap='round';x.strokeStyle=T.prop==='cactus'?'#e6cf9f':'#dcc792';x.lineWidth=3.6;traza('grava');x.lineCap='butt'}
+    x.fillStyle=T.prop==='nevado'?'#dbe6ee':T.prop==='cactus'?'#ecd7ab':T.prop==='edificio'?'#8c8c86':T.prop==='farol'?'#3a4250':'#e2cf9c';llena('grava');
     x.strokeStyle=T.asf;x.lineWidth=HALF*2;traza('centro');
     x.strokeStyle='rgba(0,0,0,.1)';x.lineWidth=3.6;traza('goma');
     x.strokeStyle='rgba(0,0,0,.13)';x.lineWidth=.45;traza('gomaA');traza('gomaB');
     x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=.16;traza('bordeI');traza('bordeD');
-    for(const k of ['kerbI','kerbD']){
-      x.setLineDash([]);x.strokeStyle=T.kA;x.lineWidth=1.2;traza(k);
-      x.setLineDash([3,3]);x.strokeStyle=T.kB;traza(k,1);
-    }
+    x.fillStyle=T.kA;llena('pianoA');x.fillStyle=T.kB;llena('pianoB');
     for(const k of ['muroI','muroD']){
       x.setLineDash([]);x.strokeStyle=T.mB;x.lineWidth=.9;traza(k);
       x.setLineDash([2.5,2.5]);x.strokeStyle=T.mA;traza(k,1);
@@ -3125,9 +3561,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function draw(now,dt){
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,W,H);
-    {const v=!(gl&&(salaVista==='garaje'||cine));if(tres.hidden!==v){tres.hidden=v;cv.style.visibility=v?'':'hidden'}}
+    {const v=!(gl&&(salaVista||cine));if(tres.hidden!==v){tres.hidden=v;cv.style.visibility=v?'':'hidden'}}
     if(cine){dibujarCine(now);return}
-    if(salaVista==='garaje'&&gl){dibujarSala3D(dt);return}
+    if(salaVista&&gl){dibujarSala3D(dt);return}
     if(salaVista){dibujarSala(dt);return}
     if(tapado)return;
     for(let i=parts.length-1;i>=0;i--){
@@ -3278,6 +3714,8 @@ if(typeof module!=='undefined')module.exports=Sim;
         }
       }
     }
+    if(me&&(me.rescates||0)!==vistos){vistos=me.rescates||0;perderCombo();aviso('De vuelta a la pista')}
+    if(me&&me.piano&&Math.hypot(me.vx,me.vy)>9)camShake=Math.max(camShake,.07);
     raceTick(now);
     puntuar(dt);grabar(now);
     camShake=Math.max(0,camShake-dt*2.2);
@@ -3288,13 +3726,13 @@ if(typeof module!=='undefined')module.exports=Sim;
       const s=me?Math.hypot(me.vx,me.vy):0,gear=(s%13)/13;
       au.o.frequency.setTargetAtTime(55+s*2.1+gear*34,au.a.currentTime,.03);
       au.g.gain.setTargetAtTime(tapado||salaVista?0:me&&me.gas?.07:.035,au.a.currentTime,.05);
-      const pat=me&&!me.grass&&s>4?clamp((me.slip-2.5)/9,0,1):0;
+      const pat=me&&!me.grass&&s>4?Math.max(clamp((me.slip-2.5)/9,0,1),me.piano?.35:0):0;
       au.rg.gain.setTargetAtTime(pat*.16,au.a.currentTime,.04);au.rf.frequency.setTargetAtTime(1150+pat*650,au.a.currentTime,.06);
     }
     draw(now,dt);hud(now);vigilarFluidez(dt,now);
     requestAnimationFrame(frame);
   }
-  armarCircuito();pintarCircuito();pintarPlata();
+  armarCircuito();pintarCircuito();pintarInicio();pintarPlata();pintarCasco();
   requestAnimationFrame(frame);
   window.__juego={cars,remotes,get me(){return me},get race(){return race}};
 })();
