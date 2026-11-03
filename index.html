@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw0r1up8"></script>
+<script src="room.js?v=mw0vhadm"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -897,7 +897,7 @@ const Sim=(()=>{
     {nombre:'Pluma',tag:'Liviano y nervioso',txt:'Acelera y frena enseguida. Un toque y sale volando.',m:720,power:92000,drag:2.5,fmax:6200,brake:13000,forma:{h:.8,cl:.55,cx:-.1,ch:1.2,tipo:'mini'}},
     {nombre:'Clavado',tag:'Los mejores frenos',txt:'Entra última en la curva y frena donde nadie se anima.',brake:24000,mu:1.74,power:98000,forma:{h:.88,cl:.9,franja:1,tipo:'sedan'}},
     {nombre:'Deriva',tag:'Cola suelta',txt:'Atrás patina a propósito. Hay que manejarlo de costado.',rear:1.05,mu:1.65,slide:.9,tcsSuelto:.8,betaMax:.85,power:150000,fmax:8500,forma:{h:.82,ala:1,rueda:1.1,tipo:'cuna'}},
-    {nombre:'Puma',tag:'Rápido y dobla mucho',txt:'Veloz, con mucho agarre y frenos fuertes.',power:205000,fmax:10500,brake:21000,mu:1.95,forma:{tipo:'cuna',h:.82,cl:.75,cx:-.35,ch:.9,franja:1}},
+    {nombre:'Yaguareté',tag:'Rápido y dobla mucho',txt:'Veloz, con mucho agarre y frenos fuertes.',power:205000,fmax:10500,brake:21000,mu:1.95,forma:{tipo:'cuna',h:.82,cl:.75,cx:-.35,ch:.9,franja:1}},
     {nombre:'Rayo',tag:'Veloz y frena fuerte',txt:'Muy rápido y frena casi donde quiere.',power:255000,fmax:9800,brake:24000,mu:1.85,forma:{tipo:'cuna',h:.76,ala:1,cl:.7,cx:-.3,ch:.82}},
     {nombre:'Cóndor',tag:'Punta enorme y buen freno',txt:'Se traga las rectas sin perder frenos.',power:320000,fmax:9000,brake:25000,mu:1.78,drag:1.8,forma:{tipo:'cuna',h:.72,ala:1,franja:1,cl:.72,cx:-.25,ch:.78}},
     {nombre:'Cometa',tag:'El mejor en todo',txt:'El tope de gama: velocidad, frenos y agarre.',power:380000,fmax:11500,brake:28000,mu:2.05,drag:1.75,forma:{tipo:'cuna',h:.68,ala:1,franja:1,cl:.62,cx:-.2,ch:.76,rueda:1.08}},
@@ -905,21 +905,21 @@ const Sim=(()=>{
     {nombre:'Lince',tag:'4x4 con mucha tracción',txt:'El mejor para derrapar rápido: agarra aun yendo de costado.',awd:.45,slide:.96,tcsSuelto:.7,betaMax:.85,mu:1.9,power:265000,fmax:12000,brake:24000,drag:1.9,forma:{h:.86,ala:1,cl:.72,cx:-.3,ch:.9,rueda:1.1,tipo:'cuna'}},
     {nombre:'Patrón',tag:'Trasero, puro derrape',txt:'Mucha fuerza atrás. Con el acelerador lo llevás cruzado toda la curva.',rear:1.06,slide:.92,tcsSuelto:1,betaMax:.95,tiempoSuelto:1.3,mu:1.78,power:240000,fmax:11500,brake:21000,forma:{h:.8,ala:1,franja:1,cl:.68,cx:-.25,ch:.84,tipo:'cuna'}},
     {nombre:'Leoncito',tag:'Chiquito y picante',txt:'Hatchback de barrio: liviano, doblador y fácil de tirar de costado.',m:960,power:118000,fmax:8200,brake:17000,mu:1.68,slide:.88,tcsSuelto:.55,forma:{tipo:'h206',via:.8,pinta:18,llanta:'#17181c'}},
-    {nombre:'Fiat Uno',tag:'Liviano y ágil',txt:'Chiquito, cuadrado y vivo: dobla en cualquier lado.',m:850,power:96000,fmax:7800,brake:15500,mu:1.64,drag:2.3,forma:{real:'uno',pinta:0}},
-    {nombre:'Fiat 147',tag:'El más liviano',txt:'Poco motor, pero frena tarde y entra fuerte en la curva.',m:790,power:86000,fmax:7400,brake:15000,mu:1.6,drag:2.3,forma:{real:'f147',pinta:7}},
-    {nombre:'Fiat Duna',tag:'Sedán de barrio',txt:'El Uno con baúl: un poco más estable atrás.',m:900,power:98000,fmax:7600,brake:15000,mu:1.62,rear:1.2,forma:{real:'duna',pinta:16}},
-    {nombre:'Renault 12',tag:'Noble y estable',txt:'Pisa firme y no te sorprende nunca.',m:950,power:102000,fmax:7600,brake:15500,mu:1.64,rear:1.22,forma:{real:'r12',pinta:12}},
-    {nombre:'Ford Falcon',tag:'Fierro con mucho motor',txt:'Largo y pesado, con un seis cilindros que empuja y cruza la cola.',m:1250,power:190000,fmax:9000,brake:16500,mu:1.55,rear:1.08,slide:.9,betaMax:.82,forma:{real:'falcon',pinta:13}},
-    {nombre:'Lada Niva',tag:'4x4 que no se rinde',txt:'Corto y alto: tira de las cuatro ruedas y no le importa el pasto.',m:1150,awd:.5,power:112000,fmax:9000,brake:15000,mu:1.6,drag:3.2,slide:.9,forma:{real:'niva',pinta:10}},
-    {nombre:'Land Rover Defender',tag:'Duro y pesado',txt:'Una caja de acero con tracción en las cuatro.',m:1700,awd:.5,power:155000,fmax:9500,brake:17000,mu:1.55,drag:3.6,forma:{real:'defender',pinta:11}},
-    {nombre:'Mercedes Clase G',tag:'Una caja fuerte que vuela',txt:'Pesa una tonelada de más y aun así acelera como pocos.',m:1900,awd:.5,power:265000,fmax:11000,brake:21000,mu:1.6,drag:3.4,forma:{real:'clase_g',pinta:18}},
-    {nombre:'Volvo 240',tag:'Ladrillo trasero',txt:'Cuadrado, largo y con tracción atrás: sorprende de costado.',m:1250,power:150000,fmax:8200,brake:16500,mu:1.58,rear:1.08,slide:.9,betaMax:.8,forma:{real:'volvo',pinta:3}},
-    {nombre:'VW Gol',tag:'El de todos los días',txt:'Ágil y fácil: no hace nada mal.',m:860,power:106000,fmax:7900,brake:15500,mu:1.64,forma:{real:'gol',pinta:14}},
-    {nombre:'BMW E30',tag:'Trasero y equilibrado',txt:'Liviano, con el peso bien repartido: derrapa y vuelve solo.',m:1150,power:178000,fmax:9200,brake:19000,mu:1.72,rear:1.07,slide:.91,betaMax:.85,tcsSuelto:.7,forma:{real:'e30',pinta:18}},
-    {nombre:'Toyota AE86',tag:'Nacido para derrapar',txt:'Liviano y de tracción trasera: el rey de las curvas de costado.',m:950,power:142000,fmax:8200,brake:17000,mu:1.68,rear:1.05,slide:.92,betaMax:.88,tcsSuelto:.8,angulo:.62,forma:{real:'ae86',pinta:7}},
-    {nombre:'Nissan 240SX',tag:'Turbo y cola suelta',txt:'Largo y bajo: con el turbo lo llevás cruzado toda la curva.',m:1200,power:212000,fmax:10000,brake:19000,mu:1.7,rear:1.06,slide:.93,betaMax:.9,tcsSuelto:.9,tiempoSuelto:1.2,forma:{real:'s13',pinta:5}},
-    {nombre:'Lancia Delta',tag:'4x4 de rally',txt:'Ensanchado y con tracción integral: sale de la curva como un tiro.',m:1250,awd:.5,power:232000,fmax:11500,brake:21000,mu:1.85,slide:.9,betaMax:.8,forma:{real:'delta',pinta:0}},
-    {nombre:'Ford F-100',tag:'Camioneta que empuja a todos',txt:'Enorme y pesada: en un choque, siempre gana.',m:1800,power:205000,fmax:9000,brake:17000,mu:1.5,drag:3.4,forma:{real:'f100',pinta:3}}
+    {nombre:'Cubito',tag:'Liviano y ágil',txt:'Chiquito, cuadrado y vivo: dobla en cualquier lado.',m:850,power:96000,fmax:7800,brake:15500,mu:1.64,drag:2.3,forma:{real:'uno',pinta:0}},
+    {nombre:'Bichito',tag:'El más liviano',txt:'Poco motor, pero frena tarde y entra fuerte en la curva.',m:790,power:86000,fmax:7400,brake:15000,mu:1.6,drag:2.3,forma:{real:'f147',pinta:7}},
+    {nombre:'Baulero',tag:'Sedán de barrio',txt:'El Cubito con baúl: un poco más estable atrás.',m:900,power:98000,fmax:7600,brake:15000,mu:1.62,rear:1.2,forma:{real:'duna',pinta:16}},
+    {nombre:'Noble',tag:'Noble y estable',txt:'Pisa firme y no te sorprende nunca.',m:950,power:102000,fmax:7600,brake:15500,mu:1.64,rear:1.22,forma:{real:'r12',pinta:12}},
+    {nombre:'Fierro',tag:'Fierro con mucho motor',txt:'Largo y pesado, con un seis cilindros que empuja y cruza la cola.',m:1250,power:190000,fmax:9000,brake:16500,mu:1.55,rear:1.08,slide:.9,betaMax:.82,forma:{real:'falcon',pinta:13}},
+    {nombre:'Estepa',tag:'4x4 que no se rinde',txt:'Corto y alto: tira de las cuatro ruedas y no le importa el pasto.',m:1150,awd:.5,power:112000,fmax:9000,brake:15000,mu:1.6,drag:3.2,slide:.9,forma:{real:'niva',pinta:10}},
+    {nombre:'Baqueano',tag:'Duro y pesado',txt:'Una caja de acero con tracción en las cuatro.',m:1700,awd:.5,power:155000,fmax:9500,brake:17000,mu:1.55,drag:3.6,forma:{real:'defender',pinta:11}},
+    {nombre:'Caja Fuerte',tag:'Una caja fuerte que vuela',txt:'Pesa una tonelada de más y aun así acelera como pocos.',m:1900,awd:.5,power:265000,fmax:11000,brake:21000,mu:1.6,drag:3.4,forma:{real:'clase_g',pinta:18}},
+    {nombre:'Ladrillo',tag:'Ladrillo trasero',txt:'Cuadrado, largo y con tracción atrás: sorprende de costado.',m:1250,power:150000,fmax:8200,brake:16500,mu:1.58,rear:1.08,slide:.9,betaMax:.8,forma:{real:'volvo',pinta:3}},
+    {nombre:'Pibe',tag:'El de todos los días',txt:'Ágil y fácil: no hace nada mal.',m:860,power:106000,fmax:7900,brake:15500,mu:1.64,forma:{real:'gol',pinta:14}},
+    {nombre:'Tango',tag:'Trasero y equilibrado',txt:'Liviano, con el peso bien repartido: derrapa y vuelve solo.',m:1150,power:178000,fmax:9200,brake:19000,mu:1.72,rear:1.07,slide:.91,betaMax:.85,tcsSuelto:.7,forma:{real:'e30',pinta:18}},
+    {nombre:'Serrano',tag:'Nacido para derrapar',txt:'Liviano y de tracción trasera: el rey de las curvas de costado.',m:950,power:142000,fmax:8200,brake:17000,mu:1.68,rear:1.05,slide:.92,betaMax:.88,tcsSuelto:.8,angulo:.62,forma:{real:'ae86',pinta:7}},
+    {nombre:'Turbina',tag:'Turbo y cola suelta',txt:'Largo y bajo: con el turbo lo llevás cruzado toda la curva.',m:1200,power:212000,fmax:10000,brake:19000,mu:1.7,rear:1.06,slide:.93,betaMax:.9,tcsSuelto:.9,tiempoSuelto:1.2,forma:{real:'s13',pinta:5}},
+    {nombre:'Ripio',tag:'4x4 de rally',txt:'Ensanchado y con tracción integral: sale de la curva como un tiro.',m:1250,awd:.5,power:232000,fmax:11500,brake:21000,mu:1.85,slide:.9,betaMax:.8,forma:{real:'delta',pinta:0}},
+    {nombre:'Chata',tag:'Camioneta que empuja a todos',txt:'Enorme y pesada: en un choque, siempre gana.',m:1800,power:205000,fmax:9000,brake:17000,mu:1.5,drag:3.4,forma:{real:'f100',pinta:3}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE,LEJOS=44;
   // Pista: curva cerrada Catmull-Rom remuestreada a paso constante
@@ -1831,7 +1831,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Ford Falcon':[6,700,5200],'Toyota AE86':[4,900,7800],'BMW E30':[6,850,7200],'Ford F-100':[8,650,4800],'Mercedes Clase G':[8,700,6000],'Nissan 240SX':[4,850,7200],'Lancia Delta':[4,900,7000],'Fiat 147':[4,850,6000],'Fiat Uno':[4,850,6200],'Renault 12':[4,800,5800],'Fiat Duna':[4,800,5900],'Volvo 240':[4,750,5800],'VW Gol':[4,850,6400],'Lada Niva':[4,750,5400],'Land Rover Defender':[4,700,4800]};
+  const MOTOR_DE={'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2654,8 +2654,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         }
       };
       const todos=MODELOS.map((m,i)=>i);
-      grupo('Clásicos de verdad',todos.filter(i=>MODELOS[i].forma.real));
-      grupo('Del juego',todos.filter(i=>!MODELOS[i].forma.real));
+      grupo('Autos',todos);
     },
     mecanico(c){
       c.append(el('p','nota','Hacen andar mejor a tu '+MODELOS[modelo].nombre+'. Mirá las barras de abajo: cambian cuando comprás.'));
@@ -3148,49 +3147,49 @@ if(typeof module!=='undefined')module.exports=Sim;
   // u es la distancia desde la trompa; y la altura desde el piso. El juego los dibuja un 5% más grandes.
   const ESC=1.05;
   const REALES={
-    uno:{L:3.64,W:1.55,H:1.43,rr:.28,suelo:.2,eje:[.7,3.06],hn:.7,hc:.86,para:[1.02,1.72],techo:3.14,lun:[3.5,.98],cola:.93,cint:[.86,.92],caida:.88,puertas:2,pilB:2.4,pc:['negro',.3,.45,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['UNO 083',.36,.7],
+    uno:{L:3.64,W:1.55,H:1.43,rr:.28,suelo:.2,eje:[.7,3.06],hn:.7,hc:.86,para:[1.02,1.72],techo:3.14,lun:[3.5,.98],cola:.93,cint:[.86,.92],caida:.88,puertas:2,pilB:2.4,pc:['negro',.3,.45,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['CUB 083',.36,.7],
       frente(h){h.rejilla(.34,.53,.63,4);h.faroR(.36,.7,.52,.645);h.giro(.56,.7,.38,.42,.065)},
       atras(h){h.stop(.5,.71,.62,.88);h.giro(.5,.71,.62,.68,.016)}},
-    f147:{L:3.63,W:1.55,H:1.36,rr:.27,suelo:.2,eje:[.72,2.945],hn:.66,hc:.82,para:[1,1.66],techo:2.88,lun:[3.42,.93],cola:.88,cint:[.82,.86],caida:.88,puertas:2,pilB:2.3,pc:['cromo',.33,.42,.06],pcR:['cromo',.33,.42,.06],mold:['negro',.5],aro:'chapa',pat:['147 TR',.37,.62],
+    f147:{L:3.63,W:1.55,H:1.36,rr:.27,suelo:.2,eje:[.72,2.945],hn:.66,hc:.82,para:[1,1.66],techo:2.88,lun:[3.42,.93],cola:.88,cint:[.82,.86],caida:.88,puertas:2,pilB:2.3,pc:['cromo',.33,.42,.06],pcR:['cromo',.33,.42,.06],mold:['negro',.5],aro:'chapa',pat:['BCH 471',.37,.62],
       frente(h){h.rejilla(.7,.5,.64,3,'negro','cromo');h.faroR(.42,.68,.52,.63);h.giro(.5,.66,.46,.5)},
       atras(h){h.stop(.42,.67,.5,.66);h.giro(.42,.67,.6,.66,.016)}},
-    duna:{L:4.05,W:1.56,H:1.43,rr:.28,suelo:.2,eje:[.7,3.07],hn:.7,hc:.86,para:[1.02,1.72],techo:2.75,lun:[3.3,1],cola:.98,cint:[.86,.95],caida:.88,puertas:4,pilB:2.18,pc:['negro',.3,.45,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['DUN 87',.36,.78],
+    duna:{L:4.05,W:1.56,H:1.43,rr:.28,suelo:.2,eje:[.7,3.07],hn:.7,hc:.86,para:[1.02,1.72],techo:2.75,lun:[3.3,1],cola:.98,cint:[.86,.95],caida:.88,puertas:4,pilB:2.18,pc:['negro',.3,.45,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['BAU 87',.36,.78],
       frente(h){h.rejilla(.32,.5,.61,4);h.faroR(.34,.7,.5,.62);h.giro(.58,.7,.36,.41,.065)},
       atras(h){h.stop(.36,.72,.7,.86);h.giro(.6,.72,.7,.86,.016)}},
-    r12:{L:4.35,W:1.62,H:1.435,rr:.29,suelo:.21,eje:[.84,3.28],hn:.7,hc:.88,para:[1.25,1.92],techo:3,lun:[3.62,.98],cola:.95,cint:[.88,.94],caida:.86,puertas:4,pilB:2.42,pc:['cromo',.34,.45,.07],pcR:['cromo',.34,.45,.07],mold:['cromo',.56],aro:'chapa',pat:['R12 TL',.39,.66],
+    r12:{L:4.35,W:1.62,H:1.435,rr:.29,suelo:.21,eje:[.84,3.28],hn:.7,hc:.88,para:[1.25,1.92],techo:3,lun:[3.62,.98],cola:.95,cint:[.88,.94],caida:.86,puertas:4,pilB:2.42,pc:['cromo',.34,.45,.07],pcR:['cromo',.34,.45,.07],mold:['cromo',.56],aro:'chapa',pat:['NBL 512',.39,.66],
       frente(h){h.rejilla(.4,.55,.68,5,'negro','cromo');h.faroR(.4,.74,.55,.68);h.giro(.52,.7,.48,.52)},
       atras(h){h.stop(.56,.75,.56,.84);h.giro(.56,.75,.76,.84,.016)}},
-    falcon:{L:4.59,W:1.79,H:1.41,rr:.31,suelo:.2,eje:[.82,3.6],hn:.76,hc:.92,para:[1.5,2.12],techo:3.3,lun:[3.82,.97],cola:.95,cint:[.9,.94],caida:.86,puertas:4,pilB:2.68,pc:['cromo',.32,.46,.08],pcR:['cromo',.32,.46,.08],mold:['cromo',.6],aro:'tasa',pat:['FAL 182',.39,.64],
+    falcon:{L:4.59,W:1.79,H:1.41,rr:.31,suelo:.2,eje:[.82,3.6],hn:.76,hc:.92,para:[1.5,2.12],techo:3.3,lun:[3.82,.97],cola:.95,cint:[.9,.94],caida:.86,puertas:4,pilB:2.68,pc:['cromo',.32,.46,.08],pcR:['cromo',.32,.46,.08],mold:['cromo',.6],aro:'tasa',pat:['FRR 182',.39,.64],
       frente(h){h.rejilla(.8,.5,.72,6,'negro','cromo');h.faroC(.62,.61,.085);h.giro(.28,.42,.52,.56)},
       atras(h){h.stop(.56,.82,.56,.72);h.r(.56,.82,.6,.62,'cromo',.02)}},
-    niva:{L:3.72,W:1.68,H:1.64,rr:.34,suelo:.36,eje:[.7,2.9],hn:.96,hc:1.08,para:[1.02,1.5],techo:3.32,lun:[3.66,1.18],cola:1.12,cint:[1.06,1.1],caida:.9,puertas:2,pilB:2.32,pc:['gris',.44,.6,.07],pcR:['gris',.44,.6,.07],aro:'chapa',pat:['NIV 4X4',.5,.74],
+    niva:{L:3.72,W:1.68,H:1.64,rr:.34,suelo:.36,eje:[.7,2.9],hn:.96,hc:1.08,para:[1.02,1.5],techo:3.32,lun:[3.66,1.18],cola:1.12,cint:[1.06,1.1],caida:.9,puertas:2,pilB:2.32,pc:['gris',.44,.6,.07],pcR:['gris',.44,.6,.07],aro:'chapa',pat:['EST 4X4',.5,.74],
       frente(h){h.rejilla(.42,.66,.88,5,'negro','gris');h.r(.44,.79,.66,.92,'negro');h.faroC(.6,.79,.095);h.giro(.62,.78,.6,.65)},
       atras(h){h.stop(.62,.81,.6,.86);h.giro(.62,.81,.78,.86,.016)}},
-    defender:{L:3.88,W:1.79,H:1.97,rr:.39,suelo:.42,eje:[.72,3.08],hn:1.15,hc:1.27,para:[1.36,1.5],techo:3.83,lun:[3.86,1.9],cola:1.9,cint:[1.24,1.26],caida:.95,puertas:2,pilB:2.42,pc:['negro',.5,.66,.12],pcR:['negro',.5,.64,.08],aro:'acero',auxilio:1,pat:['DEF 90',.58,.86],
+    defender:{L:3.88,W:1.79,H:1.97,rr:.39,suelo:.42,eje:[.72,3.08],hn:1.15,hc:1.27,para:[1.36,1.5],techo:3.83,lun:[3.86,1.9],cola:1.9,cint:[1.24,1.26],caida:.95,puertas:2,pilB:2.42,pc:['negro',.5,.66,.12],pcR:['negro',.5,.64,.08],aro:'acero',auxilio:1,pat:['BQN 90',.58,.86],
       frente(h){h.malla(.5,.8,1.08);h.r(.52,.76,.8,1.06,'negro');h.faroC(.64,.93,.09);h.giro(.58,.72,.72,.78)},
       atras(h){h.stop(.7,.84,.72,.98);h.giro(.7,.84,.9,.98,.016)}},
-    clase_g:{L:4.66,W:1.76,H:1.95,rr:.37,suelo:.4,eje:[.78,3.63],hn:1.12,hc:1.24,para:[1.34,1.6],techo:4.6,lun:[4.64,1.86],cola:1.86,cint:[1.22,1.24],caida:.97,puertas:4,pilB:2.62,pc:['negro',.48,.66,.1],pcR:['negro',.48,.64,.08],aro:'cinco',auxilio:1,pat:['G 463',.56,.84],
+    clase_g:{L:4.66,W:1.76,H:1.95,rr:.37,suelo:.4,eje:[.78,3.63],hn:1.12,hc:1.24,para:[1.34,1.6],techo:4.6,lun:[4.64,1.86],cola:1.86,cint:[1.22,1.24],caida:.97,puertas:4,pilB:2.62,pc:['negro',.48,.66,.1],pcR:['negro',.48,.64,.08],aro:'cinco',auxilio:1,pat:['CJF 463',.56,.84],
       frente(h){h.rejilla(.38,.84,1.1,4,'negro','gris');h.faroC(.6,.97,.1);h.r(.5,.68,.8,.86,'naranja')},
       atras(h){h.stop(.68,.84,.58,.84);h.giro(.68,.84,.76,.84,.016)}},
-    volvo:{L:4.79,W:1.71,H:1.46,rr:.3,suelo:.22,eje:[.85,3.49],hn:.78,hc:.92,para:[1.45,2.08],techo:3.38,lun:[3.92,1.02],cola:1,cint:[.9,.98],caida:.88,puertas:4,pilB:2.62,pc:['negro',.34,.52,.12],pcR:['negro',.34,.52,.12],mold:['cromo',.62],aro:'cinco',pat:['VLV 240',.43,.76],
+    volvo:{L:4.79,W:1.71,H:1.46,rr:.3,suelo:.22,eje:[.85,3.49],hn:.78,hc:.92,para:[1.45,2.08],techo:3.38,lun:[3.92,1.02],cola:1,cint:[.9,.98],caida:.88,puertas:4,pilB:2.62,pc:['negro',.34,.52,.12],pcR:['negro',.34,.52,.12],mold:['cromo',.62],aro:'cinco',pat:['LDR 724',.43,.76],
       frente(h){h.r(-.36,.36,.55,.75,'cromo');h.rejilla(.33,.57,.73,7,'negro','cromo');h.faroR(.38,.74,.58,.72);h.giro(.38,.74,.53,.57)},
       atras(h){h.stop(.44,.83,.64,.92);h.giro(.44,.83,.82,.92,.016)}},
-    gol:{L:3.79,W:1.6,H:1.37,rr:.28,suelo:.2,eje:[.72,3.08],hn:.66,hc:.83,para:[1.02,1.72],techo:2.92,lun:[3.62,.94],cola:.9,cint:[.82,.88],caida:.87,puertas:2,pilB:2.4,pc:['negro',.3,.46,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['GOL 87',.37,.72],
+    gol:{L:3.79,W:1.6,H:1.37,rr:.28,suelo:.2,eje:[.72,3.08],hn:.66,hc:.83,para:[1.02,1.72],techo:2.92,lun:[3.62,.94],cola:.9,cint:[.82,.88],caida:.87,puertas:2,pilB:2.4,pc:['negro',.3,.46,.05],pcR:['negro',.3,.46,.05],aro:'chapa',pat:['PIB 87',.37,.72],
       frente(h){h.rejilla(.34,.53,.63,3);h.faroR(.36,.72,.52,.64);h.giro(.6,.72,.38,.42,.065)},
       atras(h){h.stop(.4,.74,.64,.8);h.giro(.4,.52,.64,.8,.016)}},
-    e30:{L:4.33,W:1.65,H:1.38,rr:.3,suelo:.19,eje:[.78,3.35],hn:.7,hc:.86,para:[1.25,1.85],techo:2.95,lun:[3.48,.97],cola:.95,cint:[.84,.92],caida:.86,puertas:2,pilB:2.5,pc:['negro',.34,.48,.06],pcR:['negro',.34,.48,.06],mold:['negro',.5],aro:'malla',pat:['E30 325',.4,.72],
+    e30:{L:4.33,W:1.65,H:1.38,rr:.3,suelo:.19,eje:[.78,3.35],hn:.7,hc:.86,para:[1.25,1.85],techo:2.95,lun:[3.48,.97],cola:.95,cint:[.84,.92],caida:.86,puertas:2,pilB:2.5,pc:['negro',.34,.48,.06],pcR:['negro',.34,.48,.06],mold:['negro',.5],aro:'malla',pat:['TNG 325',.4,.72],
       frente(h){h.r(.14,.8,.55,.68,'negro');for(const z of [-1,1]){h.r(z>0?.025:-.13,z>0?.13:-.025,.54,.69,'cromo',.013);h.r(z>0?.04:-.115,z>0?.115:-.04,.555,.675,'negro',.015)}h.faroC(.33,.615,.068);h.faroC(.55,.615,.075);h.giro(.62,.76,.4,.44,.07)},
       atras(h){h.stop(.38,.8,.66,.8);h.giro(.38,.5,.66,.8,.016)}},
-    ae86:{L:4.18,W:1.63,H:1.33,rr:.29,suelo:.18,eje:[.85,3.25],hn:.62,hc:.82,para:[1.2,1.85],techo:2.62,lun:[3.86,.98],cola:.94,cint:[.8,.9],caida:.85,puertas:2,pilB:2.36,pc:['color',.3,.5,.03],pcR:['color',.32,.52,.03],aro:'cinco',pat:['AE 86',.38,.6],popup:1,
+    ae86:{L:4.18,W:1.63,H:1.33,rr:.29,suelo:.18,eje:[.85,3.25],hn:.62,hc:.82,para:[1.2,1.85],techo:2.62,lun:[3.86,.98],cola:.94,cint:[.8,.9],caida:.85,puertas:2,pilB:2.36,pc:['color',.3,.5,.03],pcR:['color',.32,.52,.03],aro:'cinco',pat:['SRR 186',.38,.6],popup:1,
       frente(h){h.r(.3,.74,.55,.58,'negro');h.faroR(.44,.72,.42,.48);h.r(-.4,.4,.34,.42,'negro',.04)},
       atras(h){h.r(-.79,.79,.62,.75,'negro');h.stop(.42,.78,.635,.735);h.giro(.62,.78,.635,.735,.018)}},
-    s13:{L:4.52,W:1.69,H:1.29,rr:.3,suelo:.17,eje:[.92,3.39],hn:.6,hc:.8,para:[1.3,2],techo:2.85,lun:[3.55,.94],cola:.92,cint:[.78,.88],caida:.84,puertas:2,pilB:2.6,pc:['color',.28,.5,.03],pcR:['color',.3,.5,.03],aro:'malla',pat:['240 SX',.36,.48],popup:1,
+    s13:{L:4.52,W:1.69,H:1.29,rr:.3,suelo:.17,eje:[.92,3.39],hn:.6,hc:.8,para:[1.3,2],techo:2.85,lun:[3.55,.94],cola:.92,cint:[.78,.88],caida:.84,puertas:2,pilB:2.6,pc:['color',.28,.5,.03],pcR:['color',.3,.5,.03],aro:'malla',pat:['TRB 024',.36,.48],popup:1,
       frente(h){h.faroR(.45,.75,.44,.5);h.r(-.36,.36,.32,.4,'negro',.04);h.r(.3,.7,.52,.55,'negro')},
       atras(h){h.stop(.24,.81,.62,.74);h.giro(.6,.81,.62,.67,.016)}},
-    delta:{L:3.9,W:1.77,H:1.38,rr:.3,suelo:.17,eje:[.78,3.26],hn:.7,hc:.86,para:[1.02,1.72],techo:3.2,lun:[3.72,.97],cola:.95,cint:[.86,.92],caida:.84,puertas:4,pilB:2.12,pc:['color',.3,.5,.04],pcR:['negro',.3,.48,.05],aro:'malla',ens:1,pat:['HF 4WD',.38,.7],
+    delta:{L:3.9,W:1.77,H:1.38,rr:.3,suelo:.17,eje:[.78,3.26],hn:.7,hc:.86,para:[1.02,1.72],techo:3.2,lun:[3.72,.97],cola:.95,cint:[.86,.92],caida:.84,puertas:4,pilB:2.12,pc:['color',.3,.5,.04],pcR:['negro',.3,.48,.05],aro:'malla',ens:1,pat:['RIP 4WD',.38,.7],
       frente(h){h.rejilla(.26,.6,.72,3,'negro','gris');h.faroC(.38,.66,.075);h.faroC(.58,.66,.08);h.r(-.62,.62,.36,.46,'negro',.04)},
       atras(h){h.stop(.5,.83,.62,.78);h.giro(.5,.62,.62,.78,.016)}},
-    f100:{L:5,W:1.98,H:1.8,rr:.38,suelo:.4,eje:[.86,3.86],hn:1.1,hc:1.2,para:[1.55,1.9],techo:2.8,lun:[2.86,1.18],cola:1.16,cint:[1.18,1.16],caida:.92,puertas:2,pilB:2.5,pc:['cromo',.44,.62,.1],pcR:['cromo',.44,.6,.1],aro:'tasa',caja:1,pat:['F100 84',.5,.53],
+    f100:{L:5,W:1.98,H:1.8,rr:.38,suelo:.4,eje:[.86,3.86],hn:1.1,hc:1.2,para:[1.55,1.9],techo:2.8,lun:[2.86,1.18],cola:1.16,cint:[1.18,1.16],caida:.92,puertas:2,pilB:2.5,pc:['cromo',.44,.62,.1],pcR:['cromo',.44,.6,.1],aro:'tasa',caja:1,pat:['CHT 84',.5,.53],
       frente(h){h.rejilla(.8,.72,.98,4,'negro','cromo');h.faroC(.7,.85,.095);h.giro(.52,.62,.76,.8)},
       atras(h){h.stop(.86,.96,.74,1.06);h.giro(.86,.96,.98,1.06,.016)}}
   };
@@ -3575,12 +3574,12 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Cada auto del juego usa uno de los modelos, estirado a su largo: [modelo, largo, ancho, alto]
   const KAUTO={'Rural':['coupe',4.5],'Flecha':['italia',4.4],'Picudo':['rally',3.9],'Crucero':['mobil',5],'Pegote':['italia',4.3,1.02,.95],
     'Bólido':['fenyr',4.5],'Tanque':['van',5],'Pluma':['rally',3.7,.96],'Clavado':['coupe',4.4],'Deriva':['ghini',4.4],
-    'Puma':['rally',4.1,1.03,.96],'Rayo':['italia',4.6],'Cóndor':['fenyr',4.7],'Cometa':['lamb',4.6],'Zorro':['jeep',4.2],
+    'Yaguareté':['rally',4.1,1.03,.96],'Rayo':['italia',4.6],'Cóndor':['fenyr',4.7],'Cometa':['lamb',4.6],'Zorro':['jeep',4.2],
     'Lince':['ghini',4.4,1.04],'Patrón':['kamaro',4.7],'Leoncito':['rally',3.9],
-    'Fiat Uno':['rally',3.7,.95,1.04],'Fiat 147':['rally',3.6,.93,1.04],'Fiat Duna':['coupe',4.05,.95,1.02],'Renault 12':['coupe',4.35,.97,1.02],
-    'Ford Falcon':['kamaro',4.8,1.02],'Lada Niva':['jeep',3.8,.95],'Land Rover Defender':['armor',4.2,.98],'Mercedes Clase G':['armor',4.6],
-    'Volvo 240':['coupe',4.8,.98,1.03],'VW Gol':['rally',3.8,.97],'BMW E30':['coupe',4.3,.97,.97],'Toyota AE86':['kamaro',4.2,.95],
-    'Nissan 240SX':['ghini',4.5,.98],'Lancia Delta':['rally',3.9,1.06],'Ford F-100':['armor',5.2,1.03,1.05]};
+    'Cubito':['rally',3.7,.95,1.04],'Bichito':['rally',3.6,.93,1.04],'Baulero':['coupe',4.05,.95,1.02],'Noble':['coupe',4.35,.97,1.02],
+    'Fierro':['kamaro',4.8,1.02],'Estepa':['jeep',3.8,.95],'Baqueano':['armor',4.2,.98],'Caja Fuerte':['armor',4.6],
+    'Ladrillo':['coupe',4.8,.98,1.03],'Pibe':['rally',3.8,.97],'Tango':['coupe',4.3,.97,.97],'Serrano':['kamaro',4.2,.95],
+    'Turbina':['ghini',4.5,.98],'Ripio':['rally',3.9,1.06],'Chata':['armor',5.2,1.03,1.05]};
   const kmallas={},kautos={};
   // Lee una malla guardada: posiciones, normales, color y papel de cada vértice
   function leerMalla(b64){
