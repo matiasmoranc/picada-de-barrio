@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw0pqsvw"></script>
+<script src="room.js?v=mw0q327n"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -3611,12 +3611,14 @@ if(typeof module!=='undefined')module.exports=Sim;
     const ruedas=[],gira=[];
     if(!foto){
       const rod=(P.rod|0)/10,anc=(P.anc|0)/10,caida=(P.cam|0)/10*.2,mas=(kit>=3?.08:0)+.06*anc;
+      // Bajado: la goma se hace de perfil bajo para no atravesar el guardabarros; la llanta queda igual
+      const perfil=1-((P.alt|0)/10*.1+.03)/(2*K.rc);
       const lm=P.llanta?nuevo(new THREE.MeshMatcapMaterial({color:COLORES[P.lc|0],matcap:matcapDe('metal')})):null;
       Q.w.forEach(([wx,wy,wz],i)=>{
-        const sg=Math.sign(wz),eje=new THREE.Group();eje.position.set(wx*K.S[0]-K.cx,wy*K.S[1],wz*K.S[2]+sg*mas);g.add(eje);
+        const sg=Math.sign(wz),eje=new THREE.Group();eje.position.set(wx*K.S[0]-K.cx,wy*K.S[1]*perfil,wz*K.S[2]+sg*mas);g.add(eje);
         const r=new THREE.Group();r.rotation.x=Math.PI/2+sg*caida;eje.add(r);
-        const geos=sg<0?Q.rI:Q.rD,gR=1+.06*rod;
-        for(const k in geos){const m=new THREE.Mesh(geos[k],k==4&&lm?lm:KFIJO);m.rotation.x=-Math.PI/2;if(k==4)m.scale.set(1+.12*rod,1+.12*rod,1);r.add(m)}
+        const geos=sg<0?Q.rI:Q.rD,gR=perfil;
+        for(const k in geos){const m=new THREE.Mesh(geos[k],k==4&&lm?lm:KFIJO);m.rotation.x=-Math.PI/2;if(k==4)m.scale.set((1+.12*rod)/perfil,(1+.12*rod)/perfil,1);r.add(m)}
         r.scale.set(K.S[1]*gR,K.S[2]*(1+.45*anc),K.S[1]*gR);
         gira.push({m:r,s:sg});if(i<2)ruedas.push(eje);
       });
