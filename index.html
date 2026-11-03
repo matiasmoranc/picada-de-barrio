@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1949g8"></script>
+<script src="room.js?v=mw1a0sx6"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1347,7 +1347,7 @@ const Sim=(()=>{
     if((c.iaN=(c.iaN||0)+1)%3&&c.ia)return c.ia;
     dt*=3;
     const t=track,N=t.N,speed=Math.hypot(c.vx,c.vy);
-    if(speed<1.2)c.stuck+=dt;else c.stuck=0;
+    if(speed<1.2&&!c.frozen)c.stuck+=dt;else c.stuck=0;
     if(c.stuck>2.5){rescatar(c,c.idx,0);c.stuck=0}
     const look=(c.idx+Math.round((7+speed*.55)/t.sp))%N,cs=Math.cos(c.a),sn=Math.sin(c.a);
     // De base va por la línea de carrera, cada uno con su mañana
@@ -1378,7 +1378,7 @@ const Sim=(()=>{
     const tx=t.x[look]+t.nx[look]*c.meta-c.x,ty=t.y[look]+t.ny[look]*c.meta-c.y;
     const err=wrap(Math.atan2(ty,tx)-c.a);
     let vmax=60;
-    for(let k=4,fin=Math.round(300/t.sp);k<fin;k+=3){
+    for(let k=0,fin=Math.round(300/t.sp);k<fin;k+=k<6?1:3){
       const i=(c.idx+k)%N,lim=Math.sqrt(c.spec.mu*t.grip*G*.72/Math.max(t.k[i],.001)),dist=k*t.sp;
       vmax=Math.min(vmax,Math.sqrt(lim*lim+2*Math.min(8,c.spec.brake/c.spec.m*.56)*t.grip*dist));
     }
@@ -1386,7 +1386,8 @@ const Sim=(()=>{
     c.prox-=dt*c.torpe;c.fallo=Math.max(0,c.fallo-dt);
     if(c.prox<=0&&vmax<speed+2){c.fallo=.9+Math.random()*.7;c.prox=18+Math.random()*30}
     vmax*=c.skill*c.goma*(c.fallo>0?1.12:1);
-    return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&speed<vmax?1:0,brake:speed>vmax+1.5?1:0};
+    const tope=speed>10&&Math.abs(err*2.6)>1.25;
+    return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&!tope&&speed<vmax?1:0,brake:speed>vmax+1.5||tope&&speed>vmax*.85?1:0};
   }
   function progress(c){
     const s=c.idx/track.N,q=Math.floor(s*4);
@@ -2190,7 +2191,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const mine=me?Math.max(0,keysSorted.indexOf(myKey)):0;
     if(me){const g=gridSpot(mine%14);place(me,g.idx,g.off);resetRun(me);me.ghost=2}
     let slot=keysSorted.length||1;
-    for(const c of cars)if(c.kind==='bot'){const g=gridSpot(slot++);place(c,g.idx,g.off);resetRun(c)}
+    for(const c of cars)if(c.kind==='bot'){const g=gridSpot(slot++);place(c,g.idx,g.off);c.meta=g.off;c.stuck=0;resetRun(c)}
   }
   let cortada=null;
   function cortarCarrera(txt){
