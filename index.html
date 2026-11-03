@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw18gpdf"></script>
+<script src="room.js?v=mw1949g8"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -986,6 +986,18 @@ const Sim=(()=>{
       const s=i*sp;while(d[j+1]<s)j++;
       const f=(s-d[j])/(d[j+1]-d[j]),a=raw[j],b=raw[(j+1)%raw.length];
       x[i]=a[0]+(b[0]-a[0])*f;y[i]=a[1]+(b[1]-a[1])*f;
+    }
+    // Los trazados traen ruido de los puntos originales y en las rectas los bordes zigzagueaban:
+    // se alisa fuerte donde la pista casi no dobla y las curvas cerradas quedan como estaban
+    {
+      const sx=x.slice(),sy=y.slice(),w=new Float64Array(N);
+      alisar(sx,4,3);alisar(sy,4,3);
+      for(let i=0;i<N;i++){
+        const a=(i+N-4)%N,b=(i+4)%N,h1=Math.atan2(sy[i]-sy[a],sx[i]-sx[a]),h2=Math.atan2(sy[b]-sy[i],sx[b]-sx[i]);
+        w[i]=clamp(1-(Math.abs(wrap(h2-h1))/(4*sp)-.005)/.012,0,1);
+      }
+      alisar(w,6,2);
+      for(let i=0;i<N;i++){x[i]+=(sx[i]-x[i])*w[i];y[i]+=(sy[i]-y[i])*w[i]}
     }
     const tx=new Float64Array(N),ty=new Float64Array(N),nx=new Float64Array(N),ny=new Float64Array(N),k=new Float64Array(N);
     for(let i=0;i<N;i++){
