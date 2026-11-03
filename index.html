@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw0q327n"></script>
+<script src="room.js?v=mw0qc5ye"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -606,6 +606,7 @@ html,body{background:#000;touch-action:manipulation}
 #g-datos{order:2}#g-tabs{order:3}
 #g-ficha{background:rgba(10,11,15,.62);border-radius:14px;padding:8px 12px;pointer-events:none}
 #local.con-panel #g-estilo,#local.con-panel #g-todos{display:none}
+.de-fabrica{display:block;width:100%;margin:6px 0 18px;min-height:46px;border-radius:12px;background:transparent;color:#ff8a7a;border:1.5px solid #ff8a7a;font-weight:700}
 #g-todos{position:absolute;right:14px;top:14px;z-index:3;background:var(--oro);color:#14151a;font-weight:700;border-radius:999px;padding:6px 14px;min-height:36px}
 #g-ficha{padding-right:120px}
 #g-datos{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;background:rgba(14,15,20,.9);padding:9px 12px;font-size:.92rem}
@@ -1428,15 +1429,10 @@ if(typeof module!=='undefined')module.exports=Sim;
   ];
   // Piezas: p es el precio y e cuánto suma al estilo
   const PIEZAS={
-    kit:{n:'Kit de carrocería',o:[['De fábrica',0,0],['Deportivo',600,1],['Callejero',1200,2],['Ensanchado',2200,3]]},
-    aleron:{n:'Alerón',o:[['De fábrica',0,0],['Bajo',400,1],['Medio',900,2],['GT alto',1800,3]]},
-    capo:{n:'Capó',o:[['De fábrica',0,0],['Toma de aire',500,1],['Carbono',1000,2],['Ventilado',1400,2]]},
     ter:{n:'Terminación',o:[['Mate',0,0],['Brillante',300,1],['Metalizado',700,2],['Perlado',1200,3]]},
     vinilo:{n:'Vinilo',o:[['Sin vinilo',0,0],['Franja central',300,1],['Doble franja',500,1],['Franjas anchas',800,2],['Lateral',1100,3]]},
-    llanta:{n:'Llantas',o:[['De fábrica',0,0],['Deportivas',500,1],['Tres rayos',900,2],['Profundas',1500,3]]},
     neon:{n:'Neón',o:[['Sin neón',0,0],['Azul',800,2],['Verde',800,2],['Rojo',800,2],['Violeta',800,2],['Amarillo',800,2]]},
-    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]},
-    escape:{n:'Escape',o:[['De fábrica',0,0],['Doble',300,1],['Cuádruple',600,1],['Gordo',900,2]]}
+    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]}
   };
   const NEONES=[null,'#2f8cff','#2fe07a','#ff3347','#b05cff','#ffd23f'];
   const pesos=n=>'$'+Math.round(n).toLocaleString('es-AR');
@@ -1470,7 +1466,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   const nivel=(i,k)=>{const n=fichaAuto(i).mec[k];return Number.isInteger(n)?clamp(n,0,COSTO_MEJORA.length):0};
   function specDe(i){
-    const m={...MODELOS[i]},a=fichaAuto(i).aj,rel=a.rel||0,bal=a.bal||0,alt=a.alt||0,cam=a.cam||0;
+    const m={...MODELOS[i]},a=fichaAuto(i).aj,rel=a.rel||0,bal=a.bal||0,alt=((a.alt||0)+(a.altT||0))/2,cam=a.cam||0;
     for(const q of MEJORAS)q.aplica(m,nivel(i,q.k));
     m.fmax*=1+.18*rel;m.drag*=1+.12*rel;
     m.rear*=1-.05*bal;m.angulo+=.08*bal;
@@ -2323,7 +2319,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const derrape={act:0,combo:1,tiempo:0,pausa:0,carrera:0,ver:0};
   function piezasDe(i){
     const f=fichaAuto(i),pz={};for(const g in PIEZAS)pz[g]=equipo(i,g);
-    pz.vc=f.vc;pz.lc=f.lc;pz.alt=Math.round((f.aj.alt||0)*10);pz.cam=Math.round((f.aj.cam||0)*10);pz.rod=Math.round((f.aj.rod||0)*10);pz.anc=Math.round((f.aj.anc||0)*10);
+    pz.vc=f.vc;pz.lc=f.lc;pz.alt=Math.round((f.aj.alt||0)*10);pz.altT=Math.round((f.aj.altT||0)*10);pz.cam=Math.round((f.aj.cam||0)*10);pz.rod=Math.round((f.aj.rod||0)*10);pz.anc=Math.round((f.aj.anc||0)*10);
     return pz;
   }
   function aplicarAuto(){
@@ -2333,13 +2329,14 @@ if(typeof module!=='undefined')module.exports=Sim;
     me.pz=pz;me.pzk=JSON.stringify(pz);me.pzRed=CAMPOS_PZ.map(k=>pz[k]||0);
     pintarControl();pintarPlata();
   }
-  const CAMPOS_PZ=['kit','aleron','capo','ter','vinilo','llanta','neon','polar','escape','vc','lc','alt','cam','rod','anc'];
+  const CAMPOS_PZ=['kit','aleron','capo','ter','vinilo','llanta','neon','polar','escape','vc','lc','alt','cam','rod','anc','altT'];
   function leerPiezas(c,z){
     if(!Array.isArray(z)||z.length!==CAMPOS_PZ.length)return;
     const k=JSON.stringify(z);if(k===c.pzk)return;
     const pz={};CAMPOS_PZ.forEach((n,i)=>{const v=z[i];pz[n]=Number.isInteger(v)?v:0});
     for(const g in PIEZAS)pz[g]=clamp(pz[g],0,PIEZAS[g].o.length-1);
-    pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,0,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
+    for(const g of ['kit','aleron','capo','llanta','escape'])pz[g]=0;
+    pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,0,10);pz.altT=clamp(pz.altT,0,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
     c.pz=pz;c.pzk=k;
   }
   function mostrarJuego(si){
@@ -2491,7 +2488,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     caja.append(el('h3','p-titulo','Cómo ganar más'));
     tabla('Dificultad','Cambiala en Correr.',Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,'×'+String(DIFICULTADES[k].paga).replace('.',',')]));
     const es=el('section','p-carta');
-    es.append(el('h4',null,'Estilo de tu auto'),el('p',null,'Las piezas de Carrocería, Pintura y Extras suben el estilo. Hoy tenés '+textoEstrellas(estrellas(modelo))+': '+(bono?'+'+bono+'% en cada premio.':'sin bono todavía.')));
+    es.append(el('h4',null,'Estilo de tu auto'),el('p',null,'Las piezas de Pintura y Extras suben el estilo. Hoy tenés '+textoEstrellas(estrellas(modelo))+': '+(bono?'+'+bono+'% en cada premio.':'sin bono todavía.')));
     const ga=el('button','boton-p','Ir al garaje');ga.type='button';ga.onclick=()=>tab('garaje');es.append(ga);caja.append(es);
     caja.append(el('h3','p-titulo','Últimos movimientos'));
     const l=el('section','p-carta'),mv=pref.movs||[];
@@ -2501,7 +2498,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // Garaje: las flechas recorren tus autos y después los que están en venta
   const ordenGaraje=()=>pref.autos;
-  const TABS=[['mecanico','Motor','motor'],['chapa','Carrocería','chapa'],['pintura','Pintura','pintura'],['accesorios','Extras','extras'],['ajuste','Ajustes','ajustes']];
+  const TABS=[['mecanico','Motor','motor'],['pintura','Pintura','pintura'],['accesorios','Extras','extras'],['ajuste','Ajustes','ajustes']];
   {const q=el('button',null,'Autos');q.type='button';q.dataset.id='autos';q.onclick=()=>abrirPanel('autos');$('local-cats').append(q)}
   for(const [id,n,ic] of TABS){
     const b=el('button');b.type='button';b.append(svgDe(ic),el('span',null,n));b.onclick=()=>abrirPanel(id);$('g-tabs').append(b);
@@ -2532,6 +2529,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('local-cuerpo').scrollTop=0;pintarCasco();
     pintarLocal();
   }
+  // Deja el auto como vino: color original, sin piezas puestas y sin ajustes
+  function deFabrica(){
+    const f=fichaAuto(modelo);
+    f.eq={};f.aj={};f.pinta=MODELOS[modelo].forma.pinta??color;f.vc=7;f.lc=7;
+    guardar(pref);aplicarAuto();pintarGaraje();pintarPlata();if(abierto)pintarLocal();
+  }
   function cerrarLocal(){
     if(abierto){abierto=null;$('local').classList.remove('con-panel');$('local-panel').hidden=true;aplicarAuto();pintarGaraje();pintarPlata();pintarCasco()}
   }
@@ -2540,6 +2543,14 @@ if(typeof module!=='undefined')module.exports=Sim;
     const c=$('local-cuerpo'),y=c.scrollTop;
     c.textContent='';
     PINTORES[abierto](c);
+    if(abierto!=='autos'){
+      const b=el('button','de-fabrica','Volver el auto de fábrica');b.type='button';
+      b.onclick=()=>{
+        if(b.dataset.ok!=='1'){b.dataset.ok='1';b.textContent='Tocá de nuevo para confirmar';setTimeout(()=>{if(b.isConnected){b.dataset.ok='';b.textContent='Volver el auto de fábrica'}},3000);return}
+        deFabrica();
+      };
+      c.append(el('p','nota','Saca pintura, piezas y ajustes. Las mejoras de Motor y lo que ya compraste no se pierden.'),b);
+    }
     c.scrollTop=y;aplicarAuto();pintarGaraje();
   }
     function barrasDe(m,c){
@@ -2580,7 +2591,6 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
       const g=el('div','grupo');barrasDe(specDe(modelo),g);c.append(g);
     },
-    chapa(c){notaEstilo(c);grupoPiezas(c,['kit','aleron','capo'])},
     pintura(c){
       notaEstilo(c);
       c.append(el('h3',null,'Color'));
@@ -2590,14 +2600,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     },
     accesorios(c){
       notaEstilo(c);
-      grupoPiezas(c,['llanta']);
-      if(equipo(modelo,'llanta')){c.append(el('h3',null,'Color de llantas'));muestras(c,fichaAuto(modelo).lc,i=>{fichaAuto(modelo).lc=i;guardar(pref);pintarLocal()})}
-      grupoPiezas(c,['neon','polar','escape']);
+      grupoPiezas(c,['neon','polar']);
     },
     ajuste(c){
       c.append(el('p','nota','Gratis. Probá y volvé: cada cambio tiene su costo.'));
       const a=fichaAuto(modelo).aj;
-      const S=[['rel','Relación de caja','Más punta','Más pique',-1,1],['bal','Balance','Cola firme','Cola suelta',-1,1],['alt','Altura','Alto','Bien bajo',0,1],['cam','Caída de ruedas','Recta','Muy caída',0,1],['rod','Tamaño de llantas','Chicas','Grandes',0,1],['anc','Ancho de gomas','Finas','Anchas',0,1]];
+      const S=[['rel','Relación de caja','Más punta','Más pique',-1,1],['bal','Balance','Cola firme','Cola suelta',-1,1],['alt','Altura adelante','Alto','Bien bajo',0,1],['altT','Altura atrás','Alto','Bien bajo',0,1],['cam','Caída de ruedas','Recta','Muy caída',0,1],['rod','Tamaño de llantas','Chicas','Grandes',0,1],['anc','Ancho de gomas','Finas','Anchas',0,1]];
       for(const [k,n,lo,hi,mn,mx] of S){
         const f=el('div','deslizar'),l=el('label',null,n),i=el('input'),t=el('small');
         i.type='range';i.min=mn;i.max=mx;i.step=.1;i.value=a[k]||0;i.setAttribute('aria-label',n);
@@ -3552,7 +3560,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function medidas(v){return kenneyDe(v)||armadoR(v)}
   let KFIJO=null,KLUZ=null;
   function armarKenney(c,escena,K,foto){
-    const M=materialesReales(),P=c.pz||{},f=MODELOS[c.v].forma||{},extra=[],g=new THREE.Group(),caja=new THREE.Group(),Q=K.Q;
+    const M=materialesReales(),P=c.pz||{},f=MODELOS[c.v].forma||{},extra=[],g=new THREE.Group(),cajaA=new THREE.Group(),caja=new THREE.Group(),Q=K.Q;
     const nuevo=m=>{extra.push(m);return m};
     const pone=(geo,mat,x=0,y=0,z=0,padre=caja)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);padre.add(m);return m};
     if(!KFIJO)KFIJO=new THREE.MeshLambertMaterial({vertexColors:true}),KLUZ=new THREE.MeshBasicMaterial({vertexColors:true});
@@ -3605,17 +3613,19 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(ala>1)for(const z of [-.55,.55]){const p=pone(GEO.pieza,M.negro,ax,base+alto/2,z*W2);p.scale.set(.06,alto,.04)}
     }
     if(P.escape){const zs=P.escape===1?[-.35,.35]:[-.45,-.25,.25,.45];for(const z of zs){const t=pone(GEO.caño,M.cromo,-Lg-.02,suelo+.08,z*W2);t.rotation.z=Math.PI/2;if(P.escape===3)t.scale.setScalar(1.5)}}
-    caja.position.y=-(P.alt|0)/10*.1;
-    g.add(caja);
+    // Altura de adelante y de atrás: la carrocería baja y se inclina sobre el centro entre ejes
+    const bD=(P.alt|0)/10*.1,bT=(P.altT|0)/10*.1,xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
+    caja.rotation.z=inc;caja.position.y=-(bD+bT)/2-xm*inc;cajaA.add(caja);
+    g.add(cajaA);
     // Ruedas: cada una gira sobre su eje y las de adelante doblan
     const ruedas=[],gira=[];
     if(!foto){
       const rod=(P.rod|0)/10,anc=(P.anc|0)/10,caida=(P.cam|0)/10*.2,mas=(kit>=3?.08:0)+.06*anc;
       // Bajado: la goma se hace de perfil bajo para no atravesar el guardabarros; la llanta queda igual
-      const perfil=1-((P.alt|0)/10*.1+.03)/(2*K.rc);
+      const perfiles=[bD,bT].map(b=>1-(b+.03)/(2*K.rc));
       const lm=P.llanta?nuevo(new THREE.MeshMatcapMaterial({color:COLORES[P.lc|0],matcap:matcapDe('metal')})):null;
       Q.w.forEach(([wx,wy,wz],i)=>{
-        const sg=Math.sign(wz),eje=new THREE.Group();eje.position.set(wx*K.S[0]-K.cx,wy*K.S[1]*perfil,wz*K.S[2]+sg*mas);g.add(eje);
+        const sg=Math.sign(wz),perfil=perfiles[i<2?0:1],eje=new THREE.Group();eje.position.set(wx*K.S[0]-K.cx,wy*K.S[1]*perfil,wz*K.S[2]+sg*mas);g.add(eje);
         const r=new THREE.Group();r.rotation.x=Math.PI/2+sg*caida;eje.add(r);
         const geos=sg<0?Q.rI:Q.rD,gR=perfil;
         for(const k in geos){const m=new THREE.Mesh(geos[k],k==4&&lm?lm:KFIJO);m.rotation.x=-Math.PI/2;if(k==4)m.scale.set((1+.12*rod)/perfil,(1+.12*rod)/perfil,1);r.add(m)}
@@ -3626,7 +3636,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(Lg*3.2,W2*3.7,1);g.add(ne)}
     }
     escena.add(g);
-    return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
+    return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
   // Para la vista de arriba se saca una foto del modelo desde arriba, una vez por auto
   let topo=null;const fotos=new Map();
