@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mvyleh56"></script>
+<script src="room.js?v=mw02l6a5"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1420,6 +1420,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   const NEONES=[null,'#2f8cff','#2fe07a','#ff3347','#b05cff','#ffd23f'];
   const pesos=n=>'$'+Math.round(n).toLocaleString('es-AR');
   if(!Number.isFinite(pref.plata)||pref.plata<0)pref.plata=0;
+  // Mientras esté prendido, comprar no descuenta: la plata ganada se sigue guardando aparte
+  const PLATA_LIBRE=true,libre=()=>PLATA_LIBRE||!!pref.prueba;
   if(!Number.isFinite(pref.rep)||pref.rep<0)pref.rep=0;
   if(!pref.garaje||typeof pref.garaje!=='object')pref.garaje={};
   // Modo de prueba: ?prueba da plata sin límite y ?prueba=0 devuelve la partida como estaba
@@ -1467,7 +1469,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(pref.prueba)pref.plata=9999999;
     $('plata-sala').textContent=pesos(pref.plata);
     const n=progresoNivel(),m=$('b-monto');
-    if(pref.prueba)m.textContent='∞';
+    if(libre())m.textContent='∞';
     else if(plataVista==null||!m.textContent||plataVista===pref.plata)m.textContent=pesos(pref.plata);
     else contar(m,plataVista,pref.plata);
     plataVista=pref.plata;
@@ -1493,8 +1495,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Movimientos de plata: se guardan los últimos para que siempre se sepa de dónde salió cada peso
   function mov(t,m){const l=pref.movs||(pref.movs=[]);l.unshift([t,Math.round(m)]);l.length=Math.min(l.length,12)}
   function pagar(p,t){
-    if(pref.plata<p)return false;
-    pref.plata-=p;mov(t,-p);toast(t+' · −'+pesos(p));
+    if(!libre()&&pref.plata<p)return false;
+    if(!libre()){pref.plata-=p;mov(t,-p)}
+    toast(libre()?t+' · gratis':t+' · −'+pesos(p));
     return true;
   }
   let toastT=0;
@@ -1528,7 +1531,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('i-auto').textContent=MODELOS[modelo].nombre;
     $('i-mejora').hidden=!m;
     if(m){
-      const f=clamp(pref.plata/m.p,0,1);
+      const f=libre()?1:clamp(pref.plata/m.p,0,1);
       $('i-m-n').textContent=m.n;$('i-m-u').style.width=f*100+'%';
       $('i-m-t').textContent=f>=1?'Comprar '+pesos(m.p):'Faltan '+pesos(m.p-pref.plata);
       $('i-mejora').classList.toggle('lista',f>=1);
@@ -2262,7 +2265,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       $('f-nivel-t').textContent=(sube?'¡Subiste a nivel '+sube+'!':'+'+rep+' puntos')+(n.falta?' · Faltan '+n.falta.toLocaleString('es-AR')+' para nivel '+(n.n+1):'');
       const m=proximaCompra(),tip=$('f-tip');
       tip.hidden=!m;
-      if(m)tip.textContent=pref.plata>=m.p?'Ya te alcanza para '+m.n+' ('+pesos(m.p)+')':'Te faltan '+pesos(m.p-pref.plata)+' para '+m.n;
+      if(m)tip.textContent=libre()||pref.plata>=m.p?'Ya te alcanza para '+m.n+' ('+pesos(m.p)+')':'Te faltan '+pesos(m.p-pref.plata)+' para '+m.n;
     }
     $('otra').hidden=$('gastar').hidden=$('al-garaje').hidden=modo!=='evento';$('seguir').hidden=modo==='evento';
     $('final').hidden=!entered;
@@ -2444,7 +2447,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     t.textContent='Tus premios';
     const n=progresoNivel(),st=pref.stats||{c:0,v:0,p:0,o:0},bono=bonoEstilo(),D=dificultad();
     const caja=el('div','premios-caja'),hero=el('section','p-hero');
-    hero.append(el('small',null,'Tu plata'),el('b',null,pref.prueba?'∞':pesos(pref.plata)));
+    hero.append(el('small',null,'Tu plata'),el('b',null,libre()?'∞':pesos(pref.plata)));
     const nv=el('div','p-nivel');
     nv.append(el('span',null,'Nivel '+n.n));
     const pg=el('i','prog'),pu=el('u');pu.style.width=n.f*100+'%';pg.append(pu);
@@ -2566,7 +2569,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   };
   const notaEstilo=c=>c.append(el('p','nota','Estas piezas son de lucir: suben tu estilo y cada premio paga más. Hoy: '+textoEstrellas(estrellas(modelo))+(bonoEstilo()?', +'+bonoEstilo()+'%.':'.')));
   function precio(b,p){
-    b.disabled=pref.plata<p;b.textContent=b.disabled?'Faltan '+pesos(p-pref.plata):'Comprar '+pesos(p);
+    b.disabled=!libre()&&pref.plata<p;b.textContent=b.disabled?'Faltan '+pesos(p-pref.plata):'Comprar '+pesos(p);
   }
   function muestras(c,actual,fn){
     const m=el('div','muestras');
