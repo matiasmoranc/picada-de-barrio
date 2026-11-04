@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1ibrek"></script>
+<script src="room.js?v=mw1j2m5a"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -488,6 +488,25 @@ html,body{background:#000;touch-action:manipulation}
 #posicion small{color:var(--suave);font-size:.85rem}
 #posicion span{margin-left:6px}
 .boton-hud{background:rgba(10,11,15,.74);color:#fff;box-shadow:none;border-radius:10px;min-height:32px;font-size:.92rem;padding:4px 10px}
+.boton-hud.ico{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:46px;min-height:44px;padding:5px 5px 4px;font-size:.64rem;line-height:1;font-weight:700;letter-spacing:.01em;border-radius:11px;white-space:nowrap}
+.boton-hud.ico::before{content:'';width:20px;height:20px;flex:none;background:currentColor;-webkit-mask:var(--i) center/contain no-repeat;mask:var(--i) center/contain no-repeat}
+#garaje{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M9%2011a4%204%200%201%200%200-8%204%204%200%200%200%200%208Zm8%200a3%203%200%201%200%200-6%203%203%200%200%200%200%206ZM1%2021c0-4%203.6-7%208-7s8%203%208%207Zm16.5%200c0-2.4-.9-4.5-2.4-6%20.6-.1%201.2-.2%201.9-.2%203.3%200%206%202.6%206%206.2Z'%2F%3E%3C%2Fsvg%3E")}
+#mic{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M12%2015a4%204%200%200%200%204-4V5a4%204%200%200%200-8%200v6a4%204%200%200%200%204%204Zm7-4a1%201%200%201%200-2%200%205%205%200%200%201-10%200%201%201%200%201%200-2%200%207%207%200%200%200%206%206.92V21H8a1%201%200%201%200%200%202h8a1%201%200%201%200%200-2h-3v-3.08A7%207%200%200%200%2019%2011Z'%2F%3E%3C%2Fsvg%3E")}
+#reiniciar{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M12%205V1L6.5%206%2012%2011V7.5a5.5%205.5%200%201%201-5.5%205.5H4a8%208%200%201%200%208-8Z'%2F%3E%3C%2Fsvg%3E")}
+#terminar{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M4%202h2.4v20H4Zm3.6%201H20l-3.2%204.8L20%2012.6H7.6Z'%2F%3E%3C%2Fsvg%3E")}
+#abandonar{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M5.6%203.5%2012%209.9l6.4-6.4%202.1%202.1-6.4%206.4%206.4%206.4-2.1%202.1-6.4-6.4-6.4%206.4-2.1-2.1%206.4-6.4-6.4-6.4Z'%2F%3E%3C%2Fsvg%3E")}
+#reponer{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M12%201%203.5%209.5H9V16h6V9.5h5.5ZM2%2019h20v3.5H2Z'%2F%3E%3C%2Fsvg%3E")}
+#vista{--i:url("data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2024%2024'%3E%3Cpath%20d%3D'M12%201%2022%206.5v11L12%2023%202%2017.5v-11Zm0%202.3L5%207.2l7%203.9%207-3.9ZM4%208.9v7.4l7%203.9v-7.4Zm9%2011.3%207-3.9V8.9l-7%203.9Z'%2F%3E%3C%2Fsvg%3E")}
+#garaje{background:rgba(37,92,206,.9)}
+#mic{background:rgba(10,11,15,.74)}
+#mic[aria-pressed="true"]{background:#e5383b}
+#reiniciar{background:rgba(214,120,10,.92)}
+#terminar,#abandonar{background:rgba(178,34,40,.9)}
+#reponer{background:rgba(26,140,76,.9)}
+#vista{background:rgba(96,64,196,.9)}
+#largar{background:var(--oro);color:#14151a;min-height:44px;padding:4px 12px;font-size:.95rem}
+#mirar{opacity:.16;border-style:dashed}
+#mirar.on{opacity:.34;transform:none}
 #velocidad{position:absolute;right:max(14px,env(safe-area-inset-right,0px));left:auto;bottom:auto;top:calc(max(10px,env(safe-area-inset-top,0px)) + min(18.6vw,105px) + 6px);display:flex;align-items:baseline;gap:4px;background:rgba(10,11,15,.74);border-radius:10px;padding:3px 10px;font:400 1.3rem var(--display);text-shadow:none;transform:none}
 #velocidad small{display:inline;font:700 .8rem var(--texto);letter-spacing:0;color:var(--suave)}
 #grande{top:26%}
@@ -739,6 +758,7 @@ html,body{background:#000;touch-action:manipulation}
     <div class="mando" id="pedal-freno"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path fill-rule="evenodd" fill="#fbf6ea" d="M4 4H96V96H4ZM16 16V30H30V16ZM43 16V30H57V16ZM70 16V30H84V16ZM16 43V57H30V43ZM43 43V57H57V43ZM70 43V57H84V43ZM16 70V84H30V70ZM43 70V84H57V70ZM70 70V84H84V70Z"/></svg><span>FRENO</span></div>
     <div class="mando" id="pedal-gas"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path fill-rule="evenodd" fill="#fbf6ea" d="M4 4H96V96H4ZM18 12V88H32V12ZM43 12V88H57V12ZM68 12V88H82V12Z"/></svg><span id="txt-gas">ACEL.</span></div>
     <div class="mando" id="pedal-nitro" hidden><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M58 2 20 56H46L34 98 82 40H54Z" fill="#6fd0f2"/></svg><span>NITRO</span></div>
+    <div class="mando" id="mirar" hidden><span>MIRAR ATRÁS</span></div>
     <div class="mando" id="pedal-mano"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6 26 3 44 70 70 84 98 80V97H62L28 80Z" fill="#fbf6ea"/></svg><span>MANO</span></div>
   </div>
   <div id="cine" hidden><div id="cine-tarjeta"><small id="cine-sub"></small><b id="cine-nombre"></b></div><span>Tocá para saltar</span></div>
@@ -752,14 +772,14 @@ html,body{background:#000;touch-action:manipulation}
       <div class="fila">
         <button class="boton-hud" id="largar">Largar carrera</button>
         <div class="chip" id="espera" hidden></div>
-        <button class="boton-hud" id="garaje">Sala</button>
-        <button class="boton-hud boton-mic" id="mic" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11Z"/></svg><span>Hablar</span></button>
-        <button class="boton-hud" id="abandonar" hidden>Salir</button>
-        <button class="boton-hud" id="reiniciar" hidden>Reiniciar</button>
-        <button class="boton-hud" id="terminar" hidden>Terminar</button>
+        <button class="boton-hud ico" id="garaje">Sala</button>
+        <button class="boton-hud ico" id="mic" aria-pressed="false" aria-label="Micrófono" hidden>Hablar</button>
+        <button class="boton-hud ico" id="abandonar" hidden>Salir</button>
+        <button class="boton-hud ico" id="reiniciar" hidden>Reiniciar</button>
+        <button class="boton-hud ico" id="terminar" hidden>Terminar</button>
         <div class="chip" id="nitro-chip" hidden><i><u id="nitro-u"></u></i></div>
-        <button class="boton-hud" id="reponer" aria-label="Volver a la pista">Volver a pista</button>
-        <button class="boton-hud" id="vista" hidden>Ver 3D</button>
+        <button class="boton-hud ico" id="reponer" aria-label="Volver a la pista">A pista</button>
+        <button class="boton-hud ico" id="vista" hidden>Ver 3D</button>
         <button class="boton-hud" id="sonido">Sonido sí</button>
       </div>
       <div class="chip" id="tabla" hidden></div>
@@ -1454,6 +1474,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const leer=()=>{try{return JSON.parse(localStorage.getItem(LS))||{}}catch{return {}}};
   const guardar=v=>{try{localStorage.setItem(LS,JSON.stringify(v))}catch{}};
   const pref=leer();
+  if(!pref.v3dDef){pref.v3dDef=1;pref.vista3d=true;try{guardar(pref)}catch{}}
   // Controles pensados para el celular parado: quien venía de la versión acostada arranca de cero
   if(pref.vertical!==1){pref.vertical=1;pref.ajustes={};pref.control='flechas'}
   if(pref.ajustes&&pref.deslizar!==1){pref.deslizar=1;delete pref.ajustes.volante}
@@ -1643,7 +1664,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const removeBots=()=>{for(let i=cars.length-1;i>=0;i--)if(cars[i].kind==='bot')cars.splice(i,1)};
   // --- Entradas ---
   const keys={};
-  const touch={steer:0,analogico:false,gas:0,brake:0,mano:0,nitro:0};
+  const touch={steer:0,analogico:false,gas:0,brake:0,mano:0,nitro:0,mirar:0};
   let suave=0;
   const inp=()=>{
     const k=(keys.ArrowRight||keys.KeyD?1:0)-(keys.ArrowLeft||keys.KeyA?1:0),dest=k||touch.steer;
@@ -1663,13 +1684,13 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(entered&&/^Arrow|Space/.test(e.code))e.preventDefault();
   });
   addEventListener('keyup',e=>{keys[e.code]=false});
-  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=touch.mano=0;pads.clear();renderPedals()});
+  addEventListener('blur',()=>{for(const k in keys)keys[k]=false;touch.steer=touch.gas=touch.brake=touch.mano=touch.mirar=0;pads.clear();renderPedals()});
   const pads=new Map(),tactil=$('tactil');
   function renderPedals(){
-    let g=0,b=0,h=0,nt=0,st=null;
+    let g=0,b=0,h=0,nt=0,st=null,mi=0;
     let iz=0,de=0;
-    for(const p of pads.values()){if(p.z==='pedal-gas')g=1;else if(p.z==='pedal-freno')b=1;else if(p.z==='pedal-mano')h=1;else if(p.z==='pedal-nitro')nt=1;else if(p.z==='flecha-izq')iz=1;else if(p.z==='flecha-der')de=1;else st=p}
-    touch.gas=g;touch.brake=b;touch.mano=h;touch.nitro=nt;touch.analogico=!!st;touch.steer=st?st.giro:de-iz;
+    for(const p of pads.values()){if(p.z==='pedal-gas')g=1;else if(p.z==='pedal-freno')b=1;else if(p.z==='pedal-mano')h=1;else if(p.z==='pedal-nitro')nt=1;else if(p.z==='mirar')mi=1;else if(p.z==='flecha-izq')iz=1;else if(p.z==='flecha-der')de=1;else st=p}
+    touch.gas=g;touch.brake=b;touch.mano=h;touch.nitro=nt;touch.mirar=mi;$('mirar').classList.toggle('on',!!mi);touch.analogico=!!st;touch.steer=st?st.giro:de-iz;
     $('flecha-izq').classList.toggle('on',!!iz);$('flecha-der').classList.toggle('on',!!de);
     $('pedal-gas').classList.toggle('on',!!g);$('pedal-freno').classList.toggle('on',!!b);$('pedal-mano').classList.toggle('on',!!h);$('pedal-nitro').classList.toggle('on',!!nt);
     $('volante').classList.toggle('on',!!st);$('perilla').style.transform='translateX('+(touch.steer*Math.max(0,caja('volante').w/2-44)).toFixed(1)+'px)';
@@ -1682,7 +1703,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     'pedal-freno':{x:.642,y:.887,w:.181,h:.268},
     'pedal-gas':{x:.878,y:.886,w:.182,h:.27},
     'pedal-mano':{x:.881,y:.696,w:.212,h:.281},
-    'pedal-nitro':{x:.642,y:.7,w:.18,h:.22}
+    'pedal-nitro':{x:.642,y:.7,w:.18,h:.22},
+    'mirar':{x:.5,y:.4,w:.92,h:.2}
   };
   const AJ=()=>pref.ajustes||(pref.ajustes={});
   const ajuste=id=>{const a=AJ()[id],d=DEF[id];return a&&[a.x,a.y,a.w,a.h].every(n=>typeof n==='number'&&isFinite(n))?a:d};
@@ -1708,7 +1730,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Primero lo que el dedo tocó de lleno; si erró por poco, el control más cercano
   function queToca(x,y){
     const ids=[...dirige(),...pedales()],vol=pref.control!=='flechas';
-    const lleno=cercano(ids,x,y,0)||cercano(ids,x,y,40);
+    const lleno=cercano(ids,x,y,0)||(!$('mirar').hidden&&cercano(['mirar'],x,y,0))||cercano(ids,x,y,40);
     if(lleno)return lleno;
     const c=caja('volante'),W=$('juego').clientWidth;
     return vol&&(x<W/2)===((c.l+c.r)/2<W/2)?'volante':null;
@@ -1744,7 +1766,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const p=pads.get(e.pointerId);if(!p)return;
     p.lx=e.clientX;p.ly=e.clientY;
     if(p.z==='volante')moverVolante(p,e.clientX);
-    else{
+    else if(p.z!=='mirar'){
       const ids=p.z.startsWith('pedal')?pedales():dirige();
       if(distancia(caja(p.z),e.clientX,e.clientY)>12)p.z=cercano(ids,e.clientX,e.clientY,70)||p.z;
     }
@@ -1796,11 +1818,11 @@ if(typeof module!=='undefined')module.exports=Sim;
 
   // --- Editor de controles ---
   let edicion=null;
-  const ETIQUETAS={'volante':'Deslizar','flecha-izq':'Izquierda','flecha-der':'Derecha','pedal-freno':'Freno','pedal-gas':'Acelerador','pedal-mano':'Freno de mano','pedal-nitro':'Nitro'};
+  const ETIQUETAS={'mirar':'Mirar atrás','volante':'Deslizar','flecha-izq':'Izquierda','flecha-der':'Derecha','pedal-freno':'Freno','pedal-gas':'Acelerador','pedal-mano':'Freno de mano','pedal-nitro':'Nitro'};
   const textoSens=()=>(pref.sens||1).toFixed(2).replace('.',',');
   function pintarEditor(){
     const m=$('editor-mesa');m.textContent='';
-    for(const id of [...dirige(),...pedales()]){
+    for(const id of [...dirige(),...pedales(),...(pref.vista3d?['mirar']:[])]){
       const d=document.createElement('div'),sv=$(id).querySelector('svg'),t=document.createElement('span');
       d.className='ed';d.dataset.id=id;ponerCaja(d,caja(id));
       if(sv)d.append(sv.cloneNode(true));
@@ -2151,7 +2173,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   const vozPosible=()=>!!(room&&typeof room.voz==='function'&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
   function pintarMic(){
     const ok=vozPosible();
-    for(const id of ['mic','mic-sala']){const b=$(id);b.setAttribute('aria-pressed',!!miMic);b.querySelector('span').textContent=miMic?'Hablando':'Hablar'}
+    for(const id of ['mic','mic-sala'])$(id).setAttribute('aria-pressed',!!miMic);
+    $('mic-sala').querySelector('span').textContent=miMic?'Hablando':'Hablar';$('mic').textContent=miMic?'Al aire':'Hablar';
     $('mic-sala').hidden=!ok;
   }
   function apagarMic(){
@@ -2164,11 +2187,19 @@ if(typeof module!=='undefined')module.exports=Sim;
   async function cambiarMic(){
     if(!vozPosible()||pidiendoMic)return;
     if(miMic){apagarMic();aviso('Micrófono apagado');return}
-    pidiendoMic=true;let st=null;
-    try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
-    catch(e){aviso(e&&e.name==='NotAllowedError'?'Sin permiso para el micrófono: habilitalo en los ajustes del navegador':'No pudimos abrir el micrófono')}
+    pidiendoMic=true;let st=null,err=null;
+    // En iPhone el modo "solo reproducir" (el que hace sonar el juego con la tecla de silencio) no deja grabar
+    try{if(navigator.audioSession)navigator.audioSession.type='play-and-record'}catch{}
+    for(const pedido of [{audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}},{audio:true}]){
+      try{st=await navigator.mediaDevices.getUserMedia(pedido);break}catch(e){err=e;if(e&&e.name==='NotAllowedError')break}
+    }
     pidiendoMic=false;
-    if(!st)return;
+    if(!st){
+      try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch{}
+      const n=err&&err.name||'';
+      aviso(n==='NotAllowedError'?'Sin permiso para el micrófono. En Ajustes › Safari › Micrófono poné Permitir':n==='NotFoundError'?'No encontramos un micrófono':'No pudimos abrir el micrófono ('+(n||'error')+'). Abrí el juego en Safari');
+      return;
+    }
     if(!vozPosible()){for(const t of st.getTracks())t.stop();return}
     miMic=st;
     try{if(navigator.audioSession)navigator.audioSession.type='play-and-record'}catch{}
@@ -4253,7 +4284,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Mira un poco hacia donde va el auto: en el derrape se lo ve cruzado
     const va=sp>3&&(c.vf??1)>=-.5?Math.atan2(c.vy,c.vx):c.a;
     q.ca+=wrap(c.a+wrap(va-c.a)*.55-q.ca)*(1-Math.exp(-dt*6));
-    const fx=Math.cos(q.ca),fy=Math.sin(q.ca),v=Math.min(sp,60),Lg=(medidas(c.v)||{Lg:2.2}).Lg,lejos=Lg+4.6+v*.035,alto=2.45+v*.01,sh=camShake*.18,r=()=>(Math.random()-.5)*sh;
+    const atras=touch.mirar||keys.KeyC,ma=q.ca+(atras?Math.PI:0);
+    const fx=Math.cos(ma),fy=Math.sin(ma),v=Math.min(sp,60),Lg=(medidas(c.v)||{Lg:2.2}).Lg,lejos=Lg+4.6+v*.035,alto=2.45+v*.01,sh=camShake*.18,r=()=>(Math.random()-.5)*sh;
     cm.position.set(c.x-fx*lejos+r(),alto+r(),c.y-fy*lejos+r());
     cm.lookAt(c.x+fx*5.5,0,c.y+fy*5.5);
     const asp=W/H;cm.aspect=asp;cm.fov=asp<1?66:52;cm.updateProjectionMatrix();
@@ -4665,6 +4697,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
       rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
     }
+    {const m=!en3D();if($('mirar').hidden!==m){$('mirar').hidden=m;if(m&&touch.mirar){for(const [k,p] of pads)if(p.z==='mirar')pads.delete(k);renderPedals()}}}
     $('garaje').hidden=!!race||modo!=='online';{const m=modo!=='online'||!vozPosible();if($('mic').hidden!==m)$('mic').hidden=m}$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';$('reiniciar').hidden=$('terminar').hidden=!(race&&modo==='online'&&creador());
     $('nitro-chip').hidden=!conNitro();if(conNitro())$('nitro-u').style.width=me.nos*100+'%';
     $('espera').hidden=!!race||!anfitrion||modo!=='online';
