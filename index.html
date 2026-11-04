@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1o2jt2"></script>
+<script src="room.js?v=mw26thxb"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -953,6 +953,8 @@ html,body{background:#000;touch-action:manipulation}
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/geometries/DecalGeometry.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
 <script>
 /*SIM-START*/
 const Sim=(()=>{
@@ -996,7 +998,9 @@ const Sim=(()=>{
     {nombre:'Serrano',tag:'Nacido para derrapar',txt:'Liviano y de tracción trasera: el rey de las curvas de costado.',m:950,power:142000,fmax:8200,brake:17000,mu:1.68,rear:1.05,slide:.92,betaMax:.88,tcsSuelto:.8,angulo:.62,forma:{real:'ae86',pinta:7}},
     {nombre:'Turbina',tag:'Turbo y cola suelta',txt:'Largo y bajo: con el turbo lo llevás cruzado toda la curva.',m:1200,power:212000,fmax:10000,brake:19000,mu:1.7,rear:1.06,slide:.93,betaMax:.9,tcsSuelto:.9,tiempoSuelto:1.2,forma:{real:'s13',pinta:5}},
     {nombre:'Ripio',tag:'4x4 de rally',txt:'Ensanchado y con tracción integral: sale de la curva como un tiro.',m:1250,awd:.5,power:232000,fmax:11500,brake:21000,mu:1.85,slide:.9,betaMax:.8,forma:{real:'delta',pinta:0}},
-    {nombre:'Chata',tag:'Camioneta que empuja a todos',txt:'Enorme y pesada: en un choque, siempre gana.',m:1800,power:205000,fmax:9000,brake:17000,mu:1.5,drag:3.4,forma:{real:'f100',pinta:3}}
+    {nombre:'Chata',tag:'Camioneta que empuja a todos',txt:'Enorme y pesada: en un choque, siempre gana.',m:1800,power:205000,fmax:9000,brake:17000,mu:1.5,drag:3.4,forma:{real:'f100',pinta:3}},
+    // Modelo 3D: "2000 Peugeot 206" de tonielpro520 (Sketchfab, CC BY 4.0), adaptado con techo solar
+    {nombre:'Peugeot 206',tag:'Techo solar',txt:'El 206 de tres puertas, con techo solar. Liviano, nervioso y fácil de llevar.',m:1030,power:112000,fmax:8200,brake:16000,mu:1.66,drag:2.4,forma:{glb:'p206',tipo:'sedan',pinta:7}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE,LEJOS=44;
   // Pista: curva cerrada Catmull-Rom remuestreada a paso constante
@@ -1973,7 +1977,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
+  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2698,7 +2702,8 @@ if(typeof module!=='undefined')module.exports=Sim;
             ['Largá bien','Soltá el acelerador con el semáforo. Tocalo justo cuando se apagan las luces: si te adelantás, salís tarde.'],
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
         ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
-        ['Jugá con amigos','En Online creá una partida y pasales el enlace.']
+        ['Jugá con amigos','En Online creá una partida y pasales el enlace.'],
+        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar.']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -2981,6 +2986,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const tres=$('tres');
   let gl=null;
   try{if(window.THREE)gl=new THREE.WebGLRenderer({canvas:tres,antialias:true,powerPreference:'high-performance'})}catch{gl=null}
+  setTimeout(()=>{try{cargarGLBs()}catch(e){console.warn(e)}},0);
   const colorHex=h=>new THREE.Color(h);
   const SOMBRA=gl&&new THREE.MeshBasicMaterial({color:'#000',transparent:true,opacity:.26,depthWrite:false});
   // En carrera se elige ver desde arriba (2D) o detrás del auto (3D)
@@ -3865,7 +3871,62 @@ if(typeof module!=='undefined')module.exports=Sim;
     return kautos[v]={n,Q,S,cx,Lg,W2:mp.z1*s*w,ejes,rc,via,e:1,d:{H:mp.y1*s*h,ens:0},
       techo:(x,z)=>mp.techo((x+cx)/s,z/(s*w))*s*h,alto:(x,z)=>mp.alto((x+cx)/s,z/(s*w))*s*h,lado:(x,y)=>mp.lado((x+cx)/s,y/(s*h))*s*w,suelo:Q.rr*.6*s*h};
   }
-  function medidas(v){return kenneyDe(v)||armadoR(v)}
+  function medidas(v){return glbDe(v)||kenneyDe(v)||armadoR(v)}
+  // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
+  const GLBS={p206:{url:'autos/p206.glb',listo:false}};
+  function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
+  function cargarGLBs(){
+    if(!gl||!window.THREE||!THREE.GLTFLoader)return;
+    const ld=new THREE.GLTFLoader();
+    if(THREE.DRACOLoader){const dl=new THREE.DRACOLoader();dl.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');ld.setDRACOLoader(dl)}
+    for(const [k,A] of Object.entries(GLBS))ld.load(A.url,gltf=>{
+      const nodos={};gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.name&&!nodos[o.name])nodos[o.name]=o});
+      let info={};try{const c=nodos.carroceria;info=JSON.parse((c&&c.userData&&c.userData.picada)||'{}')}catch{}
+      A.nodos=nodos;A.info=info;
+      A.K={glb:k,Lg:(info.largo||3.9)/2,W2:(info.ancho||1.75)/2*.9,e:1,d:{H:Math.min(info.alto||1.45,1.5),ens:0},ejes:info.ejes||[1.2,-1.3],rc:info.rc||.29,via:info.via||.72,suelo:.15};
+      A.listo=true;
+      // Lo que ya estaba armado con el auto de repuesto se rearma con el modelo
+      if(sala)sala.k=null;
+      if(v3)for(const [a,m] of [...v3.autos]){soltarSala(m);v3.autos.delete(a)}
+    },undefined,e=>console.warn('No se pudo cargar',A.url,e));
+  }
+  function armarGLB(c,escena,K){
+    const A=GLBS[K.glb],M=materialesReales(),P=c.pz||{},extra=[],g=new THREE.Group(),caja=new THREE.Group();
+    const nuevo=m=>{extra.push(m);return m};
+    const pint=new THREE.MeshMatcapMaterial({color:COLORES[c.color],matcap:matcapDe((P.ter|0)>0?'brillo':'satin')});
+    const frenoMat=new THREE.MeshBasicMaterial({color:'#7a1b12'}),propio={};
+    // Los materiales del modelo pasan a los del juego: pintura cambiable, polarizado y stops que se prenden al frenar
+    const conv=m=>{
+      const n=((m&&m.name)||'').split('.')[0];
+      if(n==='pintura')return pint;
+      if(n==='vidrio')return M.vidrios[P.polar|0];
+      if(n==='stop')return frenoMat;
+      if(n==='Carro_Pneu')return M.goma;
+      if(n==='Rueda_Fondo')return M.interior;
+      if(propio[n])return propio[n];
+      if(n==='Carro_Roda')return propio[n]=nuevo(new THREE.MeshMatcapMaterial({color:P.llanta?COLORES[P.lc|0]:'#b9bdc2',matcap:matcapDe('metal')}));
+      const cap=n==='cromo'?'metal':(n==='faro'||n==='espejo'||n==='giro'||n.startsWith('techo_solar'))?'vidrio':'satin';
+      return propio[n]=nuevo(new THREE.MeshMatcapMaterial({color:m&&m.color?m.color.clone():new THREE.Color('#888'),map:(m&&m.map)||null,matcap:matcapDe(cap)}));
+    };
+    const copia=o=>{const k=o.clone(true);k.traverse(q=>{if(q.isMesh)q.material=Array.isArray(q.material)?q.material.map(conv):conv(q.material)});return k};
+    for(const n of ['carroceria','techo_solar','techo_solar_marco'])if(A.nodos[n])caja.add(copia(A.nodos[n]));
+    g.add(caja);
+    // Ruedas: goma, llanta y fondo del modelo; la cara de afuera del modelo mira a -Z
+    const ruedas=[],gira=[],via=K.via+.06*(P.anc|0)/10,caida=(P.cam|0)/10*.2;
+    for(const [ex,del] of [[K.ejes[0],1],[K.ejes[1],0]])for(const sg of [-1,1]){
+      const eje=new THREE.Group();eje.position.set(ex,K.rc,sg*via);g.add(eje);
+      const r=new THREE.Group();r.rotation.x=Math.PI/2+sg*caida;eje.add(r);
+      const w=new THREE.Group();w.rotation.set(-Math.PI/2,sg>0?Math.PI:0,0);w.scale.z=1+.45*(P.anc|0)/10;r.add(w);
+      for(const n of ['goma','llanta','rueda_fondo'])if(A.nodos[n]){const k=copia(A.nodos[n]);k.position.set(0,0,0);k.rotation.set(0,0,0);w.add(k)}
+      gira.push({m:r,s:sg});if(del)ruedas.push(eje);
+    }
+    // Altura: baja la carrocería hasta tocar la goma o la sube hasta 8 cm
+    {const a=((P.alt|0)+(P.altT|0))/20,tops=[];for(const ex of K.ejes)for(const s2 of [-1,1])tops.push([ex,2*K.rc,s2*K.via]);caja.position.y=-bajada(a,a>0?huelgo(caja,tops):0)}
+    const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(K.Lg*1.2,K.W2*1.35,1);so.position.y=.09;g.add(so);
+    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(K.Lg*3.2,K.W2*3.7,1);g.add(ne)}
+    escena.add(g);
+    return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
+  }
   let KFIJO=null,KLUZ=null;
   function armarKenney(c,escena,K,foto){
     const M=materialesReales(),P=c.pz||{},f=MODELOS[c.v].forma||{},extra=[],g=new THREE.Group(),cajaA=new THREE.Group(),caja=new THREE.Group(),Q=K.Q;
@@ -3970,6 +4031,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   const autos=new Map();
   function armarAuto(c,escena){
+    {const G=glbDe(c.v);if(G)return armarGLB(c,escena,G)}
     {const K=kenneyDe(c.v);if(K)return armarKenney(c,escena,K)}
     {const R=armadoR(c.v);if(R)return armarReal(c,escena,R)}
     const P=c.pz||{},extra=[],g=new THREE.Group(),caja=new THREE.Group();
