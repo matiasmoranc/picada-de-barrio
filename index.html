@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1md2zl"></script>
+<script src="room.js?v=mw1n42dd"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -698,6 +698,11 @@ html,body{background:#000;touch-action:manipulation}
 .calco-cab{display:flex;align-items:center;gap:10px}.calco-cab img{height:34px;max-width:120px;object-fit:contain}
 .calco-desl{display:grid;grid-template-columns:62px 1fr 58px;align-items:center;gap:8px;font-weight:700}
 .calco-desl input{width:100%;accent-color:var(--oro)}.calco-desl b{text-align:right;color:var(--oro)}
+.calco-fila{display:grid;grid-template-columns:64px 1fr;align-items:center;gap:8px;font-weight:700}
+.calco-btns{display:flex;align-items:center;justify-content:flex-end;gap:6px}
+.calco-btns button{width:44px;height:38px;border-radius:10px;background:#2a2d38;color:#fff;font-size:1.15rem;font-weight:700;touch-action:none;user-select:none;-webkit-user-select:none}
+.calco-btns button:active{background:var(--oro);color:#14151a}
+.calco-btns b{min-width:70px;text-align:center;color:var(--oro)}
 .calco-ctrl{display:grid;grid-template-columns:minmax(0,1fr) 132px;gap:10px;align-items:center}
 .calco-deslizadores{display:grid;gap:8px}.calco-deslizadores .calco-desl{grid-template-columns:50px 1fr 46px;gap:6px}
 .calco-cruz{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(3,42px);gap:3px;justify-content:center}
@@ -2603,7 +2608,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const pz={};CAMPOS_PZ.forEach((n,i)=>{const v=z[i];pz[n]=Number.isInteger(v)?v:0});
     for(const g in PIEZAS)pz[g]=clamp(pz[g],0,PIEZAS[g].o.length-1);
     for(const g of ['kit','aleron','capo','llanta','escape'])pz[g]=0;
-    pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,0,10);pz.altT=clamp(pz.altT,0,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
+    pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,-10,10);pz.altT=clamp(pz.altT,-10,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
     pz.calcos=c.calcosV||[];c.pz=pz;c.pzk=k+'|'+(c.cqk||'');
   }
   function mostrarJuego(si){
@@ -2789,6 +2794,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     dl.append(el('p','g-resumen',(m.awd?'4x4':'Tracción trasera')+' · '+Math.round(sp.power/745.7)+' HP · '+Math.round(d.Velocidad*3.6)+' km/h'));
   }
   function abrirPanel(id){
+    if(id!==abierto&&typeof salaZoom!=='undefined'){salaZoom.obj=1;calcoSel=-1}
     abierto=id;
     const T=TABS.find(x=>x[0]===id);$('local-titulo').textContent=T?T[1]:'Elegí tu auto';
     $('local').classList.add('con-panel');$('local-panel').hidden=false;
@@ -2872,7 +2878,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     ajuste(c){
       c.append(el('p','nota','Gratis. Probá y volvé: cada cambio tiene su costo.'));
       const a=fichaAuto(modelo).aj;
-      const S=[['rel','Relación de caja','Más punta','Más pique',-1,1],['bal','Balance','Cola firme','Cola suelta',-1,1],['alt','Altura adelante','Alto','Bien bajo',0,1],['altT','Altura atrás','Alto','Bien bajo',0,1],['cam','Caída de ruedas','Recta','Muy caída',0,1],['rod','Tamaño de llantas','Chicas','Grandes',0,1],['anc','Ancho de gomas','Finas','Anchas',0,1]];
+      const S=[['rel','Relación de caja','Más punta','Más pique',-1,1],['bal','Balance','Cola firme','Cola suelta',-1,1],['alt','Altura adelante','Más alto','Bien bajo',-1,1],['altT','Altura atrás','Más alto','Bien bajo',-1,1],['cam','Caída de ruedas','Recta','Muy caída',0,1],['rod','Perfil de goma','Perfil alto','Perfil bajo',0,1],['anc','Ancho de gomas','Finas','Anchas',0,1]];
       for(const [k,n,lo,hi,mn,mx] of S){
         const f=el('div','deslizar'),l=el('label',null,n),i=el('input'),t=el('small');
         i.type='range';i.min=mn;i.max=mx;i.step=.1;i.value=a[k]||0;i.setAttribute('aria-label',n);
@@ -3647,7 +3653,16 @@ if(typeof module!=='undefined')module.exports=Sim;
       carbono:new THREE.MeshPhongMaterial({color:'#141518',shininess:60,specular:'#555',...sobre})};
   }
   // Llanta más grande con la misma goma por fuera, y goma más ancha que sale un poco más
-  const tunearRueda=(r,P)=>{const rod=(P.rod|0)/10,anc=(P.anc|0)/10,gR=1+.04*rod,rs=(1+.25*rod)/gR;r.scale.x*=gR;r.scale.z*=gR;r.scale.y*=1+.45*anc;for(const h of r.children)h.scale.multiplyScalar(rs)};
+  // Lugar libre entre la goma y el guardabarros (con la carrocería en su altura de fábrica)
+  function huelgo(caja,tops){
+    const y0=caja.position.y,rz=caja.rotation.z;caja.position.y=0;caja.rotation.z=0;caja.updateMatrixWorld(true);
+    const ms=[];caja.traverse(o=>{if(o.isMesh&&o.visible)ms.push(o)});
+    const ray=new THREE.Raycaster();let gap=.2;
+    for(const [x,y,z] of tops){ray.set(new THREE.Vector3(x,y-.04,z),new THREE.Vector3(0,1,0));ray.far=.6;const h=ray.intersectObjects(ms,false)[0];if(h)gap=Math.min(gap,h.distance-.04)}
+    caja.position.y=y0;caja.rotation.z=rz;return Math.max(0,gap);
+  }
+  const bajada=(a,gap)=>a>=0?a*gap:a*.08;
+  const tunearRueda=(r,P)=>{const rod=(P.rod|0)/10,anc=(P.anc|0)/10,gR=1,rs=1+.18*rod;r.scale.x*=gR;r.scale.z*=gR;r.scale.y*=1+.45*anc;for(const h of r.children)h.scale.multiplyScalar(rs)};
   // Ensanche del kit: un arco que sigue el pasarrueda
   const ensanches={};
   function ensanche(a){
@@ -3706,8 +3721,8 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(ala>1)for(const z of [-.55,.55]){const p=pone(GEO.pieza,M.negro,atrasX,base+alto/2,z*R.W2);p.scale.set(.06,alto,.04)}
     }
     if(P.escape){const zs=P.escape===1?[-.35,.35]:[-.45,-.25,.25,.45];for(const z of zs){const t=pone(GEO.caño,M.cromo,-R.Lg-.06,R.Y(d.suelo)+.08,z*R.W2);t.rotation.z=Math.PI/2;if(P.escape===3)t.scale.setScalar(1.5)}}
-    caja.position.y=-(P.alt|0)/10*.1;
     g.add(caja);
+    {const a=(P.alt|0)/10,v=R.via+(kit>=3||d.ens?.08:0);caja.position.y=-bajada(a,a>0?huelgo(caja,R.ejes.flatMap(x=>[[x,2*R.rc,-v],[x,2*R.rc,v]])):0)}
     // Ruedas
     const ruedas=[],gira=[],q=ruedaDe(),via=R.via+(kit>=3||d.ens?.08:0)+.06*(P.anc|0)/10,caida=(P.cam|0)/10*.2,esc=R.rc/.395*(P.llanta===3?1.05:1);
     const estilo=P.llanta===1?'cinco':P.llanta===2?'tres':P.llanta===3?'malla':d.aro;
@@ -3902,7 +3917,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     if(P.escape){const zs=P.escape===1?[-.35,.35]:[-.45,-.25,.25,.45];for(const z of zs){const t=pone(GEO.caño,M.cromo,-Lg-.02,suelo+.08,z*W2);t.rotation.z=Math.PI/2;if(P.escape===3)t.scale.setScalar(1.5)}}
     // Altura de adelante y de atrás: la carrocería baja y se inclina sobre el centro entre ejes
-    const bD=(P.alt|0)/10*.1,bT=(P.altT|0)/10*.1,xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
+    const tops=i=>Q&&Q.w?Q.w.filter((_,k)=>(k<2)===(i===0)).map(([wx,wy,wz])=>[wx*K.S[0]-K.cx,wy*K.S[1]+K.rc,wz*K.S[2]]):[];
+    const aD=(P.alt|0)/10,aT=(P.altT|0)/10,bD=bajada(aD,aD>0?huelgo(caja,tops(0)):0),bT=bajada(aT,aT>0?huelgo(caja,tops(1)):0),xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
     caja.rotation.z=inc;caja.position.y=-(bD+bT)/2-xm*inc;cajaA.add(caja);
     g.add(cajaA);
     // Ruedas: cada una gira sobre su eje y las de adelante doblan
@@ -3910,13 +3926,13 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!foto){
       const rod=(P.rod|0)/10,anc=(P.anc|0)/10,caida=(P.cam|0)/10*.2,mas=(kit>=3?.08:0)+.06*anc;
       // Bajado: la goma se hace de perfil bajo para no atravesar el guardabarros; la llanta queda igual
-      const perfiles=[bD,bT].map(b=>1-(b+.03)/(2*K.rc));
+      const perfiles=[1,1];
       const lm=P.llanta?nuevo(new THREE.MeshMatcapMaterial({color:COLORES[P.lc|0],matcap:matcapDe('metal')})):null;
       Q.w.forEach(([wx,wy,wz],i)=>{
         const sg=Math.sign(wz),perfil=perfiles[i<2?0:1],eje=new THREE.Group();eje.position.set(wx*K.S[0]-K.cx,wy*K.S[1]*perfil,wz*K.S[2]+sg*mas);g.add(eje);
         const r=new THREE.Group();r.rotation.x=Math.PI/2+sg*caida;eje.add(r);
         const geos=sg<0?Q.rI:Q.rD,gR=perfil;
-        for(const k in geos){const m=new THREE.Mesh(geos[k],k==4&&lm?lm:KFIJO);m.rotation.x=-Math.PI/2;if(k==4)m.scale.set((1+.12*rod)/perfil,(1+.12*rod)/perfil,1);r.add(m)}
+        for(const k in geos){const m=new THREE.Mesh(geos[k],k==4&&lm?lm:KFIJO);m.rotation.x=-Math.PI/2;if(k==4)m.scale.set(1+.2*rod,1+.2*rod,1);r.add(m)}
         r.scale.set(K.S[1]*gR,K.S[2]*(1+.45*anc),K.S[1]*gR);
         gira.push({m:r,s:sg});if(i<2)ruedas.push(eje);
       });
@@ -4047,7 +4063,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));
       const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(7,3.6,1);g.add(ne);
     }
-    const baja=(P.alt|0)/10*.1;caja.position.y=-baja;
+    {const a=(P.alt|0)/10,top=.37+.37*(f.rueda||1)*(P.llanta===3?1.08:1);caja.position.y=-bajada(a,a>0?huelgo(caja,[eF,eR].flatMap(x=>[[x,top,-via],[x,top,via]])):0)}
     escena.add(g);
     return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex,extra,alfa:1,mats:[pint,VIDRIO,GOMA]};
   }
@@ -4336,7 +4352,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function elegirCalco(i){
     calcoSel=i;const q=misCalcos()[i];
     if(q){const nx=q.n[0],nz=q.n[2];if(Math.hypot(nx,nz)>.45)orbitaObj=Math.atan2(-nx,nz);salaZoom.obj=Math.max(salaZoom.obj,2.2)}
-    pintarLocal();
+    pintarLocal();$('local-cuerpo').scrollTop=0;
   }
   function soltarCalco(){calcoSel=-1;salaZoom.obj=1;pintarLocal()}
   // Flechas: corren la calco por la chapa, a la derecha/izquierda/arriba/abajo de como la estás viendo
@@ -4392,8 +4408,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('orbita').addEventListener('pointerdown',e=>{
     if(abierto!=='calcos')return;
     const h=tocarAuto(e);if(!h)return;
-    if(h.calco){const i=h.calco.object.userData.i;arrastreC=e.pointerId;orbitaX=null;if(i!==calcoSel)elegirCalco(i)}
-    else if(h.chapa&&calcoSel>=0&&misCalcos()[calcoSel]){moverCalcoA(h.chapa,calcoSel);arrastreC=e.pointerId;orbitaX=null;calcosCambiaron()}
+    // Tocar una calco la elige; arrastrar siempre gira el auto
+    if(h.calco){const i=h.calco.object.userData.i;if(i!==calcoSel){const x0=e.clientX,y0=e.clientY,up=ev=>{removeEventListener('pointerup',up);if(Math.hypot(ev.clientX-x0,ev.clientY-y0)<10)elegirCalco(i)};addEventListener('pointerup',up)}}
   });
   addEventListener('pointermove',e=>{
     if(arrastreC!==e.pointerId||abierto!=='calcos')return;
@@ -4410,26 +4426,28 @@ if(typeof module!=='undefined')module.exports=Sim;
       const caja=el('div','calco-sel'),cab=el('div','calco-cab'),img=el('img');img.src=urlCalco(q.d);img.alt='';
       cab.append(img,el('b',null,CALCOS[CALCO_ID[q.d]][1]));caja.append(cab);
       const desl=(t,min,max,paso,val,fn,fmt)=>{const f=el('label','calco-desl'),v=el('b',null,fmt(val)),i=el('input');i.type='range';i.min=min;i.max=max;i.step=paso;i.value=val;i.oninput=()=>{fn(+i.value);v.textContent=fmt(+i.value);calcosCambiaron()};f.append(el('span',null,t),i,v);return f};
-      const ctrl=el('div','calco-ctrl'),izq=el('div','calco-deslizadores'),cruz=el('div','calco-cruz');
-      izq.append(desl('Tamaño',.15,3,.01,q.s||.8,v=>{q.s=v},v=>Math.round(v*100)+' cm'),desl('Girar',-180,180,1,q.r||0,v=>{q.r=v},v=>Math.round(v)+'°'));
-      // Mantener apretada una flecha la sigue moviendo, cada vez más rápido
-      for(const [t,dx,dy,cl] of [['▲',0,1,'ar'],['◀',-1,0,'iz'],['▶',1,0,'de'],['▼',0,-1,'ab']]){
-        const b=el('button',cl,t);b.type='button';b.setAttribute('aria-label','Mover '+{ar:'arriba',iz:'a la izquierda',de:'a la derecha',ab:'abajo'}[cl]);
-        let tm=0,n=0;const parar=()=>{clearTimeout(tm);tm=0};
-        const paso=()=>{empujarCalco(dx*(n>12?3:1),dy*(n>12?3:1));n++;tm=setTimeout(paso,n<2?320:70)};
-        b.addEventListener('pointerdown',e=>{e.preventDefault();n=0;parar();paso()});
-        for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,parar);
-        cruz.append(b);
-      }
-      ctrl.append(izq,cruz);caja.append(ctrl);
+      // Mantener apretado un botón repite, cada vez más rápido
+      const repite=(b,fn)=>{let tm=0,n=0;const parar=()=>{clearTimeout(tm);tm=0};const paso=()=>{fn(n);n++;tm=setTimeout(paso,n<2?320:70)};
+        b.addEventListener('pointerdown',e=>{e.preventDefault();n=0;parar();paso()});for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,parar)};
+      const fila=(t,botones,valor)=>{const f=el('div','calco-fila'),g=el('div','calco-btns');f.append(el('span',null,t),g);
+        for(const [x,lab,fn] of botones){if(x==='v'){g.append(valor);continue}const b=el('button',null,x);b.type='button';b.setAttribute('aria-label',lab);repite(b,fn);g.append(b)}return f};
+      const vT=el('b',null,''),vG=el('b',null,''),pinta=()=>{vT.textContent=Math.round((q.s||.8)*100)+' cm';vG.textContent=Math.round(q.r||0)+'°'};pinta();
+      const tam=d=>()=>{q.s=clamp(+((q.s||.8)+d).toFixed(2),.15,3);pinta();calcosCambiaron()};
+      const gir=d=>()=>{let r=(q.r||0)+d;if(r>180)r-=360;if(r<-180)r+=360;q.r=r;pinta();calcosCambiaron()};
+      const mov=(dx,dy)=>n=>empujarCalco(dx*(n>12?3:1),dy*(n>12?3:1));
+      caja.append(
+        fila('Tamaño',[['−','Achicar',tam(-.05)],['v'],['+','Agrandar',tam(.05)]],vT),
+        fila('Girar',[['⟲','Girar a la izquierda',gir(-5)],['v'],['⟳','Girar a la derecha',gir(5)]],vG),
+        fila('Mover',[['◀','Mover a la izquierda',mov(-1,0)],['▲','Mover arriba',mov(0,1)],['▼','Mover abajo',mov(0,-1)],['▶','Mover a la derecha',mov(1,0)]])
+      );
       const bs=el('div','calco-botones'),bt=(t,fn,cl)=>{const b=el('button',cl||null,t);b.type='button';b.onclick=fn;bs.append(b)};
       bt('Espejar',()=>{q.f=q.f?0:1;calcosCambiaron(true)});
       bt('Duplicar',()=>{if(l.length>=MAX_CALCOS)return aviso('Llegaste al máximo de '+MAX_CALCOS+' calcos');const n=JSON.parse(JSON.stringify(q));n.p=[n.p[0]-.3,n.p[1],n.p[2]];l.push(n);calcoSel=l.length-1;calcosCambiaron(true)});
-      bt('Borrar',()=>{l.splice(calcoSel,1);calcoSel=-1;calcosCambiaron(true)},'peligro');
+      bt('Borrar',()=>{l.splice(calcoSel,1);calcoSel=-1;salaZoom.obj=1;calcosCambiaron(true)},'peligro');
       bt('Listo',soltarCalco,'listo');
       caja.append(bs);c.append(caja);
-      caja.append(el('p','nota','Arrastrala con el dedo o usá las flechas. Con dos dedos acercás o alejás el auto.'));
-    }else c.append(el('p','nota',l.length?'Tocá una calco en el auto para editarla, o elegí otra de abajo. Deslizá para girar el auto y pellizcá para acercarlo.':'Elegí una calco de abajo y aparece en el auto. Deslizá para girar el auto y pellizcá para acercarlo.'));
+      caja.append(el('p','nota','Con un dedo girás el auto y con dos lo acercás.'));
+    }else c.append(el('p','nota',l.length?'Tocá una calco en el auto para editarla, o elegí otra de abajo.':'Elegí una calco de abajo y aparece en el auto.'));
     c.append(el('h3',null,'Calcos ('+l.length+' de '+MAX_CALCOS+')'));
     const g=el('div','calco-grilla');
     for(const d of CALCOS){
@@ -4919,7 +4937,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const P=c.pz||{},kit=P.kit|0;
     for(let k=0;k<4;k++){
       const Q=medidas(c.v),px=Q?Q.ejes[k<2?0:1]:k<2?1.32:-1.32,pz=k%2?1:-1;
-      x.save();x.translate(px,pz*((Q?Q.via+(kit>=3||Q.d.ens?.08:0):.92+(kit>=3?.1:0))+.06*(P.anc|0)/10));if(k<2)x.rotate(delta);if(Q)x.scale(Q.rc/.37,Q.rc/.37);x.scale(1+.04*(P.rod|0)/10,1+.45*(P.anc|0)/10);
+      x.save();x.translate(px,pz*((Q?Q.via+(kit>=3||Q.d.ens?.08:0):.92+(kit>=3?.1:0))+.06*(P.anc|0)/10));if(k<2)x.rotate(delta);if(Q)x.scale(Q.rc/.37,Q.rc/.37);x.scale(1,1+.45*(P.anc|0)/10);
       x.fillStyle='#121315';x.fillRect(-.44,-.18,.88,.36);x.fillStyle='#2a2c30';x.fillRect(-.44,-.05,.88,.1);
       if(P.llanta){x.fillStyle=COLORES[P.lc|0];x.fillRect(-.24,-.18,.48,.36)}
       x.restore();
