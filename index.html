@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1a0sx6"></script>
+<script src="room.js?v=mw1ibrek"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -666,6 +666,31 @@ html,body{background:#000;touch-action:manipulation}
 #circuitos button[aria-pressed="true"]{border-color:var(--oro);box-shadow:none}
 #pie{background:#0d0e13;border-top:1px solid var(--linea);padding:10px 14px max(12px,env(safe-area-inset-bottom,0px));margin-top:auto}
 #entrar{background:var(--oro);font-size:1.2rem;min-height:54px}
+/* Bots y vueltas lado a lado */
+#ajustes-sala{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#ajustes-sala .paso{display:flex;align-items:center;gap:6px;background:#101116;border-radius:12px;padding:6px 8px;font-weight:700;color:#fff}
+#ajustes-sala .paso span{flex:1;min-width:0}
+#ajustes-sala .paso b{min-width:20px;text-align:center;font:400 1.15rem var(--display);color:var(--oro)}
+#ajustes-sala .paso button{width:38px;height:38px;border-radius:10px;background:#2a2d38;color:#fff;font-size:1.4rem;font-weight:700}
+#ajustes-sala .paso button:disabled{opacity:.35}
+#ajustes-sala[data-solo] {grid-template-columns:1fr}
+/* Micrófono */
+.boton-mic{display:inline-flex;align-items:center;gap:5px}
+.boton-mic svg{width:18px;height:18px;flex:none}
+#fila-jug{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-right:14px;flex:none}
+#fila-jug .titulo-sala{margin-top:0}
+#mic-sala{min-height:40px;border-radius:10px;padding:6px 12px;background:#2a2d38;color:#fff;font-weight:700}
+.boton-mic[aria-pressed="true"]{background:#e5383b;color:#fff}
+/* Celular parado: los jugadores en una tira que se desliza y las pistas usan el resto de la pantalla */
+@media (max-width:619px),(min-height:521px){
+  #cartel{height:100%;min-height:0}
+  #lista-sala{display:flex;flex:none;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 14px 2px;touch-action:pan-x;scrollbar-width:none}
+  #lista-sala::-webkit-scrollbar{display:none}
+  #lista-sala li{flex:none;width:132px;padding:5px 9px}
+  #panel-pista{flex:1 1 auto;display:flex;flex-direction:column;gap:8px}
+  #circuitos{flex:1 1 auto;min-height:190px;max-height:none}
+  #invitar,#salon,.titulo-sala,#pie{flex:none}
+}
 #proximo{color:var(--suave);font-weight:500}
 .plata{display:none}
 @media (max-height:720px){
@@ -728,6 +753,7 @@ html,body{background:#000;touch-action:manipulation}
         <button class="boton-hud" id="largar">Largar carrera</button>
         <div class="chip" id="espera" hidden></div>
         <button class="boton-hud" id="garaje">Sala</button>
+        <button class="boton-hud boton-mic" id="mic" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11Z"/></svg><span>Hablar</span></button>
         <button class="boton-hud" id="abandonar" hidden>Salir</button>
         <button class="boton-hud" id="reiniciar" hidden>Reiniciar</button>
         <button class="boton-hud" id="terminar" hidden>Terminar</button>
@@ -775,10 +801,13 @@ html,body{background:#000;touch-action:manipulation}
         <p id="texto-invitar"></p>
       </div>
       <p id="salon"></p>
-      <h3 class="titulo-sala">Jugadores</h3>
+      <div id="fila-jug"><h3 class="titulo-sala">Jugadores</h3><button type="button" id="mic-sala" class="boton-mic" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11Z"/></svg><span>Hablar</span></button></div>
       <ul id="lista-sala"></ul>
       <div class="panel" id="panel-pista">
-        <div id="bots-sala"><span>Bots en la partida</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
+        <div id="ajustes-sala">
+          <div id="bots-sala" class="paso"><span>Bots</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
+          <div id="vueltas-sala" class="paso"><span>Vueltas</span><button type="button" id="vuelta-menos" aria-label="Menos vueltas">−</button><b id="vuelta-num">2</b><button type="button" id="vuelta-mas" aria-label="Más vueltas">+</button></div>
+        </div>
         <h3 class="titulo-sala">Pista</h3>
         <div class="titulo-eleccion" id="quien-pista"></div>
         <div class="seg" id="serie-sala"><button type="button" id="serie-f1">Fórmula 1</button><button type="button" id="serie-juego">Del juego</button></div>
@@ -1852,6 +1881,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!au.ok){au.ok=1;try{const b=au.a.createBufferSource();b.buffer=au.a.createBuffer(1,1,22050);b.connect(au.a.destination);b.start(0)}catch{}}
     if(!mudo){try{mudo=new Audio('data:audio/wav;base64,UklGRl4RAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YToRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=');mudo.loop=true;mudo.setAttribute('playsinline','');mudo.volume=.01}catch{}}
     if(mudo&&mudo.paused&&!document.hidden)mudo.play().catch(()=>{});
+    if(room&&typeof room.reproducir==='function')room.reproducir();
   }
   for(const ev of ['touchend','pointerup','click','keydown'])document.addEventListener(ev,despertarAudio,true);
   document.addEventListener('visibilitychange',()=>{
@@ -2006,7 +2036,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function sendNet(now){
     if(!room)return;
     const patch={n:me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto',c:me?me.color:color,v:me?me.v:modelo,z:me?me.pzRed:null,t:Math.round(now),
-      m:trackIdx,an:Math.round(now-entroT),r:race?[race.id,Math.round(race.t0-now)]:null};
+      m:trackIdx,l:vueltasOnline(),mi:miMic?1:0,an:Math.round(now-entroT),r:race?[race.id,Math.round(race.t0-now)]:null};
     if(me&&entered)Object.assign(patch,{s:Sim.snapshot(me),k:(me.gas?1:0)|(me.brk?2:0)|(me.ghost>0?4:0)|(me.mano?8:0),p:Math.round(Sim.progressValue(me)*1000),
       f:me.finT==null?null:Math.round(me.finT),h:myHit&&now-myHit.at<500?myHit.d:null});
     if(creador()&&modo==='online'){
@@ -2031,8 +2061,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     el.textContent='';
     const gente=[];
     if(codigo){
-      gente.push({n:miNombre()+' (vos)',c:color,est:entered?'en pista':'preparándose',jefe:!anfitrion});
-      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:Number.isInteger(e.pr.c)&&e.pr.c>=0&&e.pr.c<COLORES.length?e.pr.c:0,est:esBot(k)?'Bot':e.pr.s?'en pista':'preparándose',jefe:e===anfitrion});
+      gente.push({n:miNombre()+' (vos)',c:color,est:(miMic?'🎙 ':'')+(entered?'en pista':'preparándose'),jefe:!anfitrion});
+      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:Number.isInteger(e.pr.c)&&e.pr.c>=0&&e.pr.c<COLORES.length?e.pr.c:0,est:esBot(k)?'Bot':(e.pr.mi?'🎙 ':'')+(e.pr.s?'en pista':'preparándose'),jefe:e===anfitrion});
       for(const c of cars)if(c.kind==='bot')gente.push({n:c.name,c:c.color,est:'Bot',jefe:false});
     }
     const clave=JSON.stringify(gente);
@@ -2043,11 +2073,12 @@ if(typeof module!=='undefined')module.exports=Sim;
         i.style.background=COLORES[g.c];b.textContent=g.n;m.textContent=(g.jefe?'Creó la partida · ':'')+g.est;li.append(i,b,m);l.append(li);
       }
     }
+    if(codigo)$('texto-invitar').hidden=personas()>0;
     const pista=TRACKS[trackIdx].name;let t;
     if(!codigo)t=pista+'.';
     else if(race)t='Hay una carrera en curso en '+pista+'.';
-    else if(anfitrion)t=pista+'. Larga '+textoNombre(anfitrion.pr.n)+' cuando estén todos en pista.';
-    else t=pista+'. Cuando estén todos en pista, tocá Largar carrera.';
+    else if(anfitrion)t=pista+' · '+vueltas+(vueltas===1?' vuelta':' vueltas')+'. Larga '+textoNombre(anfitrion.pr.n)+' cuando estén todos en pista.';
+    else t=pista+' · '+vueltas+(vueltas===1?' vuelta':' vueltas')+'. Cuando estén todos en pista, tocá Largar carrera.';
     $('proximo').textContent=t;
   }
   // Vitrina: desde el inicio se ven las partidas abiertas, y quien manda cada partida la anuncia ahí
@@ -2104,7 +2135,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!base)return false;
     let sala=null;
     try{sala=await base.join('p-'+cod)}catch{return false}
-    room=sala;codigo=cod;entroT=performance.now();myKey='';myShort='';listaVista='';
+    room=sala;codigo=cod;entroT=performance.now();myKey='';myShort='';listaVista='';vueltasSala=0;pintarMic();
     sala.onPeers(ch=>{
       if(room!==sala)return;
       const now=performance.now();
@@ -2115,7 +2146,39 @@ if(typeof module!=='undefined')module.exports=Sim;
     },()=>{if(room===sala)dejarPartida()});
     return true;
   }
+  // Voz: cada uno manda su micrófono directo a los demás de la partida
+  let miMic=null,pidiendoMic=false;
+  const vozPosible=()=>!!(room&&typeof room.voz==='function'&&navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+  function pintarMic(){
+    const ok=vozPosible();
+    for(const id of ['mic','mic-sala']){const b=$(id);b.setAttribute('aria-pressed',!!miMic);b.querySelector('span').textContent=miMic?'Hablando':'Hablar'}
+    $('mic-sala').hidden=!ok;
+  }
+  function apagarMic(){
+    if(miMic)for(const t of miMic.getTracks())t.stop();
+    miMic=null;
+    if(room&&typeof room.voz==='function')room.voz(null);
+    try{if(navigator.audioSession)navigator.audioSession.type='playback'}catch{}
+    pintarMic();salon();
+  }
+  async function cambiarMic(){
+    if(!vozPosible()||pidiendoMic)return;
+    if(miMic){apagarMic();aviso('Micrófono apagado');return}
+    pidiendoMic=true;let st=null;
+    try{st=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true},video:false})}
+    catch(e){aviso(e&&e.name==='NotAllowedError'?'Sin permiso para el micrófono: habilitalo en los ajustes del navegador':'No pudimos abrir el micrófono')}
+    pidiendoMic=false;
+    if(!st)return;
+    if(!vozPosible()){for(const t of st.getTracks())t.stop();return}
+    miMic=st;
+    try{if(navigator.audioSession)navigator.audioSession.type='play-and-record'}catch{}
+    room.voz(miMic);despertarAudio();pintarMic();salon();
+    aviso('Micrófono prendido: te escuchan todos');
+  }
+  $('mic').onclick=()=>{$('mic').blur();cambiarMic()};
+  $('mic-sala').onclick=cambiarMic;
   function dejarPartida(){
+    apagarMic();vueltasSala=0;
     const r=room;room=null;codigo=null;
     if(r&&r.leave)r.leave().catch(()=>{});
     for(const k of [...enSala.keys()])dropRemote(k);
@@ -2232,12 +2295,19 @@ if(typeof module!=='undefined')module.exports=Sim;
     else freeze(true);
     $('final').hidden=true;
   }
-  let serieSala=false;
+  let serieSala=false,vueltasSala=0;
+  // Vueltas de la partida: las elige quien la creó; 0 = las que trae la pista
+  const vueltasOnline=()=>vueltasSala||vueltasDe(trackIdx);
+  function cambiarVueltas(d){
+    if(race||anfitrion)return;
+    vueltasSala=clamp(vueltasOnline()+d,1,10);vueltas=vueltasSala;pintarCircuito();
+  }
   function pintarCircuito(){
     const libre=!anfitrion;
     if(!libre)serieSala=!!TRACKS[trackIdx].juego;
     for(const [i,b] of [...$('circuitos').children].entries()){b.setAttribute('aria-pressed',i===trackIdx);b.disabled=!libre;b.hidden=!!TRACKS[i].juego!==serieSala}
-    $('serie-sala').hidden=$('bots-sala').hidden=!libre;$('bot-num').textContent=botsSala;$('serie-f1').setAttribute('aria-pressed',!serieSala);$('serie-juego').setAttribute('aria-pressed',serieSala);
+    $('serie-sala').hidden=$('bots-sala').hidden=!libre;
+    {const n=vueltasOnline();$('vuelta-num').textContent=n;$('vuelta-menos').disabled=!libre||n<=1;$('vuelta-mas').disabled=!libre||n>=10;if(libre)$('ajustes-sala').removeAttribute('data-solo');else $('ajustes-sala').setAttribute('data-solo','')}$('bot-num').textContent=botsSala;$('serie-f1').setAttribute('aria-pressed',!serieSala);$('serie-juego').setAttribute('aria-pressed',serieSala);
     $('quien-pista').textContent=libre?'Elegí dónde se corre':'La elige '+String(anfitrion.pr.n||'quien creó la partida').slice(0,12);
     salon();
   }
@@ -2256,7 +2326,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function setCircuito(i){
     trackIdx=i;Sim.setTrack(i);armarCircuito();
-    if(!(evento&&evento.tipo==='derrape'))vueltas=vueltasDe(i);mapa=null;skidN=0;parts.length=0;
+    if(!(evento&&evento.tipo==='derrape'))vueltas=modo==='online'?vueltasOnline():vueltasDe(i);mapa=null;skidN=0;parts.length=0;
     pintarCircuito();
     for(const c of cars)c.l=c.r=null;
     const bots=cars.filter(c=>c.kind==='bot');
@@ -2281,6 +2351,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('circuitos').append(b);
   });
   const cambiarBots=d=>{if(race)return;botsSala=clamp(botsSala+d,0,BOTS.length);removeBots();addBots();for(const c of cars)if(c.kind==='bot')c.ghost=1.5;pintarCircuito()};
+  $('vuelta-menos').onclick=()=>cambiarVueltas(-1);$('vuelta-mas').onclick=()=>cambiarVueltas(1);
   $('bot-menos').onclick=()=>cambiarBots(-1);$('bot-mas').onclick=()=>cambiarBots(1);
   $('serie-f1').onclick=()=>{serieSala=false;pintarCircuito()};
   $('serie-juego').onclick=()=>{serieSala=true;pintarCircuito()};
@@ -2289,6 +2360,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const jefe=quienManda(now);
     if(jefe!==anfitrion){anfitrion=jefe;pintarCircuito()}
     if(!race&&jefe){const m=jefe.pr.m;if(Number.isInteger(m)&&m>=0&&m<TRACKS.length&&m!==trackIdx)setCircuito(m)}
+    if(jefe&&!(race&&race.state==='go')){const l=jefe.pr.l;if(Number.isInteger(l)&&l>=1&&l<=10&&(l!==vueltasSala||vueltas!==l)){vueltasSala=l;vueltas=l;pintarCircuito()}}
     if(jefe&&me&&!(race&&race.state==='go')){const v=jefe.pr.v;if(Number.isInteger(v)&&v>=0&&v<MODELOS.length&&me.v!==v)autoDeSala(v)}
     if(entered)for(const [k,r] of remotes){
       const q=r.pr&&r.pr.r;
@@ -4593,7 +4665,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       }
       rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
     }
-    $('garaje').hidden=!!race||modo!=='online';$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';$('reiniciar').hidden=$('terminar').hidden=!(race&&modo==='online'&&creador());
+    $('garaje').hidden=!!race||modo!=='online';{const m=modo!=='online'||!vozPosible();if($('mic').hidden!==m)$('mic').hidden=m}$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';$('reiniciar').hidden=$('terminar').hidden=!(race&&modo==='online'&&creador());
     $('nitro-chip').hidden=!conNitro();if(conNitro())$('nitro-u').style.width=me.nos*100+'%';
     $('espera').hidden=!!race||!anfitrion||modo!=='online';
     if(anfitrion)$('espera').textContent='Larga '+String(anfitrion.pr.n||'el creador').slice(0,12);
