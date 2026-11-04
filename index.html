@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2oqfmw"></script>
+<script src="room.js?v=mw2oxgcy"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -2611,6 +2611,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     return c;
   }
   TRACKS.forEach((t,i)=>{
+    if(t.ruta)return;
     const b=document.createElement('button'),e=document.createElement('span');b.type='button';e.textContent=t.name;
     b.append(miniPista(i),e);b.onclick=()=>{if(i!==trackIdx&&!anfitrion&&!race)setCircuito(i)};
     $('circuitos').append(b);
@@ -2850,7 +2851,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const b=el('button');b.type='button';b.dataset.p=p;b.append(svgDe(ic),el('span',null,n));
     b.onclick=()=>{subirAlAuto();if(actual!==p)tab(p)};$('tabs').append(b);
   }
-  const TITULO_EVENTO={circuito:'Circuito',autopista:'Autopista',derrape:'Derrape',practica:'Práctica'};
+  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
   const DESC_EVENTO={circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
   function pintarMenu(p){
     const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
