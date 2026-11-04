@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2lzehc"></script>
+<script src="room.js?v=mw2nf18l"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -580,6 +580,12 @@ html,body{background:#000;touch-action:manipulation}
 #i-meta,#i-premio{margin:0;font-size:1.05rem;font-weight:500;color:var(--suave)}
 #i-premio{color:#fff;font-weight:700}
 #jugar{width:100%;margin-top:8px;font-size:1.3rem;min-height:56px}
+#i-carrera:not(.invita){background:none;border:0;padding:0}
+#i-carrera:not(.invita)>:not(#jugar){display:none}
+#i-mejora{display:none!important}
+#carga-auto{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:5px solid rgba(255,255,255,.18);border-top-color:var(--oro,#ffd23f);animation:girar .8s linear infinite;pointer-events:none;z-index:2}
+#carga-auto[hidden]{display:none}
+@keyframes girar{to{transform:rotate(360deg)}}
 #i-mejora{display:flex;align-items:center;gap:12px;text-align:left;background:var(--carta);border:1px solid var(--linea);border-radius:14px;padding:9px 14px;color:#fff}
 #i-mejora>span{flex:1;min-width:0;display:grid;gap:3px}
 #i-mejora small{color:var(--suave);font-size:.9rem;font-weight:700}
@@ -788,6 +794,7 @@ html,body{background:#000;touch-action:manipulation}
   <canvas id="tres" aria-hidden="true" hidden></canvas>
   <canvas id="lienzo" aria-label="Pista de carreras vista desde arriba"></canvas>
   <canvas id="capa" aria-hidden="true" hidden></canvas>
+  <div id="carga-auto" hidden></div>
   <div id="tactil" hidden>
     <div id="ayuda-volante">Arrastrá el dedo a la izquierda o a la derecha</div>
     <div class="mando" id="volante" hidden><i id="riel"></i><i id="perilla"></i><span>DESLIZÁ</span></div>
@@ -1713,6 +1720,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('i-meta').textContent=(e.tipo==='circuito'?dificultad().n+' · '+vueltasDe(e.p)+' vueltas':e.tipo==='derrape'?'1 vuelta':'Vueltas libres');
     $('i-premio').textContent=textoPremio(e);
     $('i-cta').textContent=salaPendiente?'Entrar a la partida':'Correr';
+    $('i-carrera').classList.toggle('invita',!!(salaPendiente&&invitacion));
     if(salaPendiente&&invitacion){
       $('i-modo').textContent='Te invitaron a correr';if(invitacion.p!=null)$('i-pista').textContent=TRACKS[invitacion.p].name;
       $('i-meta').textContent=invitacion.v!=null?'Todos con el '+MODELOS[invitacion.v].nombre:'Partida online';$('i-premio').textContent='Tocá y entrás directo a la pista';
@@ -4632,24 +4640,31 @@ if(typeof module!=='undefined')module.exports=Sim;
     sala={esc,cam,garaje,taller,auto:null,espejo:null,k:null};
   }
   const soltarSala=m=>{if(m.calcos)quitarCalcos(m);m.g.parent.remove(m.g);m.pint.dispose();m.frenoMat.dispose();m.tex.dispose();for(const e of m.extra)e.dispose()};
+  // La rueda de carga se apaga sola si se deja de dibujar el garaje
+  let cargaVista=0;setInterval(()=>{if(performance.now()-cargaVista>400){const r=$('carga-auto');if(r&&!r.hidden)r.hidden=true}},300);
   function dibujarSala3D(dt){
     if(!sala)armarSala();
-    const mio=esMio(visto),c=mio?{v:visto,color:fichaAuto(visto).pinta,pz:piezasDe(visto),num:me?me.num:7}:{v:visto,color:MODELOS[visto].forma.pinta??0,pz:{},num:7},k=[c.v,c.color,JSON.stringify({...c.pz,calcos:0})].join('|');
+    const mio=esMio(visto),c=mio?{v:visto,color:fichaAuto(visto).pinta,pz:piezasDe(visto),num:me?me.num:7}:{v:visto,color:MODELOS[visto].forma.pinta??0,pz:{},num:7},glbS=!!(MODELOS[c.v].forma.glb&&glbDe(c.v)),k=[c.v,glbS?'':c.color,glbS,JSON.stringify({...c.pz,calcos:0})].join('|');
     if(k!==sala.k){
       if(sala.auto){soltarSala(sala.auto);soltarSala(sala.espejo)}
       sala.auto=armarAuto(c,sala.esc);sala.espejo=armarAuto(c,sala.esc);sala.espejo.g.scale.y=-1;sala.k=k;
       sala.espejo.g.updateMatrixWorld(true);ponerCalcos(sala.espejo,c.pz.calcos);calcosVistas=JSON.stringify(c.pz.calcos||[]);
-    }else if(JSON.stringify(c.pz.calcos||[])!==calcosVistas){calcosVistas=JSON.stringify(c.pz.calcos||[]);ponerCalcos(sala.auto,c.pz.calcos);ponerCalcos(sala.espejo,c.pz.calcos)}
+    }
+    // Con modelo 3D, el color nuevo solo repinta: elegir tonos con el dedo no traba el garaje
+    if(sala.auto.color!==c.color){sala.auto.color=sala.espejo.color=c.color;sala.auto.pint.color.set(COLORES[c.color]);sala.espejo.pint.color.set(COLORES[c.color])}
+    if(JSON.stringify(c.pz.calcos||[])!==calcosVistas){calcosVistas=JSON.stringify(c.pz.calcos||[]);ponerCalcos(sala.auto,c.pz.calcos);ponerCalcos(sala.espejo,c.pz.calcos)}
     // La calco elegida titila para que se vea cuál es
     if(sala.auto.calcos)sala.auto.calcos.forEach((d,i)=>{const on=abierto==='calcos'&&i===calcoSel;d.material.emissive.setScalar(on?.25+.25*Math.sin(performance.now()/160):0)});
     sala.esc.background.set(mio?'#3a3f46':'#000000');sala.garaje.visible=!mio;sala.taller.visible=mio;
     if(orbitaObj!=null){orbitaA+=wrap(orbitaObj-orbitaA)*(1-Math.exp(-dt*6));if(Math.abs(wrap(orbitaObj-orbitaA))<.002)orbitaObj=null}
     else if(salaVista==='titulo')orbitaA-=dt*.18;
     sala.auto.g.rotation.y=sala.espejo.g.rotation.y=orbitaA;
-    {const esp=!!(MODELOS[visto].forma.glb&&!glbDe(visto));sala.auto.g.visible=sala.espejo.g.visible=!esp}
+    {const esp=!!(MODELOS[visto].forma.glb&&!glbDe(visto));sala.auto.g.visible=sala.espejo.g.visible=!esp;
+      const r=$('carga-auto');if(r.hidden===esp)r.hidden=!esp;cargaVista=performance.now();
+      if(esp){const p=new THREE.Vector3(0,.6,0).project(sala.cam),y=(1-p.y)/2*H;r.style.top=y+'px'}}
     const ancho=W>H,asp=W/H,panel=!!abierto;
     let dx=0,dy=0,ef=asp;
-    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else{const a=$('barra').getBoundingClientRect().bottom+22,b=$('local-panel').getBoundingClientRect().top;dy=b>a+40?H/2-(a+b)/2:H*.27;ef=asp*Math.min(1,(b-a)/(H*.32))}}else dy=H*(salaVista==='titulo'?.2:.12);
+    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else{const a=$('barra').getBoundingClientRect().bottom+22,b=$('local-panel').getBoundingClientRect().top;dy=b>a+40?H/2-(a+b)/2:H*.27;ef=asp*Math.min(1,(b-a)/(H*.32))}}else dy=H*(salaVista==='titulo'?.04:.12);
     const Q=medidas(visto),alto=Q?Q.d.H*Q.e:1.6,tg=2*Math.tan(15*Math.PI/180);
     let d=Math.max(7.6,5.8/(tg*ef))*Math.max(1,alto/1.6);
     if(panel){
