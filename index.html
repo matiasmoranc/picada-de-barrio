@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2810d6"></script>
+<script src="room.js?v=mw28odui"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1004,7 +1004,9 @@ const Sim=(()=>{
     // "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (Sketchfab, CC BY 4.0)
     {nombre:'Ford Falcon Sprint',tag:'Seis en línea',txt:'El Falcon Sprint del 73: largo, pesado y con un seis que empuja de abajo.',m:1350,power:150000,fmax:9600,brake:15000,mu:1.55,drag:3.0,forma:{glb:'falcon',tipo:'sedan',pinta:3}},
     // "Fiat 128 Super Europa" de arielandrade1611 (Sketchfab, CC BY 4.0)
-    {nombre:'Fiat 128 Super Europa',tag:'Liviano y gritón',txt:'El 128 de barrio: poco motor, pero liviano y muy fácil de doblar.',m:900,power:80000,fmax:6600,brake:14500,mu:1.6,drag:2.5,forma:{glb:'f128',tipo:'sedan',pinta:0}}
+    {nombre:'Fiat 128 Super Europa',tag:'Liviano y gritón',txt:'El 128 de barrio: poco motor, pero liviano y muy fácil de doblar.',m:900,power:80000,fmax:6600,brake:14500,mu:1.6,drag:2.5,forma:{glb:'f128',tipo:'sedan',pinta:0}},
+    // "Volkswagen Golf R Mk7.5" de DR1KING100K (Sketchfab, CC BY 4.0)
+    {nombre:'Volkswagen Golf R',tag:'Turbo y 4x4',txt:'El Golf R 7.5: turbo, tracción en las cuatro y una salida de curva que no perdona.',awd:.4,m:1480,power:215000,fmax:11500,brake:19000,mu:1.78,drag:2.5,slide:.9,forma:{glb:'golf',tipo:'sedan',pinta:3}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE,LEJOS=44;
   // Pista: curva cerrada Catmull-Rom remuestreada a paso constante
@@ -1563,11 +1565,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     ter:{n:'Terminación',o:[['Mate',0,0],['Brillante',300,1],['Metalizado',700,2],['Perlado',1200,3]]},
     vinilo:{n:'Vinilo',o:[['Sin vinilo',0,0],['Franja central',300,1],['Doble franja',500,1],['Franjas anchas',800,2],['Lateral',1100,3]]},
     neon:{n:'Neón',o:[['Sin neón',0,0],['Azul',800,2],['Verde',800,2],['Rojo',800,2],['Violeta',800,2],['Amarillo',800,2]]},
-    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]},
-    aleron:{n:'Alerón',o:[['Sin alerón',0,0],['Labio',500,1],['Alerón medio',900,2],['Alerón alto',1400,3]]},
-    capo:{n:'Capó',o:[['Original',0,0],['Toma de aire',600,1],['De carbono',1000,2],['Salidas de aire',800,2]]},
-    kit:{n:'Kit de carrocería',o:[['Original',0,0],['Faldones y labio',700,1],['Más difusor',1100,2],['Más guardabarros anchos',1700,3]]},
-    escape:{n:'Caños de escape',o:[['Originales',0,0],['Doble',400,1],['Cuádruple',800,2],['Cuádruple grueso',1100,2]]}
+    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]}
   };
   const NEONES=[null,'#2f8cff','#2fe07a','#ff3347','#b05cff','#ffd23f'];
   const pesos=n=>'$'+Math.round(n).toLocaleString('es-AR');
@@ -1985,7 +1983,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
+  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Volkswagen Golf R':[4,900,6800],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2624,7 +2622,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const k=JSON.stringify(z);if(k===c.zk)return;c.zk=k;
     const pz={};CAMPOS_PZ.forEach((n,i)=>{const v=z[i];pz[n]=Number.isInteger(v)?v:0});
     for(const g in PIEZAS)pz[g]=clamp(pz[g],0,PIEZAS[g].o.length-1);
-    pz.llanta=0;
+    for(const g of ['kit','aleron','capo','llanta','escape'])pz[g]=0;
     pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,-10,10);pz.altT=clamp(pz.altT,-10,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
     pz.calcos=c.calcosV||[];c.pz=pz;c.pzk=k+'|'+(c.cqk||'');
   }
@@ -2711,7 +2709,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
         ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
         ['Jugá con amigos','En Online creá una partida y pasales el enlace.'],
-        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0).']
+        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0). Volkswagen Golf R: "Volkswagen Golf R Mk7.5" de DR1KING100K (CC BY 4.0).']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -2891,7 +2889,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     },
     accesorios(c){
       notaEstilo(c);
-      grupoPiezas(c,['aleron','capo','kit','escape','neon','polar']);
+      grupoPiezas(c,['neon','polar']);
     },
     ajuste(c){
       c.append(el('p','nota','Gratis. Probá y volvé: cada cambio tiene su costo.'));
@@ -3369,7 +3367,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const W=256,H=128,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d'),im=x.createImageData(W,H),hx=79,hy=35,rr=14;
     for(let j=0;j<H;j++)for(let i=0;i<W;i++){
       const px=Math.abs(i+.5-W/2)-(hx-rr),py=Math.abs(j+.5-H/2)-(hy-rr),d=Math.hypot(Math.max(px,0),Math.max(py,0))+Math.min(Math.max(px,py),0)-rr;
-      const a=d<=0?.55+.45*Math.exp(d/10):Math.exp(-Math.pow(d/13,1.25)),k=(j*W+i)*4;
+      const borde=Math.min(i,W-1-i,j,H-1-j),fb=Math.min(1,borde/18),fade=fb*fb*(3-2*fb),a=(d<=0?.55+.45*Math.exp(d/10):Math.exp(-Math.pow(d/13,1.25)))*fade,k=(j*W+i)*4;
       im.data[k]=im.data[k+1]=im.data[k+2]=255;im.data[k+3]=Math.round(255*clamp(a,0,1));
     }
     x.putImageData(im,0,0);
@@ -3881,7 +3879,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function medidas(v){return glbDe(v)||kenneyDe(v)||armadoR(v)}
   // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
-  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false}};
+  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false}};
   function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
   function cargarGLBs(){
     if(!gl||!window.THREE||!THREE.GLTFLoader)return;
@@ -4542,7 +4540,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     r.normalize();u.normalize();
     const paso=.025,p=new THREE.Vector3(q.p[0],q.p[1],q.p[2]).addScaledVector(r,dx*paso).addScaledVector(u,dy*paso);
     const pW=caja.localToWorld(p.clone()),nW=n.clone().transformDirection(caja.matrixWorld);
-    rayoC.set(pW.clone().addScaledVector(nW,.5),nW.clone().negate());rayoC.far=1.2;
+    // El rayo sale de bien afuera del auto: siempre encuentra primero la chapa o el vidrio de afuera
+    rayoC.set(pW.clone().addScaledVector(nW,2.5),nW.clone().negate());rayoC.far=3.2;
     const h=rayoC.intersectObjects(mallasCaja(m),false)[0];
     if(h)moverCalcoA(h,calcoSel);else q.p=[p.x,p.y,p.z].map(v=>+v.toFixed(3));
     calcosCambiaron();
@@ -4567,6 +4566,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function moverCalcoA(h,i){
     const q=misCalcos()[i];if(!q||!h)return;
     const caja=sala.auto.caja,p=caja.worldToLocal(h.point.clone()),n=h.face.normal.clone().transformDirection(h.object.matrixWorld);
+    if(n.dot(rayoC.ray.direction)>0)n.negate();
     n.transformDirection(M4C.copy(caja.matrixWorld).invert());
     q.p=[p.x,p.y,p.z].map(v=>+v.toFixed(3));q.n=[n.x,n.y,n.z].map(v=>+v.toFixed(3));
   }
