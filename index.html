@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2eoqca"></script>
+<script src="room.js?v=mw2ezx7u"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -3987,7 +3987,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         g.applyMatrix4(new THREE.Matrix4().makeRotationFromQuaternion(new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,1,0),B.clone().sub(A).normalize())));
         g.translate((A.x+B.x)/2,(A.y+B.y)/2,(A.z+B.z)/2);return g};
       const mc=(c,k)=>new THREE.MeshMatcapMaterial({color:c,matcap:matcapDe(k)});
-      PILOTO={buzo:mc('#2a2e36','satin'),negro:mc('#111214','satin'),visera:mc('#0b0d10','brillo'),partes:[]};
+      PILOTO={buzo:mc('#2a2e36','satin'),negro:mc('#111214','satin'),casco:mc('#0e0f11','brillo'),visera:mc('#24323f','vidrio'),partes:[]};
       const P=PILOTO.partes,X=PK;
       // torso un poco tirado hacia atrás
       P.push(['buzo',tubo([X.cad,X.y0+.06,0],[X.cad-.05,X.y0+.42,0],.14)]);
@@ -4000,11 +4000,15 @@ if(typeof module!=='undefined')module.exports=Sim;
         P.push(['buzo',tubo([X.cad+.36,X.y0+.12,z*.12],[X.ped,X.y0+.02,z*.12],.06)]);
       }
       const cu=new THREE.CylinderGeometry(.05,.06,.08,10);cu.translate(X.cad-.06,X.y0+.49,0);P.push(['buzo',cu]);
-      const cas=new THREE.SphereGeometry(.135,18,14);cas.scale(1.08,1,1);cas.translate(X.cad-.04,X.y0+.62,0);P.push(['casco',cas]);
-      const vis=new THREE.SphereGeometry(.138,18,10,Math.PI-.75,1.5,1.15,.75);vis.scale(1.08,1,1);vis.translate(X.cad-.04,X.y0+.62,0);P.push(['visera',vis]);
+      // Casco integral negro: cáscara alargada, mentonera adelante, visera ahumada y un alerón chico atrás
+      const hx=X.cad-.04,hy=X.y0+.62,fin=g=>{g.scale(1.18,1.06,.9);g.translate(hx,hy,0);return g};
+      P.push(['casco',fin(new THREE.SphereGeometry(.13,24,18,0,Math.PI*2,0,Math.PI*.8))]);
+      P.push(['casco',fin(new THREE.SphereGeometry(.134,20,8,Math.PI-.85,1.7,1.72,.5))]);
+      P.push(['visera',fin(new THREE.SphereGeometry(.136,20,8,Math.PI-.8,1.6,1.2,.5))]);
+      {const al=new THREE.BoxGeometry(.07,.018,.14);al.translate(hx-.15,hy+.07,0);P.push(['casco',al])}
     }
     const g=new THREE.Group();
-    for(const [k,geo] of PILOTO.partes)g.add(new THREE.Mesh(geo,k==='casco'?pint:PILOTO[k]));
+    for(const [k,geo] of PILOTO.partes)g.add(new THREE.Mesh(geo,PILOTO[k]));
     return g;
   }
   // Medidas de la butaca y el volante del kart (en metros, adelante +X)
