@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1k8ju5"></script>
+<script src="room.js?v=mw1kr67q"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1150,8 +1150,32 @@ const Sim=(()=>{
     t.kI=a.k;t.kD=b.k;t.gI=a.g;t.gD=b.g;t.mI=a.w;t.mD=b.w;t.salida=salida;
     return t;
   }
+  // Cruces: el tramo que llega más tarde sube por un puente y el otro pasa por abajo
+  const ALTO_PUENTE=7.5;
+  function conPuentes(t){
+    const {x,y,N,sp}=t;t.alt=null;t.puentes=[];
+    const corta=(a,b,c,d)=>{
+      const r1x=x[b]-x[a],r1y=y[b]-y[a],r2x=x[d]-x[c],r2y=y[d]-y[c],den=r1x*r2y-r1y*r2x;if(Math.abs(den)<1e-9)return false;
+      const u=((x[c]-x[a])*r2y-(y[c]-y[a])*r2x)/den,v=((x[c]-x[a])*r1y-(y[c]-y[a])*r1x)/den;return u>=0&&u<1&&v>=0&&v<1;
+    };
+    const P=Math.round(24/sp),Rm=Math.round(85/sp);
+    for(let i=0;i<N;i++)for(let j=i+60;j<N;j++){
+      if(N-j+i<60||!corta(i,(i+1)%N,j,(j+1)%N))continue;
+      if(t.puentes.some(p=>Math.abs(p.c-j)<P+Rm))continue;
+      if(!t.alt)t.alt=new Float32Array(N);
+      for(let o=-(P+Rm);o<=P+Rm;o++){const k=(j+o+N)%N,d=Math.abs(o),f=d<=P?1:.5+.5*Math.cos(Math.PI*(d-P)/Rm);t.alt[k]=Math.max(t.alt[k],ALTO_PUENTE*f)}
+      t.puentes.push({c:j,lo:i,P,R:Rm});
+    }
+    return t;
+  }
+  // Altura bajo un auto, interpolada a lo largo de la pista
+  function altDe(c){
+    const t=track;if(!t.alt||c.idx<0)return 0;
+    const i=c.idx,N=t.N,f=((c.x-t.x[i])*t.tx[i]+(c.y-t.y[i])*t.ty[i])/t.sp,j=(i+(f<0?N-1:1))%N;
+    return t.alt[i]+(t.alt[j]-t.alt[i])*Math.min(1,Math.abs(f));
+  }
   const armadas=[];
-  const armar=i=>armadas[i]||(armadas[i]=conBordes(conLinea(build(TRACKS[i].ctrl)),TRACKS[i].tema||'pasto'));
+  const armar=i=>armadas[i]||(armadas[i]=conPuentes(conBordes(conLinea(build(TRACKS[i].ctrl)),TRACKS[i].tema||'pasto')));
   const track=Object.assign(armar(0),{grip:TRACKS[0].grip||1,tema:TRACKS[0].tema||'pasto'});
   const setTrack=i=>Object.assign(track,armar(i),{grip:TRACKS[i].grip||1,tema:TRACKS[i].tema||'pasto'});
   const outline=i=>build(TRACKS[i].ctrl);
@@ -1250,7 +1274,7 @@ const Sim=(()=>{
     let ur=girarEje(c.ur,2,muT,P.slide,mano?0:motor*(1-P.awd),Mr,dt);
     // Control de tracción: se afloja en el derrape para que el auto siga de costado
     if(inp.gas>0&&vf>-.5){
-      const sy=Math.abs(vr)/Math.max(speed,3),tx=c.suelto>0?P.tcsSuelto:Math.sqrt(Math.max(.0009,P.tcs*P.tcs-sy*sy));
+      const sy=Math.abs(vr)/Math.max(speed,12),tx=c.suelto>0?P.tcsSuelto:Math.sqrt(Math.max(.0016,P.tcs*P.tcs-sy*sy));
       const top=Math.max(vf,0)*(1+tx)+Math.max(3,speed)*tx*.3;
       if(P.awd>0)uf=Math.min(uf,top);
       ur=Math.min(ur,top);
@@ -1375,6 +1399,7 @@ const Sim=(()=>{
     c.x+=dx*k;c.y+=dy*k;c.vx+=(tvx-c.vx)*k;c.vy+=(tvy-c.vy)*k;
     c.a+=wrap(s.a+th-c.a)*k;c.w+=(s.w-c.w)*k;
     c.hitT=Math.max(0,c.hitT-dt);
+    if(track.alt){locate(c.x,c.y,c.idx);c.idx=locI;c.off=locD}
     c.steer=s.steer;
     const cs=Math.cos(c.a),sn=Math.sin(c.a);c.vf=c.vx*cs+c.vy*sn;c.vr=-c.vx*sn+c.vy*cs;c.slip=Math.abs(c.vr-CAR.B*c.w);
     c.delta=clamp(c.steer*.2+Math.atan2(c.vr+CAR.A*c.w,Math.max(Math.abs(c.vf),3))*.7,-DMAX,DMAX);
@@ -1389,6 +1414,7 @@ const Sim=(()=>{
     for(let i=0;i<cars.length;i++)for(let j=i+1;j<cars.length;j++){
       const a=cars[i],b=cars[j];
       if(a.ghost>0||b.ghost>0||a.stale||b.stale||a.frozen&&b.frozen)continue;
+      if(track.alt&&Math.abs(altDe(a)-altDe(b))>2.5)continue;
       collide(a,b,ev);
     }
   }
@@ -1400,10 +1426,11 @@ const Sim=(()=>{
     if(c.stuck>2.5){rescatar(c,c.idx,0);c.stuck=0}
     const look=(c.idx+Math.round((7+speed*.55)/t.sp))%N,cs=Math.cos(c.a),sn=Math.sin(c.a);
     // De base va por la línea de carrera, cada uno con su mañana
-    let meta=t.linea[look]*.8+c.lane*.35,gasOk=true;
+    let meta=t.linea[look]*.8+c.lane*.35,gasOk=true,trafico=1e9;
     const adentro=Math.sign(t.curva[(c.idx+Math.round(30/t.sp))%N]);
     for(const o of cars||[]){
       if(o===c||o.frozen||o.ghost>0||o.finT!=null)continue;
+      if(t.alt&&Math.abs(altDe(o)-altDe(c))>2.5)continue;
       const dx=o.x-c.x,dy=o.y-c.y;
       if(dx*dx+dy*dy>900)continue;
       const fr=dx*cs+dy*sn,la=-dx*sn+dy*cs,cierre=speed-Math.hypot(o.vx,o.vy),ofs=o.off||0;
@@ -1413,8 +1440,10 @@ const Sim=(()=>{
         let lado=libreD>libreI?1:-1;
         if(adentro&&(adentro>0?libreD:libreI)>3.4)lado=adentro;
         meta=ofs+lado*3.5;
+        // Si todavía no puede pasar, copia la velocidad del de adelante en vez de chocarlo
+        if(Math.abs(la)<2.6){const vo=o.vx*cs+o.vy*sn,g0=4.5+speed*.18;trafico=Math.min(trafico,vo+(fr-g0)*1.2)}
         if(fr<5.5&&Math.abs(la)<2.2&&cierre>1)gasOk=false;
-      }else if(fr<-1.5&&fr>-13&&cierre<1&&Math.abs(la)<5){
+      }else if(fr<-6&&fr>-13&&cierre<1&&Math.abs(la)>2.6&&Math.abs(la)<5){
         // Lo vienen a pasar: cierra la puerta, sin zigzaguear
         meta+=(ofs-meta)*.45;
       }else if(Math.abs(fr)<4.5&&Math.abs(la)<3.3){
@@ -1435,6 +1464,7 @@ const Sim=(()=>{
     c.prox-=dt*c.torpe;c.fallo=Math.max(0,c.fallo-dt);
     if(c.prox<=0&&vmax<speed+2){c.fallo=.9+Math.random()*.7;c.prox=18+Math.random()*30}
     vmax*=c.skill*c.goma*(c.fallo>0?1.12:1);
+    vmax=Math.min(vmax,trafico);
     const tope=speed>10&&Math.abs(err*2.6)>1.25;
     return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&!tope&&speed<vmax?1:0,brake:tope&&speed>vmax*.85?1:clamp((speed-vmax-.5)/3,0,1)};
   }
@@ -1451,7 +1481,7 @@ const Sim=(()=>{
     for(let i=0;i<7;i++)if(typeof s[i]!=='number'||!isFinite(s[i]))return null;
     return {x:clamp(s[0],-400,400),y:clamp(s[1],-400,400),a:s[2],vx:clamp(s[3],-80,80),vy:clamp(s[4],-80,80),w:clamp(s[5],-30,30),steer:clamp(s[6],-1,1),rt};
   }
-  return {clamp,wrap,CAR,MODELOS,HALF,VERGE,WALL,TRACKS,setTrack,outline,track,newCar,place,gridSpot,step,impulseAt,botInput,progress,progressValue,snapshot,readSnapshot,locate:(x,y,h)=>{locate(x,y,h);return {i:locI,d:locD}}};
+  return {altDe,clamp,wrap,CAR,MODELOS,HALF,VERGE,WALL,TRACKS,setTrack,outline,track,newCar,place,gridSpot,step,impulseAt,botInput,progress,progressValue,snapshot,readSnapshot,locate:(x,y,h)=>{locate(x,y,h);return {i:locI,d:locD}}};
 })();
 /*SIM-END*/
 if(typeof module!=='undefined')module.exports=Sim;
@@ -4162,7 +4192,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     esc.add(new THREE.HemisphereLight('#ffffff','#7c7f86',T.luz[0]+.1));
     const luz=new THREE.DirectionalLight('#fff4dc',T.luz[1]);luz.position.set(-30,70,20);esc.add(luz);
     const asf=rgb(T.asf),ban=rgb(T.ban),kA=rgb(T.kA),kB=rgb(T.kB),mA=rgb(T.mA),mB=rgb(T.mB),lin=rgb(T.linea),bla=rgb('#e9e6dc'),gra=rgb(GRAVA[T.prop]||'#e2cf9c'),osc=rgb('#14151a'),cla=rgb('#fbf6ea');
-    const pt=(i,o,y)=>{const k=(i+N*2)%N;return [t.x[k]+t.nx[k]*o,y,t.y[k]+t.ny[k]*o]};
+    const pt=(i,o,y)=>{const k=(i+N*2)%N;return [t.x[k]+t.nx[k]*o,y+(t.alt?t.alt[k]:0),t.y[k]+t.ny[k]*o]};
     // La pista en trozos, así la cámara descarta los que quedan atrás
     for(let a=0;a<N;a+=60){
       const q=[],tira=(i,a0,ya,b0,yb,c,a1=a0,b1=b0)=>q.push([pt(i,a0,ya),pt(i+1,a1,ya),pt(i+1,b1,yb),pt(i,b0,yb),c]);
@@ -4183,6 +4213,26 @@ if(typeof module!=='undefined')module.exports=Sim;
         if(Math.floor(i*t.sp/4)&1)tira(i,-.13,.025,.13,.025,lin);
       }
       deco.add(franjas(q));
+    }
+    // Puentes: costados de hormigón, panza oscura y columnas que no pisan la pista de abajo
+    for(const pu of t.puentes||[]){
+      const q=[],hor=rgb('#b9b4a8'),pan=rgb('#55575c'),ini=pu.c-pu.P-pu.R,fin=pu.c+pu.P+pu.R,ancho=WALL+.4;
+      for(let i=ini;i<fin;i++){
+        const k=(i+N)%N;if(t.alt[k]<.4)continue;
+        for(const e of [-1,1]){q.push([pt(i,e*ancho,0),pt(i+1,e*ancho,0),pt(i+1,e*ancho,-1.3),pt(i,e*ancho,-1.3),hor]);q.push([pt(i,e*ancho,.9),pt(i+1,e*ancho,.9),pt(i+1,e*ancho,0),pt(i,e*ancho,0),hor])}
+        q.push([pt(i,-ancho,-1.3),pt(i+1,-ancho,-1.3),pt(i+1,ancho,-1.3),pt(i,ancho,-1.3),pan]);
+      }
+      deco.add(franjas(q));
+      const col=new THREE.MeshLambertMaterial({color:'#9d988c'}),paso=Math.max(1,Math.round(11/t.sp));
+      for(let i=ini;i<fin;i+=paso){
+        const k=(i+N)%N,h=t.alt[k]-1.3;if(h<1.5)continue;
+        for(const e of [-1,1]){
+          const px=t.x[k]+t.nx[k]*e*(ancho-1.2),py=t.y[k]+t.ny[k]*e*(ancho-1.2);
+          let lejos=1e9;for(let o=-90;o<=90;o++){const m=(pu.lo+o+N)%N;lejos=Math.min(lejos,Math.hypot(px-t.x[m],py-t.y[m]))}
+          if(lejos<WALL+2)continue;
+          const p=new THREE.Mesh(new THREE.BoxGeometry(1.6,h,1.6),col);p.position.set(px,h/2,py);deco.add(p);
+        }
+      }
     }
     // Largada, grilla, pórtico y tribuna
     {
@@ -4245,7 +4295,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // Cada auto se inclina en las curvas, se agacha al frenar y prende los stops
   function mover3D(m,c,now,dt){
-    m.g.position.set(c.x,0,c.y);m.g.rotation.y=-c.a;
+    {const al=Sim.altDe(c);m.g.position.set(c.x,al,c.y);m.g.rotation.order='YZX';m.g.rotation.y=-c.a;
+      let pend=0;const t=track;if(t.alt&&c.idx>=0){const N=t.N,i=c.idx,d=(t.alt[(i+1)%N]-t.alt[(i+N-1)%N])/(2*t.sp);pend=Math.atan(d*(Math.cos(c.a)*t.tx[i]+Math.sin(c.a)*t.ty[i]))}
+      m.g.rotation.z=pend}
     m.g.visible=!(c.ghost>0&&Math.floor(now/120)%2);
     const s=m.est,sp=Math.hypot(c.vx,c.vy),k=Math.max(dt,1e-3);
     s.w+=(wrap(c.a-s.a)/k-s.w)*(1-Math.exp(-dt*10));s.a=c.a;
@@ -4287,8 +4339,10 @@ if(typeof module!=='undefined')module.exports=Sim;
     q.ca+=wrap(c.a+wrap(va-c.a)*.55-q.ca)*(1-Math.exp(-dt*6));
     const atras=touch.mirar||keys.KeyC,ma=q.ca+(atras?Math.PI:0);
     const fx=Math.cos(ma),fy=Math.sin(ma),v=Math.min(sp,60),Lg=(medidas(c.v)||{Lg:2.2}).Lg,lejos=Lg+4.6+v*.035,alto=2.45+v*.01,sh=camShake*.18,r=()=>(Math.random()-.5)*sh;
-    cm.position.set(c.x-fx*lejos+r(),alto+r(),c.y-fy*lejos+r());
-    cm.lookAt(c.x+fx*5.5,0,c.y+fy*5.5);
+    // Sobre el puente la cámara sube con el auto
+    q.alt=(q.alt??0)+(Sim.altDe(c)-(q.alt??0))*(1-Math.exp(-dt*8));
+    cm.position.set(c.x-fx*lejos+r(),alto+q.alt+r(),c.y-fy*lejos+r());
+    cm.lookAt(c.x+fx*5.5,q.alt,c.y+fy*5.5);
     const asp=W/H;cm.aspect=asp;cm.fov=asp<1?66:52;cm.updateProjectionMatrix();
   }
   function dibujar3D(now,dt){
@@ -4307,7 +4361,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const o of cars){
       if(o===me||o.stale)continue;
       if(Math.hypot(o.x-c.x,o.y-c.y)>140)continue;
-      V.set(o.x,2.2,o.y).project(q.cam);if(V.z>1||V.z<-1)continue;
+      V.set(o.x,2.2+Sim.altDe(o),o.y).project(q.cam);if(V.z>1||V.z<-1)continue;
       const sx=(V.x+1)/2*W,sy=(1-V.y)/2*H;if(sx<-40||sx>W+40||sy<-20||sy>H+20)continue;
       const w=x.measureText(o.name).width+10;
       x.fillStyle='rgba(14,34,53,.72)';x.fillRect(sx-w/2,sy-9,w,18);
@@ -4469,6 +4523,27 @@ if(typeof module!=='undefined')module.exports=Sim;
     x.save();x.translate(t.x[0],t.y[0]);x.rotate(Math.atan2(t.ty[0],t.tx[0]));
     x.fillStyle='rgba(0,0,0,.2)';x.fillRect(5.2,-WALL-.6,.9,WALL*2+1.2);x.fillStyle='#23262c';x.fillRect(4,-WALL-.6,.9,WALL*2+1.2);x.fillStyle='#ffd51a';x.fillRect(4.05,-HALF,.8,HALF*2);
     x.restore();
+  }
+  function dibujarPuentes(x,now){
+    const t=track,N=t.N,T=pista.T;
+    for(const pu of t.puentes||[]){
+      if(!pu.dib){
+        const tira=o=>{const p=new Path2D(),a=pu.c-pu.P-Math.round(pu.R*.45),b=pu.c+pu.P+Math.round(pu.R*.45);for(let i=a;i<=b;i++){const k=(i+N)%N,px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o;i===a?p.moveTo(px,py):p.lineTo(px,py)}return p};
+        pu.dib={centro:tira(0),bI:tira(-HALF+.2),bD:tira(HALF-.2),x:t.x[pu.c],y:t.y[pu.c]};
+      }
+      const d=pu.dib;if(Math.hypot(d.x-cam.x,d.y-cam.y)>Math.hypot(W,H)/cam.z+120)continue;
+      x.save();x.lineJoin='round';x.lineCap='butt';x.setLineDash([]);
+      x.translate(1.6,1.6);x.strokeStyle='rgba(0,0,0,.28)';x.lineWidth=HALF*2+4;x.stroke(d.centro);x.translate(-1.6,-1.6);
+      x.strokeStyle='#b9b4a8';x.lineWidth=HALF*2+3.2;x.stroke(d.centro);
+      x.strokeStyle=T.asf;x.lineWidth=HALF*2;x.stroke(d.centro);
+      x.strokeStyle='rgba(255,255,255,.6)';x.lineWidth=.16;x.stroke(d.bI);x.stroke(d.bD);
+      x.setLineDash([4,4]);x.strokeStyle=T.linea;x.lineWidth=.26;x.stroke(d.centro);x.setLineDash([]);
+      x.restore();
+    }
+    for(const c of cars){
+      if(Sim.altDe(c)<2.5||(c.ghost>0&&Math.floor(now/120)%2))continue;
+      autoEnPista(x,c,now);
+    }
   }
   function dibujarMarcas(x){
     const n=Math.min(skidN,SK);if(!n)return;
@@ -4637,6 +4712,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(c.ghost>0&&Math.floor(now/120)%2)continue;
       autoEnPista(x,c,now);
     }
+    if(track.alt)dibujarPuentes(x,now);
     for(const p of parts){
       if(p.humo){const f=p.t/p.t0,e=1+(1-f)*3.6;x.globalAlpha=.42*f;x.drawImage(bocanada(p.col),p.x-e,p.y-e,e*2,e*2)}
     }
