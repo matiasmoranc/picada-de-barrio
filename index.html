@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2o94xg"></script>
+<script src="room.js?v=mw2oqfmw"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -2834,7 +2834,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('jugar').onclick=()=>{
     subirAlAuto();
     if(salaPendiente){const q=salaPendiente,inv=invitacion;salaPendiente='';invitacion=null;tab('online');entrarA(q,true,inv)}
-    else{const e=eventoActual();correr(e.tipo,e.p)}
+    // El botón del inicio abre la pantalla de Correr para elegir modo y pista
+    else tab('correr')
   };
   $('i-cambiar').onclick=()=>{subirAlAuto();tab('correr')};
   $('i-auto').onclick=()=>{subirAlAuto();tab('garaje')};
