@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2nf18l"></script>
+<script src="room.js?v=mw2ntmgn"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1066,6 +1066,8 @@ const Sim=(()=>{
     {juego:1,name:'Las Sierras',tema:'medano',grip:.8,ctrl:[[-91,-133],[-67,-145],[-46,-165],[-21,-183],[7,-187],[34,-175],[57,-154],[78,-138],[105,-131],[139,-130],[173,-127],[195,-113],[199,-89],[192,-62],[189,-39],[198,-18],[219,2],[236,25],[235,47],[214,65],[183,77],[157,89],[143,108],[135,133],[122,158],[99,171],[68,169],[36,158],[7,150],[-21,153],[-52,164],[-84,172],[-112,166],[-129,147],[-138,120],[-148,98],[-169,83],[-199,71],[-227,57],[-239,37],[-229,14],[-208,-8],[-192,-28],[-189,-50],[-196,-75],[-199,-101],[-186,-121],[-157,-130],[-121,-130]]},
     {juego:1,name:'El Laberinto',tema:'ciudad',ctrl:[[-174,69],[-201,38],[-214,-4],[-201,-47],[-174,-74],[-149,-80],[-128,-81],[-110,-88],[-92,-102],[-73,-111],[-55,-110],[-37,-99],[-18,-86],[0,-80],[18,-86],[37,-99],[55,-110],[73,-111],[92,-101],[110,-88],[128,-80],[149,-80],[174,-72],[201,-42],[214,4],[201,55],[174,93],[149,106],[128,99],[110,86],[92,81],[73,86],[55,99],[37,110],[18,111],[0,102],[-18,88],[-37,81],[-55,84],[-73,96],[-92,108],[-110,111],[-128,104],[-149,90]]},
     {juego:1,name:'La Cornisa',tema:'glaciar',grip:.66,ctrl:[[63,-175],[122,-157],[138,-103],[127,-54],[142,-28],[196,0],[237,47],[212,91],[138,103],[73,94],[38,105],[0,145],[-63,175],[-122,157],[-138,103],[-127,54],[-142,28],[-196,0],[-237,-47],[-212,-91],[-138,-103],[-73,-94],[-38,-105],[0,-145]]},
+    {juego:1,ruta:1,name:'Ruta 2',ctrl:[[0,-300],[600,-340],[1200,-270],[1700,-320],[2050,-160],[2080,180],[1780,400],[1200,350],[600,440],[0,380],[-480,410],[-860,210],[-900,-140],[-560,-310]]},
+    {juego:1,ruta:1,name:'Panamericana',tema:'medano',ctrl:[[0,-260],[420,-300],[820,-200],[1100,-340],[1450,-250],[1600,40],[1400,300],[1000,240],[700,420],[300,330],[-100,420],[-500,300],[-650,0],[-420,-220]]},
     {juego:1,name:'La Montaña Rusa',tema:'noche',ctrl:[[-12,145],[-37,128],[-66,127],[-104,135],[-145,139],[-174,125],[-180,96],[-169,65],[-162,39],[-175,19],[-204,-2],[-228,-27],[-227,-53],[-198,-72],[-157,-81],[-125,-89],[-109,-107],[-100,-137],[-83,-166],[-53,-178],[-19,-168],[12,-145],[37,-128],[66,-126],[105,-135],[146,-138],[174,-125],[180,-96],[169,-64],[163,-39],[175,-19],[204,2],[228,28],[228,54],[199,72],[158,81],[125,89],[109,107],[100,137],[83,166],[54,178],[19,168]]}
   ];
   function build(CTRL){
@@ -1226,9 +1228,10 @@ const Sim=(()=>{
     return t.alt[i]+(t.alt[j]-t.alt[i])*Math.min(1,Math.abs(f));
   }
   const armadas=[];
-  const armar=i=>armadas[i]||(armadas[i]=conPuentes(conBordes(conLinea(build(TRACKS[i].ctrl)),TRACKS[i].tema||'pasto')));
+  const deRuta=t=>{for(const k of ['kI','kD','gI','gD'])t[k].fill(0);t.mI.fill(HALF+2.2);t.mD.fill(HALF+2.2);return t};
+  const armar=i=>armadas[i]||(armadas[i]=(t=>TRACKS[i].ruta?deRuta(t):t)(conPuentes(conBordes(conLinea(build(TRACKS[i].ctrl)),TRACKS[i].tema||'pasto'))));
   const track=Object.assign(armar(0),{grip:TRACKS[0].grip||1,tema:TRACKS[0].tema||'pasto'});
-  const setTrack=i=>Object.assign(track,armar(i),{grip:TRACKS[i].grip||1,tema:TRACKS[i].tema||'pasto'});
+  const setTrack=i=>Object.assign(track,armar(i),{grip:TRACKS[i].grip||1,tema:TRACKS[i].tema||'pasto',ruta:TRACKS[i].ruta?1:0});
   const outline=i=>build(TRACKS[i].ctrl);
   let locI=0,locD=0;
   function locate(px,py,hint){
@@ -1462,6 +1465,8 @@ const Sim=(()=>{
     const cs=Math.cos(c.a),sn=Math.sin(c.a);c.vf=c.vx*cs+c.vy*sn;c.vr=-c.vx*sn+c.vy*cs;c.slip=Math.abs(c.vr-CAR.B*c.w);
     c.delta=clamp(c.steer*.2+Math.atan2(c.vr+CAR.A*c.w,Math.max(Math.abs(c.vf),3))*.7,-DMAX,DMAX);
   }
+  let trafico=[];
+  const setTrafico=l=>{trafico=l};
   function step(cars,inputs,dt,now,leadOf,ev){
     for(const c of cars){
       if(c.kind==='net')stepProxy(c,dt,now,leadOf(c));
@@ -1474,6 +1479,10 @@ const Sim=(()=>{
       if(a.ghost>0||b.ghost>0||a.stale||b.stale||a.frozen&&b.frozen)continue;
       if(track.alt&&Math.abs(altDe(a)-altDe(b))>2.5)continue;
       collide(a,b,ev);
+    }
+    if(trafico.length)for(const c of cars){
+      if(c.kind==='net'||c.frozen||c.ghost>0||c.stale)continue;
+      for(const o of trafico){const dx=o.x-c.x,dy=o.y-c.y;if(dx*dx+dy*dy<30)collide(c,o,ev)}
     }
   }
   function botInput(c,dt,cars){
@@ -1539,7 +1548,7 @@ const Sim=(()=>{
     for(let i=0;i<7;i++)if(typeof s[i]!=='number'||!isFinite(s[i]))return null;
     return {x:clamp(s[0],-400,400),y:clamp(s[1],-400,400),a:s[2],vx:clamp(s[3],-80,80),vy:clamp(s[4],-80,80),w:clamp(s[5],-30,30),steer:clamp(s[6],-1,1),rt};
   }
-  return {altDe,clamp,wrap,CAR,MODELOS,NOMBRES_VIEJOS,puntaPorMotor,HALF,VERGE,WALL,TRACKS,setTrack,outline,track,newCar,place,gridSpot,step,impulseAt,botInput,progress,progressValue,snapshot,readSnapshot,locate:(x,y,h)=>{locate(x,y,h);return {i:locI,d:locD}}};
+  return {altDe,clamp,wrap,CAR,MODELOS,NOMBRES_VIEJOS,puntaPorMotor,HALF,VERGE,WALL,TRACKS,setTrack,outline,track,newCar,place,gridSpot,step,impulseAt,botInput,progress,progressValue,snapshot,readSnapshot,setTrafico,locate:(x,y,h)=>{locate(x,y,h);return {i:locI,d:locD}}};
 })();
 /*SIM-END*/
 if(typeof module!=='undefined')module.exports=Sim;
@@ -1553,7 +1562,47 @@ if(typeof module!=='undefined')module.exports=Sim;
   const COLORES=new Proxy(['#e23b2e','#f2a81d','#25a55a','#1f7fd6','#8a4fd0','#f05a9d','#14b8b0','#f4f1e6','#ff7a1a','#f7e13a','#8fd13f','#0b7a55','#6fd0f2','#16348c','#b0123b','#1e1f24','#7d8791','#8a5a34','#dde1e6','#ff4fd8','#c0ff00','#00e0ff','#3d1a78','#5e0b15','#ffb3c7','#b8f2e6','#ffd8a8','#c8a2ff','#d4af37','#b87333','#c0c6cc','#2e3b2f','#556b2f','#c2b280','#4a4e57','#0f2a4a','#ff5f00','#1abc9c','#9b111e','#004953','#f5f5dc','#ff9eb5','#7fffd4','#e6e600','#6a0dad','#2c5f2d','#a0522d'],{get:(t,k)=>{if(typeof k==='string'&&/^\d+$/.test(k)&&+k>=PROPIO)return '#'+(+k-PROPIO).toString(16).padStart(6,'0');return t[k]}});
   // Los diez colores de auto más comunes, en orden
   const COMUNES=[7,15,30,16,34,0,38,3,35,11];
-  const LAPS=2,vueltasDe=i=>TRACKS[i].juego?3:LAPS,LS='picada-piloto';
+  // --- Autopista: cada auto del tráfico va por su carril a velocidad fija. La posición sale del reloj de la carrera,
+  // así en una partida online todos ven el mismo tráfico sin mandarse nada ---
+  const TRAF={lista:[],pista:-1,pool:[],act:[],L:1},TRAF_N=22;
+  const TRAF_MOD=()=>TRAF.mod||(TRAF.mod=['Peugeot 206','Fiat 128','Falcon','Golf 7.5','Golf GTI','Escarabajo','Civic','Golf R','Impreza','Lancer','Mustang','Supra'].map(n=>MODELOS.findIndex(m=>m.nombre.includes(n))).filter(i=>i>=0));
+  function armarTrafico(){
+    TRAF.pista=trackIdx;TRAF.lista=[];const t=Sim.track;if(!t.ruta)return;
+    const L=t.N*t.sp;TRAF.L=L;let sem=trackIdx*7919+13;const rnd=()=>{sem=(sem*16807)%2147483647;return sem/2147483647};
+    // Cuatro carriles: el de la derecha es el más lento; al largar no hay nadie cerca de la grilla
+    for(let l=0;l<4;l++){const v=[15,19,23,27][l],off=-6.75+l*4.5;let p=70+rnd()*80;
+      while(p<L-280){TRAF.lista.push({s0:p,v,off});p+=40+rnd()*(l<2?90:160)}}
+    if(!TRAF.pool.length){const ms=TRAF_MOD();for(let k=0;k<TRAF_N;k++)TRAF.pool.push({kind:'trafico',name:'',v:ms[k%ms.length],color:COMUNES[(k*7+3)%COMUNES.length],pz:{},pzk:'trafico',num:0,
+      x:0,y:0,a:0,vx:0,vy:0,w:0,vf:0,vr:0,delta:0,steer:0,slip:0,idx:0,off:0,ghost:0,frozen:false,finT:null,stale:false,spec:{m:2600,I:4700},q:null})}
+  }
+  function moverTrafico(now){
+    const t=Sim.track;
+    if(!t.ruta){if(TRAF.act.length){TRAF.act=[];Sim.setTrafico(TRAF.act)}return}
+    if(TRAF.pista!==trackIdx)armarTrafico();
+    const L=TRAF.L,N=t.N,tau=race?Math.max(0,(now-race.t0)/1000):now/1000;
+    const ojos=cars.filter(c=>c.kind!=='net'&&!c.stale&&c.idx>=0),cand=[];
+    for(const q of TRAF.lista){
+      const p=((q.s0+q.v*tau)%L+L)%L;q.s=p;let best=1e9;
+      for(const c of ojos){let d=p-c.idx*t.sp;d-=Math.round(d/L)*L;if(d>-120&&d<280){const pr=(c===me?0:1000)+Math.abs(d);if(pr<best)best=pr}}
+      if(best<1e9)cand.push([best,q]);
+    }
+    cand.sort((a,b)=>a[0]-b[0]);const elegidos=new Set(cand.slice(0,TRAF_N).map(x=>x[1]));
+    for(const p of TRAF.pool)if(p.q&&!elegidos.has(p.q))p.q=null;
+    for(const q of elegidos)if(!TRAF.pool.some(p=>p.q===q)){const p=TRAF.pool.find(p=>!p.q);if(p){p.q=q;p.dAnt=null}}
+    TRAF.act=[];
+    for(const p of TRAF.pool){
+      if(!p.q)continue;const q=p.q,f=q.s/t.sp,i=Math.floor(f)%N,j=(i+1)%N,u=f-Math.floor(f);
+      const tx=t.tx[i]+(t.tx[j]-t.tx[i])*u,ty=t.ty[i]+(t.ty[j]-t.ty[i])*u,m=Math.hypot(tx,ty)||1;
+      p.x=t.x[i]+(t.x[j]-t.x[i])*u+t.nx[i]*q.off;p.y=t.y[i]+(t.y[j]-t.y[i])*u+t.ny[i]*q.off;
+      p.a=Math.atan2(ty,tx);p.vx=tx/m*q.v;p.vy=ty/m*q.v;p.w=0;p.vf=q.v;p.vr=0;p.idx=i;p.off=q.off;
+      // Pasada finita: lo pasás rápido y bien cerca
+      if(me&&me.idx>=0&&!me.frozen){let d=q.s-me.idx*t.sp;d-=Math.round(d/L)*L;
+        if(p.dAnt!=null&&p.dAnt>0&&d<=0&&Math.abs((me.off||0)-q.off)<3.3&&Math.hypot(me.vx,me.vy)-q.v>8)aviso('¡Pasada finita!');p.dAnt=d}
+      TRAF.act.push(p);
+    }
+    Sim.setTrafico(TRAF.act);
+  }
+  const LAPS=2,vueltasDe=i=>TRACKS[i].ruta?1:TRACKS[i].juego?3:LAPS,LS='picada-piloto';
   const TEMAS={
     pasto:{s1:'#7ea356',s2:'#74994e',ban:'#8fb15f',asf:'#5a5853',kA:'#fbf6ea',kB:'#d8412f',mA:'#d8412f',mB:'#fbf6ea',top:'#d9d0bc',linea:'#fbf6ea',prop:'pino',luz:[.82,.72],cielo:'#a9d8f0'},
     medano:{s1:'#dcbb7c',s2:'#d3b06f',ban:'#c9a264',asf:'#a57c52',kA:'#f4e6c8',kB:'#c9622f',mA:'#8a5a34',mB:'#e8d3a7',top:'#b58f62',linea:'#caa67a',prop:'cactus',luz:[.86,.76],cielo:'#f3dcae'},
@@ -1707,17 +1756,19 @@ if(typeof module!=='undefined')module.exports=Sim;
     const e=pref.evento||(pref.evento={tipo:'circuito',p:0});
     if(!TITULO_EVENTO[e.tipo])e.tipo='circuito';
     if(!(e.p>=0&&e.p<TRACKS.length))e.p=0;
+    // La ruta es solo para la autopista y la autopista va solo por rutas
+    if((e.tipo==='autopista')!==!!TRACKS[e.p].ruta)e.p=e.tipo==='autopista'?TRACKS.findIndex(t=>t.ruta):0;
     return e;
   };
   function textoPremio(e){
-    if(e.tipo==='circuito')return '1º gana '+pesos(PREMIOS_MAQUINA[0]*(1+bonoEstilo()/100)*dificultad().paga);
+    if(e.tipo==='circuito'||e.tipo==='autopista')return '1º gana '+pesos(PREMIOS_MAQUINA[0]*(1+bonoEstilo()/100)*dificultad().paga);
     if(e.tipo==='derrape')return 'Medalla de oro: '+pesos(1300);
     return 'No paga: corrés contra tu mejor vuelta';
   }
   function pintarInicio(){
     const e=eventoActual(),m=proximaCompra();
     $('i-modo').textContent=TITULO_EVENTO[e.tipo];$('i-pista').textContent=TRACKS[e.p].name;
-    $('i-meta').textContent=(e.tipo==='circuito'?dificultad().n+' · '+vueltasDe(e.p)+' vueltas':e.tipo==='derrape'?'1 vuelta':'Vueltas libres');
+    $('i-meta').textContent=(e.tipo==='circuito'||e.tipo==='autopista'?dificultad().n+' · '+vueltasDe(e.p)+' vueltas':e.tipo==='derrape'?'1 vuelta':'Vueltas libres');
     $('i-premio').textContent=textoPremio(e);
     $('i-cta').textContent=salaPendiente?'Entrar a la partida':'Correr';
     $('i-carrera').classList.toggle('invita',!!(salaPendiente&&invitacion));
@@ -2107,7 +2158,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function sonarOtros(dt,t,yo){
     const cerca=[];
-    for(const c of cars){if(c===yo)continue;const d=Math.hypot(c.x-yo.x,c.y-yo.y);if(d<80)cerca.push([d,c])}
+    for(const c of cars.concat(TRAF.act)){if(c===yo)continue;const d=Math.hypot(c.x-yo.x,c.y-yo.y)*(c.kind==='trafico'?1.3:1);if(d<80)cerca.push([d,c])}
     cerca.sort((a,b)=>a[0]-b[0]);const elegidos=cerca.slice(0,au.otros.length).map(x=>x[1]);
     // Cada voz sigue al mismo auto mientras esté entre los más cercanos, así no salta de tono
     for(const o of au.otros)if(o.c&&!elegidos.includes(o.c))o.c=null;
@@ -2115,9 +2166,9 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const o of au.otros){
       const c=o.c;if(!c){o.g.gain.setTargetAtTime(0,t,.08);continue}
       const E=c.snd||(c.snd={rpm:900,marcha:1,v:-1,ant:0});
-      if(E.v!==c.v){E.v=c.v;E.M=motorDe(c.v);E.punta=Math.max(30,punta(c.spec||MODELOS[c.v]));E.marcha=1}
+      if(E.v!==c.v){E.v=c.v;E.M=motorDe(c.v);E.punta=Math.max(30,punta(c.kind==='trafico'?MODELOS[c.v]:c.spec||MODELOS[c.v]));E.marcha=1}
       const [cil,ral,tope]=E.M,s=Math.hypot(c.vx,c.vy),acel=(s-E.ant)/Math.max(dt,.001);E.ant=s;
-      const gas=c.kind==='net'?acel>.3||s>E.punta*.9:c.gas>0,banda=g=>E.punta*BANDAS[g-1];
+      const gas=c.kind==='trafico'?true:c.kind==='net'?acel>.3||s>E.punta*.9:c.gas>0,banda=g=>E.punta*BANDAS[g-1];
       if(E.marcha<BANDAS.length&&s/banda(E.marcha)>.97&&gas)E.marcha++;else if(E.marcha>1&&s<banda(E.marcha-1)*.7)E.marcha--;
       let obj=s<1.5&&E.marcha===1?ral:ral+(tope-ral)*clamp(s/banda(E.marcha),0,.93);
       if(gas&&c.slip>4&&s>2)obj=ral+(tope-ral)*.97;
@@ -2795,8 +2846,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     const b=el('button');b.type='button';b.dataset.p=p;b.append(svgDe(ic),el('span',null,n));
     b.onclick=()=>{subirAlAuto();if(actual!==p)tab(p)};$('tabs').append(b);
   }
-  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
-  const DESC_EVENTO={circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
+  const TITULO_EVENTO={circuito:'Circuito',autopista:'Autopista',derrape:'Derrape',practica:'Práctica'};
+  const DESC_EVENTO={circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
   function pintarMenu(p){
     const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
     $('menu').hidden=false;$('menu').classList.toggle('sub',p==='opciones'||p==='ayuda');
@@ -2837,21 +2888,21 @@ if(typeof module!=='undefined')module.exports=Sim;
       return q;
     };
     const box=el('div','sel-pista');
-    box.append(seg(Object.keys(TITULO_EVENTO).map(k=>[TITULO_EVENTO[k],k]),e.tipo,v=>{e.tipo=v;rehacer()}),el('p','bajada',DESC_EVENTO[e.tipo]));
-    const delJuego=!!TRACKS[e.p].juego;
-    box.append(seg([['Fórmula 1',false],['Del juego',true]],delJuego,v=>{e.p=TRACKS.findIndex(x=>!!x.juego===v);rehacer()}));
+    box.append(seg(Object.keys(TITULO_EVENTO).map(k=>[TITULO_EVENTO[k],k]),e.tipo,v=>{e.tipo=v;eventoActual();rehacer()}),el('p','bajada',DESC_EVENTO[e.tipo]));
+    const delJuego=!!TRACKS[e.p].juego,ruta=e.tipo==='autopista';
+    if(!ruta)box.append(seg([['Fórmula 1',false],['Del juego',true]],delJuego,v=>{e.p=TRACKS.findIndex(x=>!!x.juego===v&&!x.ruta);rehacer()}));
     const lista=el('div','pistas-ev');
     TRACKS.forEach((tr,i)=>{
-      if(!!tr.juego!==delJuego)return;
+      if(ruta?!tr.ruta:(!!tr.juego!==delJuego||tr.ruta))return;
       const b=el('button');b.type='button';b.setAttribute('aria-pressed',i===e.p);b.append(miniPista(i),el('span',null,tr.name));
       b.onclick=()=>{const q=lista.scrollTop;e.p=i;rehacer();const n=$('menu-cuerpo').querySelector('.pistas-ev');if(n)n.scrollTop=q};lista.append(b);
     });
     const dock=el('div','dock'),d=datosPista(e.p),info=el('div','dock-t');
-    info.append(el('h3',null,TRACKS[e.p].name),el('p',null,d.km+' km · '+d.curvas+' curvas'+(e.tipo==='circuito'?' · '+vueltasDe(e.p)+' vueltas':'')+' · '+['fácil','media','difícil'][d.nivel-1]));
+    info.append(el('h3',null,TRACKS[e.p].name),el('p',null,d.km+' km · '+d.curvas+' curvas'+(e.tipo==='circuito'?' · '+vueltasDe(e.p)+' vueltas':e.tipo==='autopista'?' · 1 vuelta con tráfico':'')+' · '+['fácil','media','difícil'][d.nivel-1]));
     dock.append(info);
-    if(e.tipo==='circuito')dock.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
+    if(e.tipo==='circuito'||e.tipo==='autopista')dock.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
     const pr=el('div','premios-p'),tag=(a,b)=>{const q=el('span');q.append(el('small',null,a),el('b',null,b));pr.append(q)},bono=1+bonoEstilo()/100;
-    if(e.tipo==='circuito')PREMIOS_MAQUINA.slice(0,3).forEach((p,i)=>tag((i+1)+'º',pesos(p*bono*dificultad().paga)));
+    if(e.tipo==='circuito'||e.tipo==='autopista')PREMIOS_MAQUINA.slice(0,3).forEach((p,i)=>tag((i+1)+'º',pesos(p*bono*dificultad().paga)));
     else if(e.tipo==='derrape'){Sim.setTrack(e.p);const med=medallas();Sim.setTrack(trackIdx);med.forEach(m=>tag(m.n+' · '+m.min.toLocaleString('es-AR'),pesos(m.p)))}
     else{const f=(pref.fantasmas||{})[TRACKS[e.p].name];tag('Tu récord',f?tiempo(f.t):'Sin vueltas');tag('Fantasma',f?'Listo':'Hacé una vuelta')}
     const u=el('button','fr grande-c','¡A correr!');u.type='button';u.onclick=()=>correr(e.tipo,e.p);
@@ -3083,7 +3134,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     modo=pr?'practica':'evento';evento={tipo,pista};vueltas=tipo==='derrape'?1:LAPS;
     aplicarAuto();me.frozen=false;
     setCircuito(pista);
-    if(tipo==='circuito')addBots();
+    if(tipo==='circuito'||tipo==='autopista')addBots();
     mostrarJuego(true);
     if(pr)return;
     const now=performance.now();
@@ -4986,7 +5037,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         }
         tira(i,-HALF,.02,HALF,.02,asf);
         tira(i,-HALF+.12,.025,-HALF+.28,.025,bla);tira(i,HALF-.28,.025,HALF-.12,.025,bla);
-        if(Math.floor(i*t.sp/4)&1)tira(i,-.13,.025,.13,.025,lin);
+        if(Math.floor(i*t.sp/4)&1)for(const o of t.ruta?[-4.5,0,4.5]:[0])tira(i,o-.13,.025,o+.13,.025,t.ruta?bla:lin);
       }
       deco.add(franjas(q));
     }
@@ -5128,6 +5179,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const q=v3,c=focus();if(!c)return;
     const vivos=new Set();
     for(const a of cars){if(a.stale)continue;vivos.add(a);mover3D(auto3D(a),a,now,dt)}
+    if(track.ruta)for(const p of TRAF.pool){vivos.add(p);const m=auto3D(p);if(p.q)mover3D(m,p,now,dt);else m.g.visible=false}
     for(const [a,m] of q.autos)if(!vivos.has(a)){soltarSala(m);q.autos.delete(a)}
     marcas3D();humo3D();camara3D(c,dt);
     gl.render(q.esc,q.cam);
@@ -5488,6 +5540,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(c.ghost>0&&Math.floor(now/120)%2)continue;
       autoEnPista(x,c,now);
     }
+    for(const c of TRAF.act)autoEnPista(x,c,now);
     if(track.alt)dibujarPuentes(x,now);
     for(const p of parts){
       if(p.humo){const f=p.t/p.t0,e=1+(1-f)*3.6;x.globalAlpha=.42*f;x.drawImage(bocanada(p.col),p.x-e,p.y-e,e*2,e*2)}
@@ -5584,10 +5637,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     x.save();x.globalAlpha=.42;x.translate(c.x,c.y);x.rotate(a+wrap(b-a)*u);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
   }
   const DT=1/120;let acc=0,last=performance.now(),netT=0;
-  const inputs=c=>c.kind==='me'?(window.__botMe?Sim.botInput(c,DT,cars):inp()):Sim.botInput(c,DT,cars);
+  const conTrafico=()=>TRAF.act.length?cars.concat(TRAF.act):cars;
+  const inputs=c=>c.kind==='me'?(window.__botMe?Sim.botInput(c,DT,conTrafico()):inp()):Sim.botInput(c,DT,conTrafico());
   function frame(t){
     const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
     acc+=dt;
+    moverTrafico(now);
     while(acc>=DT){
       acc-=DT;
       Sim.step(cars,inputs,DT,now,leadOf,ev);
