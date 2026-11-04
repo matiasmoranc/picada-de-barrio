@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2e67cj"></script>
+<script src="room.js?v=mw2eoqca"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1291,7 +1291,7 @@ const Sim=(()=>{
     const lim=clamp(.1+P.L*mu*G/Math.max(speed*speed,1),.1,.6);
     const bf=Math.atan2(vr+P.A*c.w,Math.max(Math.abs(vf),3));
     const avance=vf>2?P.avance*clamp((Math.abs(bf)-.06)/.14,0,1):0;
-    const delta=clamp(c.steer*lim*(vf<0?-1:1)*Math.min(1,Math.abs(vf)/3)+bf*avance,-DMAX,DMAX);
+    const delta=clamp(c.steer*lim*Math.min(1,Math.abs(vf)/3)+bf*avance,-DMAX,DMAX);
     const cd=Math.cos(delta),sd=Math.sin(delta);
     // Peso de cada rueda con la transferencia de la aceleración, el frenado y la curva
     const tr=P.track/2,sxz=P.m*c.lax*P.h/P.L/2,syz=P.m*c.lay*P.h/P.track;
@@ -3844,7 +3844,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(del)ruedas.push(eje);
     }
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(R.Lg*1.2,R.W2*1.35,1);so.position.y=.09;g.add(so);
-    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(R.Lg*2.57,R.W2*2.86,1);g.add(ne)}
+    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(R.Lg*2.57,R.W2*2.86,1);g.add(ne)}
     escena.add(g);
     return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
@@ -4085,7 +4085,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
       caja.rotation.z=inc;caja.position.y=-(bD+bT)/2-xm*inc}
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(K.Lg*1.2,K.W2*1.35,1);so.position.y=.09;g.add(so);
-    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(K.Lg*2.57,K.W2*2.86,1);g.add(ne)}
+    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(K.Lg*2.57,K.W2*2.86,1);g.add(ne)}
     escena.add(g);
     return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
@@ -4165,7 +4165,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         gira.push({m:r,s:sg});if(i<2)ruedas.push(eje);
       });
       const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(Lg*1.2,W2*1.35,1);so.position.y=.09;g.add(so);
-      if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(Lg*2.57,W2*2.86,1);g.add(ne)}
+      if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(Lg*2.57,W2*2.86,1);g.add(ne)}
     }
     escena.add(g);
     return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
@@ -4289,8 +4289,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(2.6,1.3,1);so.position.y=.09;g.add(so);
     if(P.neon){
-      const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));
-      const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(7,3.6,1);g.add(ne);
+      const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));
+      const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(7,3.6,1);g.add(ne);
     }
     {const a=(P.alt|0)/10,top=.37+.37*(f.rueda||1)*(P.llanta===3?1.08:1);caja.position.y=-bajada(a,a>0?huelgo(caja,[eF,eR].flatMap(x=>[[x,top,-via],[x,top,via]])):0)}
     escena.add(g);
