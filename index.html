@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2ezx7u"></script>
+<script src="room.js?v=mw2lrunv"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -286,7 +286,8 @@ label{font-weight:700;display:block;margin-bottom:3px}
 :root{--oro:#ffd51a;--azul:#4fb4ff;--violeta:#5a1fd0;--ciruela:#3b2a55;--borde:2px 0 #000,-2px 0 #000,0 2px #000,0 -2px #000,2px 2px #000,-2px 2px #000,2px -2px #000,-2px -2px #000,4px 4px 0 #000;
   --peligro:repeating-linear-gradient(135deg,#0b0b14 0 26px,var(--violeta) 26px 52px);--peligro-az:repeating-linear-gradient(135deg,#0b0b14 0 26px,#0a9dff 26px 52px);--patron:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%27520%27%20height%3D%27250%27%20viewBox%3D%270%200%20520%20250%27%3E%3Cg%20fill%3D%27%238f0a0a%27%3E%3Cpath%20d%3D%27M20%20150%2090%2040%2096%2096%20190%2024%20170%2092%20300%2020%20262%2096%20400%2042%20352%20118%20470%2096%20396%20160%20300%20150%20280%20214%20214%20168%20150%20226%20136%20172Z%27%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%27%23000%27%20font-family%3D%27Arial%20Black%2CArial%2Csans-serif%27%20font-weight%3D%27900%27%20font-style%3D%27italic%27%3E%3Ctext%20x%3D%2796%27%20y%3D%27128%27%20font-size%3D%2754%27%3EPICADA%3C%2Ftext%3E%3C%2Fg%3E%3Cpath%20d%3D%27M118%20164h22l26-20h56l34%2020%2034%206%206%2014h-26a15%2015%200%200%200-29%200h-58a15%2015%200%200%200-29%200h-36Z%27%20fill%3D%27%23000%27%2F%3E%3C%2Fsvg%3E")}
 /* iPhone: nada se selecciona ni abre la lupa al mantener apretado */
-*{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+*{-webkit-touch-callout:none!important;-webkit-user-select:none!important;user-select:none!important}
+input,textarea{-webkit-user-select:text!important;user-select:text!important}
 input{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 html,body{background:#000;touch-action:manipulation}
 #juego{position:fixed;inset:0;width:auto;height:auto;background:#000}
@@ -1231,7 +1232,7 @@ const Sim=(()=>{
   }
   function newCar(o){
     return Object.assign({lane:0,skill:.95,meta:0,fallo:0,prox:30,torpe:1,goma:1,kind:'bot',x:0,y:0,vx:0,vy:0,a:0,w:0,steer:0,delta:0,uf:0,ur:0,lax:0,lay:0,suelto:0,cola:0,betaAnt:0,nos:1,nosOn:0,gas:0,brk:0,mano:0,idx:-1,off:0,ghost:0,frozen:false,hitT:0,
-      spec:MODELOS[0],v:0,vf:0,vr:0,slip:0,grass:0,laps:-1,sector:3,finT:null,lapStart:0,lastLap:null,bestLap:null,net:null,stale:false,stuck:0},o);
+      spec:MODELOS[0],v:0,vf:0,vr:0,slip:0,grass:0,laps:-1,sector:3,finT:null,lapStart:0,lastLap:null,bestLap:null,net:null,stale:false,stuck:0,trompo:0},o);
   }
   function place(c,idx,off){
     const t=track,i=(idx+t.N*2)%t.N;
@@ -1281,7 +1282,11 @@ const Sim=(()=>{
     // así el derrape se sostiene con el acelerador y la salida no da un latigazo
     const beta=speed>4?Math.abs(Math.atan2(vr,Math.abs(vf))):0;
     c.suelto=mano?P.tiempoSuelto:beta>.16?Math.max(c.suelto,.35):Math.max(0,c.suelto-dt);
-    const cola=c.suelto>0&&vf>2?clamp(beta/.3,0,1):0;
+    const giroMismo=Math.abs(inp.steer)>.25&&inp.steer*c.w>.25;
+    if(!mano&&inp.gas>0&&speed<11.1&&speed>.6&&vf>-1&&giroMismo&&(c.suelto>0||c.trompo>0))c.trompo=.35;
+    else c.trompo=Math.max(0,(c.trompo||0)-dt*(inp.gas>0?1:3));
+    if(c.trompo>0)c.suelto=Math.max(c.suelto,.35);
+    const cola=c.trompo>0?1:c.suelto>0&&vf>2?clamp(beta/.3,0,1):0;
     c.cola+=(cola-c.cola)*(1-Math.exp(-dt*(cola>c.cola?14:5)));
     const muT=mu*P.rear*(1-c.cola*P.aflojar);
     const rate=Math.abs(inp.steer)>Math.abs(c.steer)?5.5:9;
@@ -1319,8 +1324,9 @@ const Sim=(()=>{
     if(inp.gas>0&&vf>-.5){
       const sy=Math.abs(vr)/Math.max(speed,12),tx=c.suelto>0?P.tcsSuelto:Math.sqrt(Math.max(.0016,P.tcs*P.tcs-sy*sy));
       const top=Math.max(vf,0)*(1+tx)+Math.max(3,speed)*tx*.3;
-      if(P.awd>0)uf=Math.min(uf,top);
-      ur=Math.min(ur,top);
+      if(!(c.trompo>0)){if(P.awd>0)uf=Math.min(uf,top);ur=Math.min(ur,top)}
+      // En el cerito las gomas de atrás patinan a fondo: humo, corte y la cola que sigue empujando
+      else ur=Math.max(ur,Math.max(vf,0)+9*inp.gas);
     }
     // Frenos con antibloqueo: buscan el pico de la goma, sin trabar las ruedas
     if(freno>0){
@@ -1357,6 +1363,8 @@ const Sim=(()=>{
       const g=vr<0?1:-1,meta=clamp(P.angulo*(inp.gas>0?1:.3)*clamp(.12+1.05*c.steer*g,0,1.2),0,P.betaMax);
       T+=P.I*c.cola*g*clamp(P.guia*(meta-beta)-2.2*(beta-c.betaAnt)/dt,-7,7);
     }
+    // En el cerito la cola sigue dando vueltas: el giro busca una velocidad pareja según el volante y el acelerador
+    if(c.trompo>0){const meta=Math.sign(c.steer)*(1.6+1.4*Math.abs(c.steer))*inp.gas;T+=P.I*clamp(4*(meta-c.w),-8,8)*Math.min(1,c.trompo/.2)}
     c.betaAnt=beta;
     const sobra=beta-P.betaMax;
     if(sobra>0&&vf>0&&speed>5)T+=P.I*P.aguante*sobra*(vr>0?1:-1)-P.I*.8*c.w*sobra;
@@ -1364,7 +1372,7 @@ const Sim=(()=>{
     c.w*=1-Math.min(1,.35*dt);
     c.x+=c.vx*dt;c.y+=c.vy*dt;c.a+=c.w*dt;
     c.gas=inp.gas;c.brk=inp.brake;c.mano=mano?1:0;c.delta=delta;c.vf=vf;c.vr=vr;
-    c.slip=Math.max(Math.abs(vr-P.B*c.w),speed>3?Math.abs(ur-vf):0);
+    c.slip=Math.max(Math.abs(vr-P.B*c.w),speed>3||c.trompo>0?Math.abs(ur-vf):0);
   }
   function impulseAt(c,px,py,jx,jy){
     const P=c.spec;
@@ -1886,6 +1894,20 @@ if(typeof module!=='undefined')module.exports=Sim;
   for(const t of ['touchstart','touchmove','touchend'])tactil.addEventListener(t,sinGesto,{passive:false});
   for(const t of ['gesturestart','gesturechange','gestureend','dblclick'])document.addEventListener(t,sinGesto,{passive:false});
   document.addEventListener('selectstart',e=>{if(e.target.tagName!=='INPUT')e.preventDefault()});
+  // El segundo toque rápido no agranda la pantalla: se anula y, si era un botón, se lo aprieta igual
+  {let ult=0,ux=0,uy=0;
+    document.addEventListener('touchend',e=>{
+      const t=e.target,q=e.changedTouches[0];if(!q)return;
+      if(t.closest&&t.closest('input,select,textarea'))return;
+      if(e.timeStamp-ult<380&&Math.hypot(q.clientX-ux,q.clientY-uy)<60&&e.touches.length===0){
+        if(e.cancelable)e.preventDefault();
+        if(!(t.closest&&t.closest('#orbita,canvas'))&&typeof t.click==='function')t.click();
+      }
+      ult=e.timeStamp;ux=q.clientX;uy=q.clientY;
+    },{passive:false});
+    // Dos dedos fuera del garaje no agrandan la página (en el garaje el pellizco acerca el auto)
+    document.addEventListener('touchmove',e=>{if(e.touches.length>1&&e.cancelable)e.preventDefault()},{passive:false});
+  }
   tactil.addEventListener('lostpointercapture',soltar);
   addEventListener('pointerup',soltar);addEventListener('pointercancel',soltar);
   addEventListener('pagehide',soltarTodo);
@@ -1986,7 +2008,10 @@ if(typeof module!=='undefined')module.exports=Sim;
         g.gain.value=0;r.connect(b1);b1.connect(b2);b2.connect(g);g.connect(m);r.start();return {b1,b2,g,k}});
       // Nitro: soplido agudo
       const [nf,ng]=fuente(3200,'highpass',.7);
-      au={a,m,o1,o2,o3,lp,mot,lfo,lg,af,ag,rf,rg,chir,tiembla:1,corre:0,nf,ng,buf,est:{rpm:800,marcha:1,corte:0,gas:false,motor:-1}};
+      const otros=[0,1,2].map(()=>{const p=a.createOscillator(),q=a.createOscillator(),gp=a.createGain(),gq=a.createGain(),s2=a.createWaveShaper(),f=a.createBiquadFilter(),g=a.createGain();
+        p.type='sawtooth';q.type='square';gp.gain.value=.5;gq.gain.value=.3;s2.curve=saturar(2);f.type='lowpass';f.Q.value=1.2;f.frequency.value=500;g.gain.value=0;
+        p.connect(gp);q.connect(gq);gp.connect(s2);gq.connect(s2);s2.connect(f);f.connect(g);g.connect(m);p.start();q.start();return {p,q,f,g,c:null}});
+      au={a,m,o1,o2,o3,lp,mot,lfo,lg,af,ag,rf,rg,chir,otros,tiembla:1,corre:0,nf,ng,buf,est:{rpm:800,marcha:1,corte:0,gas:false,motor:-1}};
     }catch{}
   }
   // iPhone: el sonido del juego sale aunque la tecla de silencio esté puesta
@@ -2020,7 +2045,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const BANDAS=[.26,.42,.58,.75,.9,1.04];
   function sonarMotor(dt){
     const a=au.a,t=a.currentTime,E=au.est,c=me,callado=tapado||salaVista||!c;
-    if(callado){au.mot.gain.setTargetAtTime(0,t,.05);au.ag.gain.setTargetAtTime(0,t,.05);au.rg.gain.setTargetAtTime(0,t,.05);for(const q of au.chir)q.g.gain.setTargetAtTime(0,t,.05);au.ng.gain.setTargetAtTime(0,t,.05);return}
+    if(callado){for(const o of au.otros)o.g.gain.setTargetAtTime(0,t,.05);au.mot.gain.setTargetAtTime(0,t,.05);au.ag.gain.setTargetAtTime(0,t,.05);au.rg.gain.setTargetAtTime(0,t,.05);for(const q of au.chir)q.g.gain.setTargetAtTime(0,t,.05);au.ng.gain.setTargetAtTime(0,t,.05);return}
     if(E.motor!==c.v){E.motor=c.v;E.M=motorDe(c.v);E.punta=Math.max(30,punta(c.spec||MODELOS[c.v]));E.marcha=1}
     const [cil,ral,tope]=E.M,s=Math.hypot(c.vx,c.vy),gas=!!c.gas&&!c.frozen,frenado=!!c.frozen;
     const banda=g=>E.punta*BANDAS[g-1];
@@ -2033,10 +2058,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     else if(s<1.5&&E.marcha===1)obj=gas?ral+(tope-ral)*.45:ral;
     else obj=ral+(tope-ral)*clamp(s/banda(E.marcha),0,1.02);
     // Patinando de costado el motor se pasa de vueltas
-    if(gas&&c.slip>4)obj=Math.min(tope,obj+(tope-ral)*.18*clamp((c.slip-4)/6,0,1));
+    const deriva=gas&&!frenado&&c.slip>4&&s>2&&!c.grass;
+    if(deriva)obj=Math.max(obj,ral+(tope-ral)*(.86+.2*clamp((c.slip-4)/5,0,1)));
+    else if(!frenado)obj=Math.min(obj,ral+(tope-ral)*.93);
     if(!gas&&!frenado)obj=Math.max(ral,obj*.92);
     E.rpm+=(obj-E.rpm)*Math.min(1,dt*(gas?10:5));
-    if(E.rpm>tope*.985&&gas)E.rpm=tope*(.93+Math.random()*.04);
+    if(deriva&&E.rpm>tope*.975)E.rpm=tope*(.9+Math.random()*.05);
     // Soltar el acelerador arriba hace petardear el escape
     if(E.gas&&!gas&&E.rpm>tope*.6&&s>8)for(let i=0;i<2+Math.floor(Math.random()*3);i++)petardo(t+.05+Math.random()*.35,.12+Math.random()*.15);
     E.gas=gas;
@@ -2055,6 +2082,32 @@ if(typeof module!=='undefined')module.exports=Sim;
     const tono=(640+pat*330+Math.min(s,45)*3)*(1+au.corre),fuerza=pat>.12?Math.pow((pat-.12)/.88,1.2):0;
     for(const q of au.chir){const f=tono*q.k;q.b1.frequency.setTargetAtTime(f,t,.05);q.b2.frequency.setTargetAtTime(f,t,.05);q.g.gain.setTargetAtTime(fuerza*au.tiembla*(q.k===1?2.4:q.k<2?1.3:.6),t,.03)}
     au.ng.gain.setTargetAtTime(c.nosOn?.06:0,t,.08);
+    sonarOtros(dt,t,c);
+  }
+  function sonarOtros(dt,t,yo){
+    const cerca=[];
+    for(const c of cars){if(c===yo)continue;const d=Math.hypot(c.x-yo.x,c.y-yo.y);if(d<80)cerca.push([d,c])}
+    cerca.sort((a,b)=>a[0]-b[0]);const elegidos=cerca.slice(0,au.otros.length).map(x=>x[1]);
+    // Cada voz sigue al mismo auto mientras esté entre los más cercanos, así no salta de tono
+    for(const o of au.otros)if(o.c&&!elegidos.includes(o.c))o.c=null;
+    for(const c of elegidos)if(!au.otros.some(o=>o.c===c)){const o=au.otros.find(o=>!o.c);if(o)o.c=c}
+    for(const o of au.otros){
+      const c=o.c;if(!c){o.g.gain.setTargetAtTime(0,t,.08);continue}
+      const E=c.snd||(c.snd={rpm:900,marcha:1,v:-1,ant:0});
+      if(E.v!==c.v){E.v=c.v;E.M=motorDe(c.v);E.punta=Math.max(30,punta(c.spec||MODELOS[c.v]));E.marcha=1}
+      const [cil,ral,tope]=E.M,s=Math.hypot(c.vx,c.vy),acel=(s-E.ant)/Math.max(dt,.001);E.ant=s;
+      const gas=c.kind==='net'?acel>.3||s>E.punta*.9:c.gas>0,banda=g=>E.punta*BANDAS[g-1];
+      if(E.marcha<BANDAS.length&&s/banda(E.marcha)>.97&&gas)E.marcha++;else if(E.marcha>1&&s<banda(E.marcha-1)*.7)E.marcha--;
+      let obj=s<1.5&&E.marcha===1?ral:ral+(tope-ral)*clamp(s/banda(E.marcha),0,.93);
+      if(gas&&c.slip>4&&s>2)obj=ral+(tope-ral)*.97;
+      E.rpm+=(obj-E.rpm)*Math.min(1,dt*(gas?9:5));
+      const r=E.rpm/tope,f=E.rpm/60*cil/2,d=Math.hypot(c.x-yo.x,c.y-yo.y);
+      o.p.frequency.setTargetAtTime(f,t,.02);o.q.frequency.setTargetAtTime(f/2,t,.02);
+      // Más lejos suena más bajo y más apagado
+      const lejos=1/(1+Math.pow(d/12,2));
+      o.f.frequency.setTargetAtTime((240+r*(gas?2000:900))*(.45+.55*lejos),t,.05);
+      o.g.gain.setTargetAtTime((gas?.085:.045)*(.55+.45*r)*lejos,t,.06);
+    }
   }
   function golpe(fuerza){
     if(!au||mute)return;
@@ -3844,7 +3897,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(del)ruedas.push(eje);
     }
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(R.Lg*1.2,R.W2*1.35,1);so.position.y=.09;g.add(so);
-    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(R.Lg*2.57,R.W2*2.86,1);g.add(ne)}
+    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.69,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(R.Lg*2.57,R.W2*3.15,1);g.add(ne)}
     escena.add(g);
     return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
@@ -3958,7 +4011,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!gl||!window.THREE||!THREE.GLTFLoader)return;
     const ld=new THREE.GLTFLoader();
     if(THREE.DRACOLoader){const dl=new THREE.DRACOLoader();dl.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');ld.setDRACOLoader(dl)}
-    for(const [k,A] of Object.entries(GLBS))ld.load(A.url,gltf=>{
+    let pri='';try{pri=MODELOS[modelo].forma.glb||''}catch{}
+    for(const [k,A] of Object.entries(GLBS).sort((a,b)=>(b[0]===pri)-(a[0]===pri)))ld.load(A.url,gltf=>{
       const nodos={};gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.name&&!nodos[o.name])nodos[o.name]=o});
       let info={};try{const c=nodos.carroceria;info=JSON.parse((c&&c.userData&&c.userData.picada)||'{}')}catch{}
       A.nodos=nodos;A.info=info;
@@ -4089,7 +4143,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
       caja.rotation.z=inc;caja.position.y=-(bD+bT)/2-xm*inc}
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(K.Lg*1.2,K.W2*1.35,1);so.position.y=.09;g.add(so);
-    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(K.Lg*2.57,K.W2*2.86,1);g.add(ne)}
+    if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.69,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(K.Lg*2.57,K.W2*3.15,1);g.add(ne)}
     escena.add(g);
     return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
@@ -4169,7 +4223,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         gira.push({m:r,s:sg});if(i<2)ruedas.push(eje);
       });
       const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(Lg*1.2,W2*1.35,1);so.position.y=.09;g.add(so);
-      if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(Lg*2.57,W2*2.86,1);g.add(ne)}
+      if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.69,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(Lg*2.57,W2*3.15,1);g.add(ne)}
     }
     escena.add(g);
     return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
@@ -4293,7 +4347,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(2.6,1.3,1);so.position.y=.09;g.add(so);
     if(P.neon){
-      const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.81,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));
+      const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.69,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));
       const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.025;ne.scale.set(7,3.6,1);g.add(ne);
     }
     {const a=(P.alt|0)/10,top=.37+.37*(f.rueda||1)*(P.llanta===3?1.08:1);caja.position.y=-bajada(a,a>0?huelgo(caja,[eF,eR].flatMap(x=>[[x,top,-via],[x,top,via]])):0)}
@@ -4579,6 +4633,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(orbitaObj!=null){orbitaA+=wrap(orbitaObj-orbitaA)*(1-Math.exp(-dt*6));if(Math.abs(wrap(orbitaObj-orbitaA))<.002)orbitaObj=null}
     else if(salaVista==='titulo')orbitaA-=dt*.18;
     sala.auto.g.rotation.y=sala.espejo.g.rotation.y=orbitaA;
+    {const esp=!!(MODELOS[visto].forma.glb&&!glbDe(visto));sala.auto.g.visible=sala.espejo.g.visible=!esp}
     const ancho=W>H,asp=W/H,panel=!!abierto;
     let dx=0,dy=0,ef=asp;
     if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else{const a=$('barra').getBoundingClientRect().bottom+22,b=$('local-panel').getBoundingClientRect().top;dy=b>a+40?H/2-(a+b)/2:H*.27;ef=asp*Math.min(1,(b-a)/(H*.32))}}else dy=H*(salaVista==='titulo'?.2:.12);
@@ -4796,7 +4851,9 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Rayas de la grilla y línea de largada
     const c0=[t.x[0],0,t.y[0]],tx=t.tx[0],ty=t.ty[0],nx=t.nx[0],ny=t.ny[0],P=(u,v,y=.04)=>[c0[0]+tx*u+nx*v,y,c0[2]+ty*u+ny*v],cs=HALF*2/12;
     for(let a=0;a<2;a++)for(let b=0;b<12;b++){const u=a*1.5-1.5,v=-HALF+b*cs;q.push([P(u,v),P(u+1.5,v),P(u+1.5,v+cs),P(u,v+cs),(a+b)%2?kA:rgb('#14151a')])}
-    for(let f=0;f<14;f++){const g=gridSpot(f),i=g.idx,o=g.off;tira(i+Math.round(3/t.sp),o-1.5,.04,o+1.5,.04,lin);}
+    for(let f=0;f<14;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.04;
+      const Q=(u,v)=>[t.x[k]+t.tx[k]*u+t.nx[k]*v,y,t.y[k]+t.ty[k]*u+t.ny[k]*v],caja=(u0,u1,v0,v1)=>q.push([Q(u0,v0),Q(u1,v0),Q(u1,v1),Q(u0,v1),lin]);
+      caja(2.6,2.88,o-1.35,o+1.35);caja(1.5,2.6,o-1.35,o-1.2);caja(1.5,2.6,o+1.2,o+1.35)}
     const g=new THREE.Group();g.add(franjas(q));
     const suelo=new THREE.Mesh(new THREE.PlaneGeometry(900,900),new THREE.MeshBasicMaterial({color:T.s1}));suelo.rotation.x=-Math.PI/2;suelo.position.set(t.x[0],-.02,t.y[0]);g.add(suelo);
     // Pórtico
@@ -4927,7 +4984,9 @@ if(typeof module!=='undefined')module.exports=Sim;
     {
       const q=[],c0=[t.x[0],0,t.y[0]],tx=t.tx[0],ty=t.ty[0],nx=t.nx[0],ny=t.ny[0],P=(u,v,y=.035)=>[c0[0]+tx*u+nx*v,y,c0[2]+ty*u+ny*v],cs=HALF*2/12;
       for(let a=0;a<2;a++)for(let b=0;b<12;b++){const u=a*1.5-1.5,v=-HALF+b*cs;q.push([P(u,v),P(u+1.5,v),P(u+1.5,v+cs),P(u,v+cs),(a+b)%2?cla:osc])}
-      for(let f=0;f<14;f++){const g=gridSpot(f),i=g.idx+Math.round(3/t.sp),o=g.off;q.push([pt(i,o-1.5,.03),pt(i+1,o-1.5,.03),pt(i+1,o+1.5,.03),pt(i,o+1.5,.03),cla])}
+      for(let f=0;f<14;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.03+(t.alt?t.alt[k]:0);
+      const Q=(u,v)=>[t.x[k]+t.tx[k]*u+t.nx[k]*v,y,t.y[k]+t.ty[k]*u+t.ny[k]*v],caja=(u0,u1,v0,v1)=>q.push([Q(u0,v0),Q(u1,v0),Q(u1,v1),Q(u0,v1),cla]);
+      caja(2.6,2.88,o-1.35,o+1.35);caja(1.5,2.6,o-1.35,o-1.2);caja(1.5,2.6,o+1.2,o+1.35)}
       deco.add(franjas(q));
       const oscuro=new THREE.MeshLambertMaterial({color:'#23262c'}),oro=new THREE.MeshBasicMaterial({color:'#ffd51a'});
       const barra=new THREE.Mesh(new THREE.BoxGeometry(.9,1.3,WALL*2+1.6),oro);barra.position.set(c0[0]+tx*4.5,6.6,c0[2]+ty*4.5);barra.rotation.y=-Math.atan2(ty,tx);deco.add(barra);
