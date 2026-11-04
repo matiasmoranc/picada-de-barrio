@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2lrunv"></script>
+<script src="room.js?v=mw2lzehc"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1892,21 +1892,34 @@ if(typeof module!=='undefined')module.exports=Sim;
   // En iPhone, mantener apretado abre la lupa de selección y corta el toque: los controles se quedan con el dedo
   const sinGesto=e=>{if(e.cancelable)e.preventDefault()};
   for(const t of ['touchstart','touchmove','touchend'])tactil.addEventListener(t,sinGesto,{passive:false});
-  for(const t of ['gesturestart','gesturechange','gestureend','dblclick'])document.addEventListener(t,sinGesto,{passive:false});
+  // Si la página igual quedó agrandada, se deja pellizcar para achicarla
+  const agrandada=()=>!!(window.visualViewport&&visualViewport.scale>1.02);
+  for(const t of ['gesturestart','gesturechange','gestureend','dblclick'])document.addEventListener(t,e=>{if(!agrandada())sinGesto(e)},{passive:false});
   document.addEventListener('selectstart',e=>{if(e.target.tagName!=='INPUT')e.preventDefault()});
   // El segundo toque rápido no agranda la pantalla: se anula y, si era un botón, se lo aprieta igual
-  {let ult=0,ux=0,uy=0;
+  {let ult=0,ux=0,uy=0,ini=0,ix=0,iy=0;
+    // Segundo toque rápido: se corta desde que apoya el dedo, antes de que el botón se rearme
+    document.addEventListener('touchstart',e=>{
+      const t=e.target,q=e.touches[0];if(!q||e.touches.length>1)return;
+      if(t.closest&&t.closest('input,select,textarea'))return;
+      if(e.timeStamp-ini<380&&Math.hypot(q.clientX-ix,q.clientY-iy)<60&&!(t.closest&&t.closest('#orbita,#tactil,canvas'))&&e.cancelable){e.preventDefault();e.target.__sinZoom=1}
+      ini=e.timeStamp;ix=q.clientX;iy=q.clientY;
+    },{passive:false,capture:true});
     document.addEventListener('touchend',e=>{
       const t=e.target,q=e.changedTouches[0];if(!q)return;
       if(t.closest&&t.closest('input,select,textarea'))return;
       if(e.timeStamp-ult<380&&Math.hypot(q.clientX-ux,q.clientY-uy)<60&&e.touches.length===0){
         if(e.cancelable)e.preventDefault();
-        if(!(t.closest&&t.closest('#orbita,canvas'))&&typeof t.click==='function')t.click();
+        if(!(t.closest&&t.closest('#orbita,canvas'))&&typeof t.click==='function'&&t.isConnected)t.click();
       }
       ult=e.timeStamp;ux=q.clientX;uy=q.clientY;
     },{passive:false});
     // Dos dedos fuera del garaje no agrandan la página (en el garaje el pellizco acerca el auto)
-    document.addEventListener('touchmove',e=>{if(e.touches.length>1&&e.cancelable)e.preventDefault()},{passive:false});
+    document.addEventListener('touchmove',e=>{if(e.touches.length>1&&e.cancelable&&!agrandada())e.preventDefault()},{passive:false});
+    // Al soltar, si quedó agrandada, se vuelve al tamaño normal
+    const vp=document.querySelector('meta[name=viewport]');
+    if(vp&&window.visualViewport)document.addEventListener('touchend',e=>{if(e.touches.length||!agrandada())return;
+      const c=vp.content;vp.content=c.replace(/maximum-scale=[^,]*/,'maximum-scale=1.0001');setTimeout(()=>{vp.content=c},60)},{passive:true});
   }
   tactil.addEventListener('lostpointercapture',soltar);
   addEventListener('pointerup',soltar);addEventListener('pointercancel',soltar);
@@ -4794,7 +4807,9 @@ if(typeof module!=='undefined')module.exports=Sim;
       const desl=(t,min,max,paso,val,fn,fmt)=>{const f=el('label','calco-desl'),v=el('b',null,fmt(val)),i=el('input');i.type='range';i.min=min;i.max=max;i.step=paso;i.value=val;i.oninput=()=>{fn(+i.value);v.textContent=fmt(+i.value);calcosCambiaron()};f.append(el('span',null,t),i,v);return f};
       // Mantener apretado un botón repite, cada vez más rápido
       const repite=(b,fn)=>{let tm=0,n=0;const parar=()=>{clearTimeout(tm);tm=0};const paso=()=>{fn(n);n++;tm=setTimeout(paso,n<2?320:70)};
-        b.addEventListener('pointerdown',e=>{e.preventDefault();n=0;parar();paso()});for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,parar)};
+        b.addEventListener('pointerdown',e=>{e.preventDefault();n=0;parar();paso()});
+        // El toque se anula en el mismo botón: así dos toques rápidos nunca agrandan la página
+        for(const ev of ['touchstart','touchend'])b.addEventListener(ev,e=>{if(e.cancelable)e.preventDefault()},{passive:false});for(const ev of ['pointerup','pointerleave','pointercancel'])b.addEventListener(ev,parar)};
       const fila=(t,botones,valor)=>{const f=el('div','calco-fila'),g=el('div','calco-btns');f.append(el('span',null,t),g);
         for(const [x,lab,fn] of botones){if(x==='v'){g.append(valor);continue}const b=el('button',null,x);b.type='button';b.setAttribute('aria-label',lab);repite(b,fn);g.append(b)}return f};
       const vT=el('b',null,''),vG=el('b',null,''),pinta=()=>{vT.textContent=Math.round((q.s||.8)*100)+' cm';vG.textContent=Math.round(q.r||0)+'°'};pinta();
