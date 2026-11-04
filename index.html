@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1lvvy9"></script>
+<script src="room.js?v=mw1m4xwa"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -628,6 +628,12 @@ html,body{background:#000;touch-action:manipulation}
 .de-fabrica{display:block;width:100%;margin:6px 0 18px;min-height:46px;border-radius:12px;background:transparent;color:#ff8a7a;border:1.5px solid #ff8a7a;font-weight:700}
 #g-todos{position:absolute;right:14px;top:14px;z-index:3;background:var(--oro);color:#14151a;font-weight:700;border-radius:999px;padding:6px 14px;min-height:36px}
 #g-ficha{padding-right:120px}
+/* Solo el nombre, sin recuadro, para que el auto se vea siempre */
+#g-cuenta,#g-tag{display:none!important}
+#g-ficha{background:none!important;padding:2px 120px 0 2px}
+#g-nombre{font-size:1.45rem;text-shadow:0 2px 6px rgba(0,0,0,.85)}
+#local.con-panel #g-ficha{padding:0}
+#local.con-panel #g-nombre{font-size:1.05rem;opacity:.9}
 #g-datos{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;background:rgba(14,15,20,.9);padding:9px 12px;font-size:.92rem}
 #g-datos .barra-d{grid-template-columns:62px 1fr}
 .g-resumen{grid-column:1/-1;margin:0}
@@ -2651,7 +2657,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('b-op').onclick=()=>{subirAlAuto();if(actual!=='opciones')ir('opciones')};
   $('b-ayuda').onclick=()=>{subirAlAuto();if(actual!=='ayuda')ir('ayuda')};
   $('menu-atras').onclick=()=>atras();
-  const ICONOS={"bandera":"<path d=\"M18 8v84\" stroke=\"currentColor\" stroke-width=\"9\"/><path fill=\"currentColor\" d=\"M24 12h60v44H24zM24 12h20v15H24z\"/><path fill=\"#14151a\" d=\"M24 12h15v11H24zM54 12h15v11H54zM39 23h15v11H39zM69 23h15v11H69zM24 34h15v11H24zM54 34h15v11H54zM39 45h15v11H39zM69 45h15v11H69z\"/>","derrape":"<path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" d=\"M14 84C20 40 48 26 86 18\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"2 18\" d=\"M36 88C42 58 60 46 88 38\"/>","reloj":"<circle cx=\"50\" cy=\"52\" r=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\"/><path d=\"M50 30v24l16 10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"9\" stroke-linecap=\"round\"/>","gente":"<circle cx=\"34\" cy=\"34\" r=\"17\" fill=\"currentColor\"/><circle cx=\"70\" cy=\"40\" r=\"13\" fill=\"currentColor\"/><path fill=\"currentColor\" d=\"M6 88c2-26 14-36 28-36s26 10 28 36zM60 56c16-2 30 8 33 32H68c0-12-3-22-8-32z\"/>","taller":"<path fill=\"currentColor\" d=\"M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z\"/>","casa":"<path fill=\"currentColor\" d=\"M50 8 96 48H82V92H58V64H42V92H18V48H4Z\"/>","copa":"<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M26 8H74V16H94V30C94 44 84 52 71 54 67 62 61 66 56 68V78H68V92H32V78H44V68C39 66 33 62 29 54 16 52 6 44 6 30V16H26ZM14 24V30C14 38 19 43 26 45V24ZM86 24H74V45C81 43 86 38 86 30Z\"/>","motor":"<path fill=\"currentColor\" d=\"M58 2 16 56H44L34 98 84 40H54Z\"/>","chapa":"<path fill=\"currentColor\" d=\"M4 66V50L20 46 34 26H68L84 46 96 50V66H86A13 13 0 0 0 60 66H40A13 13 0 0 0 14 66ZM27 79A9 9 0 1 1 27 61 9 9 0 0 1 27 79ZM73 79A9 9 0 1 1 73 61 9 9 0 0 1 73 79Z\"/>","pintura":"<path fill=\"currentColor\" d=\"M50 6C50 6 18 44 18 64A32 32 0 0 0 82 64C82 44 50 6 50 6Z\"/>","extras":"<path fill=\"currentColor\" d=\"M50 4 63 36 97 38 70 60 80 94 50 75 20 94 30 60 3 38 37 36Z\"/>","ajustes":"<path fill=\"currentColor\" d=\"M8 20H52V10H68V20H92V32H68V42H52V32H8ZM8 68H24V58H40V68H92V80H40V90H24V80H8Z\"/>"};
+  const ICONOS={"calcos":"<path fill=\"currentColor\" d=\"M22 10h56a12 12 0 0 1 12 12v38L60 90H22a12 12 0 0 1-12-12V22a12 12 0 0 1 12-12Z\"/><path fill=\"currentColor\" opacity=\".5\" d=\"M60 90V70a10 10 0 0 1 10-10h20Z\"/><path fill=\"#14151a\" d=\"M26 26h14v14H26ZM40 40h14v14H40ZM54 26h14v14H54ZM26 54h14v14H26Z\"/>","bandera":"<path d=\"M18 8v84\" stroke=\"currentColor\" stroke-width=\"9\"/><path fill=\"currentColor\" d=\"M24 12h60v44H24zM24 12h20v15H24z\"/><path fill=\"#14151a\" d=\"M24 12h15v11H24zM54 12h15v11H54zM39 23h15v11H39zM69 23h15v11H69zM24 34h15v11H24zM54 34h15v11H54zM39 45h15v11H39zM69 45h15v11H69z\"/>","derrape":"<path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" d=\"M14 84C20 40 48 26 86 18\"/><path fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\" stroke-linecap=\"round\" stroke-dasharray=\"2 18\" d=\"M36 88C42 58 60 46 88 38\"/>","reloj":"<circle cx=\"50\" cy=\"52\" r=\"36\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"10\"/><path d=\"M50 30v24l16 10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"9\" stroke-linecap=\"round\"/>","gente":"<circle cx=\"34\" cy=\"34\" r=\"17\" fill=\"currentColor\"/><circle cx=\"70\" cy=\"40\" r=\"13\" fill=\"currentColor\"/><path fill=\"currentColor\" d=\"M6 88c2-26 14-36 28-36s26 10 28 36zM60 56c16-2 30 8 33 32H68c0-12-3-22-8-32z\"/>","taller":"<path fill=\"currentColor\" d=\"M50 8 96 38V92H82V48H18V92H4V38ZM26 56H74V64H26ZM26 70H74V78H26ZM26 84H74V92H26Z\"/>","casa":"<path fill=\"currentColor\" d=\"M50 8 96 48H82V92H58V64H42V92H18V48H4Z\"/>","copa":"<path fill=\"currentColor\" fill-rule=\"evenodd\" d=\"M26 8H74V16H94V30C94 44 84 52 71 54 67 62 61 66 56 68V78H68V92H32V78H44V68C39 66 33 62 29 54 16 52 6 44 6 30V16H26ZM14 24V30C14 38 19 43 26 45V24ZM86 24H74V45C81 43 86 38 86 30Z\"/>","motor":"<path fill=\"currentColor\" d=\"M58 2 16 56H44L34 98 84 40H54Z\"/>","chapa":"<path fill=\"currentColor\" d=\"M4 66V50L20 46 34 26H68L84 46 96 50V66H86A13 13 0 0 0 60 66H40A13 13 0 0 0 14 66ZM27 79A9 9 0 1 1 27 61 9 9 0 0 1 27 79ZM73 79A9 9 0 1 1 73 61 9 9 0 0 1 73 79Z\"/>","pintura":"<path fill=\"currentColor\" d=\"M50 6C50 6 18 44 18 64A32 32 0 0 0 82 64C82 44 50 6 50 6Z\"/>","extras":"<path fill=\"currentColor\" d=\"M50 4 63 36 97 38 70 60 80 94 50 75 20 94 30 60 3 38 37 36Z\"/>","ajustes":"<path fill=\"currentColor\" d=\"M8 20H52V10H68V20H92V32H68V42H52V32H8ZM8 68H24V58H40V68H92V80H40V90H24V80H8Z\"/>"};
   const svgDe=ic=>{const v=document.createElementNS('http://www.w3.org/2000/svg','svg');v.setAttribute('viewBox','0 0 100 100');v.setAttribute('aria-hidden','true');v.innerHTML=ICONOS[ic];return v};
   for(const [p,n,ic] of [['titulo','Inicio','casa'],['correr','Correr','bandera'],['garaje','Garaje','taller'],['online','Online','gente'],['premios','Premios','copa']]){
     const b=el('button');b.type='button';b.dataset.p=p;b.append(svgDe(ic),el('span',null,n));
@@ -2753,7 +2759,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // Garaje: las flechas recorren tus autos y después los que están en venta
   const ordenGaraje=()=>pref.autos;
-  const TABS=[['mecanico','Motor','motor'],['pintura','Pintura','pintura'],['calcos','Calcos','pintura'],['accesorios','Extras','extras'],['ajuste','Ajustes','ajustes']];
+  const TABS=[['mecanico','Motor','motor'],['pintura','Pintura','pintura'],['calcos','Calcos','calcos'],['accesorios','Extras','extras'],['ajuste','Ajustes','ajustes']];
   {const q=el('button',null,'Autos');q.type='button';q.dataset.id='autos';q.onclick=()=>abrirPanel('autos');$('local-cats').append(q)}
   for(const [id,n,ic] of TABS){
     const b=el('button');b.type='button';b.append(svgDe(ic),el('span',null,n));b.onclick=()=>abrirPanel(id);$('g-tabs').append(b);
@@ -4226,7 +4232,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     sala.auto.g.rotation.y=sala.espejo.g.rotation.y=orbitaA;
     const ancho=W>H,asp=W/H,panel=!!abierto;
     let dx=0,dy=0,ef=asp;
-    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else dy=H*.27}else dy=H*(salaVista==='titulo'?.2:.12);
+    if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else{const a=$('barra').getBoundingClientRect().bottom+22,b=$('local-panel').getBoundingClientRect().top;dy=b>a+40?H/2-(a+b)/2:H*.27;ef=asp*Math.min(1,(b-a)/(H*.32))}}else dy=H*(salaVista==='titulo'?.2:.12);
     const Q=medidas(visto),alto=Q?Q.d.H*Q.e:1.6,d=Math.max(7.6,5.8/(2*Math.tan(15*Math.PI/180)*ef))*Math.max(1,alto/1.6);
     sala.cam.position.set(0,1.7,d);sala.cam.lookAt(0,.55,0);
     sala.cam.aspect=asp;sala.cam.setViewOffset(W,H,dx,dy,W,H);
@@ -4637,15 +4643,13 @@ if(typeof module!=='undefined')module.exports=Sim;
     const x=ctxCapa,V=q.V;
     if(capa.width!==cv.width||capa.height!==cv.height){capa.width=cv.width;capa.height=cv.height}
     x.setTransform(dpr,0,0,dpr,0,0);x.clearRect(0,0,W,H);
-    x.font='700 13px "Barlow Condensed",Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.textAlign='center';x.textBaseline='middle';
     for(const o of cars){
       if(o===me||o.stale)continue;
-      if(Math.hypot(o.x-c.x,o.y-c.y)>140)continue;
-      V.set(o.x,2.2+Sim.altDe(o),o.y).project(q.cam);if(V.z>1||V.z<-1)continue;
+      const dist=Math.hypot(o.x-c.x,o.y-c.y);if(dist>70||dist<4)continue;
+      V.set(o.x,1.9+Sim.altDe(o),o.y).project(q.cam);if(V.z>1||V.z<-1)continue;
       const sx=(V.x+1)/2*W,sy=(1-V.y)/2*H;if(sx<-40||sx>W+40||sy<-20||sy>H+20)continue;
-      const w=x.measureText(o.name).width+10;
-      x.fillStyle='rgba(14,34,53,.72)';x.fillRect(sx-w/2,sy-9,w,18);
-      x.fillStyle='#fbf6ea';x.fillText(o.name,sx,sy+.5);
+      etiqueta(x,o.name,sx,sy,clamp(1-(dist-25)/45,0,1));
     }
     minimapa(x);
   }
@@ -5002,16 +5006,23 @@ if(typeof module!=='undefined')module.exports=Sim;
     nubes(x,now);
     x.globalAlpha=1;x.restore();
     if(calidad===0)x.drawImage(vineta||armarVineta(),0,0,W,H);
-    x.font='700 13px "Barlow Condensed",Arial,sans-serif';x.textAlign='center';x.textBaseline='middle';
+    x.textAlign='center';x.textBaseline='middle';
     for(const c of cars){
-      if(c===me)continue;
-      aPantalla(c.x,c.y);const sx=pantallaDe.x,sy=pantallaDe.y-26;
+      if(c===me||!me)continue;
+      const dist=Math.hypot(c.x-me.x,c.y-me.y);if(dist>90)continue;
+      aPantalla(c.x,c.y);const sx=pantallaDe.x,sy=pantallaDe.y-20;
       if(sx<-40||sx>W+40||sy<-20||sy>H+20)continue;
-      const w=x.measureText(c.name).width+10;
-      x.fillStyle='rgba(14,34,53,.72)';x.fillRect(sx-w/2,sy-9,w,18);
-      x.fillStyle='#fbf6ea';x.fillText(c.name,sx,sy+.5);
+      etiqueta(x,c.name,sx,sy,clamp(1-(dist-40)/50,0,1));
     }
     minimapa(x);
+  }
+  // Cartelito de nombre: chico, translúcido y más tenue cuanto más lejos
+  function etiqueta(x,t,sx,sy,f){
+    if(f<=.05)return;
+    const px=Math.round(10+2*f);x.font='700 '+px+'px "Barlow Condensed",Arial,sans-serif';
+    const w=x.measureText(t).width+8,h=px+3;
+    x.globalAlpha=.35+.5*f;x.fillStyle='rgba(10,11,15,.6)';x.beginPath();x.roundRect?x.roundRect(sx-w/2,sy-h/2,w,h,h/2):x.rect(sx-w/2,sy-h/2,w,h);x.fill();
+    x.globalAlpha=.55+.45*f;x.fillStyle='#fff';x.fillText(t,sx,sy+.5);x.globalAlpha=1;
   }
   function minimapa(x){
     if(!mapa)armarMapa();
