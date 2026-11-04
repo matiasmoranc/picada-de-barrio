@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1jcwj9"></script>
+<script src="room.js?v=mw1k8ju5"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1428,7 +1428,7 @@ const Sim=(()=>{
     const err=wrap(Math.atan2(ty,tx)-c.a);
     let vmax=60;
     for(let k=0,fin=Math.round(300/t.sp);k<fin;k+=k<6?1:3){
-      const i=(c.idx+k)%N,lim=Math.sqrt(c.spec.mu*t.grip*G*.72/Math.max(t.k[i],.001)),dist=k*t.sp;
+      const i=(c.idx+k)%N,lim=Math.sqrt(c.spec.mu*t.grip*G*(.72+.18*(c.ag||0))/Math.max(t.k[i],.001)),dist=k*t.sp;
       vmax=Math.min(vmax,Math.sqrt(lim*lim+2*Math.min(8,c.spec.brake/c.spec.m*.56)*t.grip*dist));
     }
     // De vez en cuando se pasa de frenada, como cualquiera
@@ -1436,7 +1436,7 @@ const Sim=(()=>{
     if(c.prox<=0&&vmax<speed+2){c.fallo=.9+Math.random()*.7;c.prox=18+Math.random()*30}
     vmax*=c.skill*c.goma*(c.fallo>0?1.12:1);
     const tope=speed>10&&Math.abs(err*2.6)>1.25;
-    return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&!tope&&speed<vmax?1:0,brake:speed>vmax+1.5||tope&&speed>vmax*.85?1:0};
+    return c.ia={steer:clamp(err*2.6,-1,1),gas:gasOk&&!tope&&speed<vmax?1:0,brake:tope&&speed>vmax*.85?1:clamp((speed-vmax-.5)/3,0,1)};
   }
   function progress(c){
     const s=c.idx/track.N,q=Math.floor(s*4);
@@ -1647,7 +1647,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   const DIFICULTADES={
     facil:{n:'Fácil',ritmo:.82,motor:.85,torpe:1.5,paga:.7},
     normal:{n:'Normal',ritmo:.91,motor:.94,torpe:1,paga:1},
-    dificil:{n:'Difícil',ritmo:1,motor:1,torpe:.5,paga:1.4}
+    // agresividad: 0 frena con mucho margen en las curvas; 1 usa casi todo el agarre (más rápido, se sale más)
+    dificil:{n:'Difícil',ritmo:1,motor:1,torpe:.5,paga:1.4,agresividad:1}
   };
   const dificultad=()=>DIFICULTADES[pref.dif]||DIFICULTADES.normal;
   const BOTS=[['Tito',0,2],['Coca',1,4],['Beto',3,8],['Lola',5,1],['Nacho',6,9]];
@@ -1657,7 +1658,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Los rivales corren con la misma preparación que tu auto: así cualquier auto es competitivo
     const D=dificultad(),base=specDe(modelo);
     BOTS.slice(0,modo==='online'?botsSala:3).forEach(([name,col,v],i)=>{
-      const c=newCar({kind:'bot',v,spec:{...base,power:base.power*D.motor,forma:MODELOS[v].forma},name,color:col+(col===color?2:0),num:i+7,lane:[-2.5,2.5,0,-1.2,1.2][i],skill:D.ritmo+(i%3-1)*.022,torpe:D.torpe});
+      const c=newCar({kind:'bot',v,spec:{...base,power:base.power*D.motor,forma:MODELOS[v].forma},name,color:col+(col===color?2:0),num:i+7,lane:[-2.5,2.5,0,-1.2,1.2][i],skill:D.ritmo+(i%3-1)*.022,torpe:D.torpe,ag:D.agresividad||0});
       place(c,Math.round(track.N*(.1+i*.27)),c.lane);cars.push(c);
     });
   }
@@ -2425,7 +2426,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(buena&&me){me.vx+=Math.cos(me.a)*buena;me.vy+=Math.sin(me.a)*buena;me.uf=me.ur=buena;aviso((buena>6?'¡Largada perfecta!':'Buena largada')+' · '+Math.round(r)+' ms')}
     }
     const lista=racers();
-    for(const b of cars)if(b.kind==='bot'&&me){const gap=(Sim.progressValue(me)-Sim.progressValue(b))*track.length;b.goma=1+clamp(gap/320,-.06,.045)}
+    for(const b of cars)if(b.kind==='bot'&&me){const gap=(Sim.progressValue(me)-Sim.progressValue(b))*track.length;b.goma=1+clamp(gap/320,-.06*(1-.7*(b.ag||0)),.045)}
     for(const c of cars){
       if(c.kind==='net'||c.finT!=null||c.laps<vueltas)continue;
       c.finT=now-race.t0;
