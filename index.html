@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw26thxb"></script>
+<script src="room.js?v=mw2810d6"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1000,7 +1000,11 @@ const Sim=(()=>{
     {nombre:'Ripio',tag:'4x4 de rally',txt:'Ensanchado y con tracción integral: sale de la curva como un tiro.',m:1250,awd:.5,power:232000,fmax:11500,brake:21000,mu:1.85,slide:.9,betaMax:.8,forma:{real:'delta',pinta:0}},
     {nombre:'Chata',tag:'Camioneta que empuja a todos',txt:'Enorme y pesada: en un choque, siempre gana.',m:1800,power:205000,fmax:9000,brake:17000,mu:1.5,drag:3.4,forma:{real:'f100',pinta:3}},
     // Modelo 3D: "2000 Peugeot 206" de tonielpro520 (Sketchfab, CC BY 4.0), adaptado con techo solar
-    {nombre:'Peugeot 206',tag:'Techo solar',txt:'El 206 de tres puertas, con techo solar. Liviano, nervioso y fácil de llevar.',m:1030,power:112000,fmax:8200,brake:16000,mu:1.66,drag:2.4,forma:{glb:'p206',tipo:'sedan',pinta:7}}
+    {nombre:'Peugeot 206',tag:'Techo solar',txt:'El 206 de tres puertas, con techo solar. Liviano, nervioso y fácil de llevar.',m:1030,power:112000,fmax:8200,brake:16000,mu:1.66,drag:2.4,forma:{glb:'p206',tipo:'sedan',pinta:7}},
+    // "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (Sketchfab, CC BY 4.0)
+    {nombre:'Ford Falcon Sprint',tag:'Seis en línea',txt:'El Falcon Sprint del 73: largo, pesado y con un seis que empuja de abajo.',m:1350,power:150000,fmax:9600,brake:15000,mu:1.55,drag:3.0,forma:{glb:'falcon',tipo:'sedan',pinta:3}},
+    // "Fiat 128 Super Europa" de arielandrade1611 (Sketchfab, CC BY 4.0)
+    {nombre:'Fiat 128 Super Europa',tag:'Liviano y gritón',txt:'El 128 de barrio: poco motor, pero liviano y muy fácil de doblar.',m:900,power:80000,fmax:6600,brake:14500,mu:1.6,drag:2.5,forma:{glb:'f128',tipo:'sedan',pinta:0}}
   ].map(modelo);
   const HALF=9,VERGE=4.5,WALL=HALF+VERGE,LEJOS=44;
   // Pista: curva cerrada Catmull-Rom remuestreada a paso constante
@@ -1559,7 +1563,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     ter:{n:'Terminación',o:[['Mate',0,0],['Brillante',300,1],['Metalizado',700,2],['Perlado',1200,3]]},
     vinilo:{n:'Vinilo',o:[['Sin vinilo',0,0],['Franja central',300,1],['Doble franja',500,1],['Franjas anchas',800,2],['Lateral',1100,3]]},
     neon:{n:'Neón',o:[['Sin neón',0,0],['Azul',800,2],['Verde',800,2],['Rojo',800,2],['Violeta',800,2],['Amarillo',800,2]]},
-    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]}
+    polar:{n:'Vidrios',o:[['Claros',0,0],['Polarizados',200,1],['Negros',400,1]]},
+    aleron:{n:'Alerón',o:[['Sin alerón',0,0],['Labio',500,1],['Alerón medio',900,2],['Alerón alto',1400,3]]},
+    capo:{n:'Capó',o:[['Original',0,0],['Toma de aire',600,1],['De carbono',1000,2],['Salidas de aire',800,2]]},
+    kit:{n:'Kit de carrocería',o:[['Original',0,0],['Faldones y labio',700,1],['Más difusor',1100,2],['Más guardabarros anchos',1700,3]]},
+    escape:{n:'Caños de escape',o:[['Originales',0,0],['Doble',400,1],['Cuádruple',800,2],['Cuádruple grueso',1100,2]]}
   };
   const NEONES=[null,'#2f8cff','#2fe07a','#ff3347','#b05cff','#ffd23f'];
   const pesos=n=>'$'+Math.round(n).toLocaleString('es-AR');
@@ -1977,7 +1985,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
+  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2616,7 +2624,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const k=JSON.stringify(z);if(k===c.zk)return;c.zk=k;
     const pz={};CAMPOS_PZ.forEach((n,i)=>{const v=z[i];pz[n]=Number.isInteger(v)?v:0});
     for(const g in PIEZAS)pz[g]=clamp(pz[g],0,PIEZAS[g].o.length-1);
-    for(const g of ['kit','aleron','capo','llanta','escape'])pz[g]=0;
+    pz.llanta=0;
     pz.vc=clamp(pz.vc,0,COLORES.length-1);pz.lc=clamp(pz.lc,0,COLORES.length-1);pz.alt=clamp(pz.alt,-10,10);pz.altT=clamp(pz.altT,-10,10);pz.cam=clamp(pz.cam,0,10);pz.rod=clamp(pz.rod,0,10);pz.anc=clamp(pz.anc,0,10);
     pz.calcos=c.calcosV||[];c.pz=pz;c.pzk=k+'|'+(c.cqk||'');
   }
@@ -2703,7 +2711,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
         ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
         ['Jugá con amigos','En Online creá una partida y pasales el enlace.'],
-        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar.']
+        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0).']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -2883,7 +2891,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     },
     accesorios(c){
       notaEstilo(c);
-      grupoPiezas(c,['neon','polar']);
+      grupoPiezas(c,['aleron','capo','kit','escape','neon','polar']);
     },
     ajuste(c){
       c.append(el('p','nota','Gratis. Probá y volvé: cada cambio tiene su costo.'));
@@ -3873,7 +3881,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function medidas(v){return glbDe(v)||kenneyDe(v)||armadoR(v)}
   // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
-  const GLBS={p206:{url:'autos/p206.glb',listo:false}};
+  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false}};
   function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
   function cargarGLBs(){
     if(!gl||!window.THREE||!THREE.GLTFLoader)return;
@@ -3884,6 +3892,11 @@ if(typeof module!=='undefined')module.exports=Sim;
       let info={};try{const c=nodos.carroceria;info=JSON.parse((c&&c.userData&&c.userData.picada)||'{}')}catch{}
       A.nodos=nodos;A.info=info;
       A.K={glb:k,Lg:(info.largo||3.9)/2,W2:(info.ancho||1.75)/2*.9,e:1,d:{H:Math.min(info.alto||1.45,1.5),ens:0},ejes:info.ejes||[1.2,-1.3],rc:info.rc||.29,via:info.via||.72,suelo:.15};
+      {const ms=[];if(nodos.carroceria)nodos.carroceria.traverse(o=>{if(o.isMesh)ms.push(o)});
+        const rc=new THREE.Raycaster(),V=new THREE.Vector3(),D=new THREE.Vector3();
+        A.K.techo=(x,z)=>{rc.set(V.set(x,6,z),D.set(0,-1,0));const h=rc.intersectObjects(ms,false)[0];return h?h.point.y:0};
+        A.K.lado=(x,y)=>{rc.set(V.set(x,y,6),D.set(0,0,-1));const h=rc.intersectObjects(ms,false)[0];return h?h.point.z:0};
+        let b=9;for(const x of [0,.4,-.4]){rc.set(V.set(x,-1,0),D.set(0,1,0));const h=rc.intersectObjects(ms,false)[0];if(h)b=Math.min(b,h.point.y)}A.K.suelo=b<9?b:.18}
       A.listo=true;
       // Lo que ya estaba armado con el auto de repuesto se rearma con el modelo
       if(sala)sala.k=null;
@@ -3910,7 +3923,23 @@ if(typeof module!=='undefined')module.exports=Sim;
     };
     const copia=o=>{const k=o.clone(true);k.traverse(q=>{if(q.isMesh)q.material=Array.isArray(q.material)?q.material.map(conv):conv(q.material)});return k};
     for(const n of ['carroceria','techo_solar','techo_solar_marco'])if(A.nodos[n])caja.add(copia(A.nodos[n]));
-    g.add(caja);
+    const cajaA=new THREE.Group();cajaA.add(caja);g.add(cajaA);
+    // Piezas del taller, ubicadas sobre la chapa del modelo
+    {const pone=(geo,mat,x,y,z)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);caja.add(m);return m};
+      const {Lg,W2}=K,suelo=K.suelo,techo=x=>K.techo(x,0),kit=P.kit|0;
+      const xc=Lg*.6,yc=techo(xc);
+      if(P.capo===1){const b=pone(GEO.pieza,pint,xc,yc+.05,0);b.scale.set(.7,.12,.5)}
+      else if(P.capo===2){const b=pone(GEO.pieza,M.carbono,xc,yc+.01,0);b.scale.set(Lg*.5,.03,W2*1.3)}
+      else if(P.capo===3)for(const z of [-.3,.3])for(const dx of [-.16,.16]){const b=pone(GEO.pieza,M.carbono,xc+dx,K.techo(xc+dx,z)+.015,z);b.scale.set(.18,.03,.36)}
+      if(kit>=1){const sp=pone(GEO.pieza,M.carbono,Lg-.08,suelo+.02,0);sp.scale.set(.3,.05,W2*1.8);
+        for(const z of [-1,1]){const k=pone(GEO.pieza,M.carbono,(K.ejes[0]+K.ejes[1])/2,suelo+.05,z*(Math.max(K.lado(0,suelo+.12),W2*.9)+.02));k.scale.set(K.ejes[0]-K.ejes[1]-K.rc*2.6,.1,.06)}}
+      if(kit>=2)for(const z of [-1,1]){const df=pone(GEO.pieza,M.carbono,-Lg+.05,suelo+.05,z*W2*.45);df.scale.set(.14,.12,W2*.7)}
+      if(kit>=3)for(const ex of K.ejes)for(const z of [-1,1])pone(ensanche(K.rc*1.12),pint,ex,K.rc,z*(Math.max(K.lado(ex,K.rc*1.3),K.lado(ex,K.rc*1.1),W2*.9)+.01));
+      const ala=P.aleron|0;
+      if(ala){const ax=-Lg+.38,base=Math.max(techo(ax),techo(ax+.3)),alto=[0,.06,.2,.4][ala];
+        const w=pone(GEO.ala,P.capo===2?M.carbono:pint,ax,base+alto,0);w.scale.set(.75,ala===1?.6:.8,W2);
+        if(ala>1)for(const z of [-.55,.55]){const p=pone(GEO.pieza,M.negro,ax,base+alto/2,z*W2);p.scale.set(.06,alto,.04)}}
+      if(P.escape){const zs=P.escape===1?[-.35,.35]:[-.45,-.25,.25,.45];for(const z of zs){const t=pone(GEO.caño,M.cromo,-Lg-.02,suelo+.08,z*W2);t.rotation.z=Math.PI/2;if(P.escape===3)t.scale.setScalar(1.5)}}}
     // Ruedas: goma, llanta y fondo del modelo; la cara de afuera del modelo mira a -Z
     const ruedas=[],gira=[],via=K.via+.06*(P.anc|0)/10,caida=(P.cam|0)/10*.2;
     for(const [ex,del] of [[K.ejes[0],1],[K.ejes[1],0]])for(const sg of [-1,1]){
@@ -3920,12 +3949,15 @@ if(typeof module!=='undefined')module.exports=Sim;
       for(const n of ['goma','llanta','rueda_fondo'])if(A.nodos[n]){const k=copia(A.nodos[n]);k.position.set(0,0,0);k.rotation.set(0,0,0);w.add(k)}
       gira.push({m:r,s:sg});if(del)ruedas.push(eje);
     }
-    // Altura: baja la carrocería hasta tocar la goma o la sube hasta 8 cm
-    {const a=((P.alt|0)+(P.altT|0))/20,tops=[];for(const ex of K.ejes)for(const s2 of [-1,1])tops.push([ex,2*K.rc,s2*K.via]);caja.position.y=-bajada(a,a>0?huelgo(caja,tops):0)}
+    // Altura de adelante y de atrás por separado: la carrocería baja hasta tocar la goma o sube hasta 8 cm, y se inclina
+    {const tops=ex=>[-1,1].map(s2=>[ex,2*K.rc,s2*K.via]);
+      const aD=(P.alt|0)/10,aT=(P.altT|0)/10,bD=bajada(aD,aD>0?huelgo(caja,tops(K.ejes[0])):0),bT=bajada(aT,aT>0?huelgo(caja,tops(K.ejes[1])):0);
+      const xm=(K.ejes[0]+K.ejes[1])/2,inc=(bT-bD)/(K.ejes[0]-K.ejes[1]);
+      caja.rotation.z=inc;caja.position.y=-(bD+bT)/2-xm*inc}
     const so=new THREE.Mesh(GEO.sombra,SOMBRA);so.rotation.x=-Math.PI/2;so.scale.set(K.Lg*1.2,K.W2*1.35,1);so.position.y=.09;g.add(so);
     if(P.neon){const nm=nuevo(new THREE.MeshBasicMaterial({color:NEONES[P.neon],map:texturaNeon(),transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending,fog:false}));const ne=new THREE.Mesh(GEO.numero,nm);ne.rotation.x=-Math.PI/2;ne.position.y=.12;ne.scale.set(K.Lg*3.2,K.W2*3.7,1);g.add(ne)}
     escena.add(g);
-    return {g,caja,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
+    return {g,caja:cajaA,pint,frenoMat,ruedas,gira,v:c.v,pzk:c.pzk||'',color:c.color,roll:0,pitch:0,tex:new THREE.Texture(),extra,alfa:1,mats:[pint,M.vidrios[0],M.goma]};
   }
   let KFIJO=null,KLUZ=null;
   function armarKenney(c,escena,K,foto){
