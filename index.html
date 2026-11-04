@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw1n42dd"></script>
+<script src="room.js?v=mw1nml8w"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1945,11 +1945,13 @@ if(typeof module!=='undefined')module.exports=Sim;
       // Admisión y escape: soplido que sube con las vueltas
       const [af,ag]=fuente(700,'bandpass',1.2);
       // Gomas: ruido fino más un silbido que tiembla
-      const [rf,rg]=fuente(1500,'bandpass',7);
-      const [sq,sg]=osc('triangle',0);sg.connect(m);
+      const [rf,rg]=fuente(2400,'bandpass',.9);
+      const chir=[1,1.47,2.08].map((k,i)=>{const r=a.createBufferSource(),b1=a.createBiquadFilter(),b2=a.createBiquadFilter(),g=a.createGain();
+        r.buffer=ruido;r.loop=true;r.playbackRate.value=.83+i*.11;for(const b of [b1,b2]){b.type='bandpass';b.Q.value=26;b.frequency.value=800*k}
+        g.gain.value=0;r.connect(b1);b1.connect(b2);b2.connect(g);g.connect(m);r.start();return {b1,b2,g,k}});
       // Nitro: soplido agudo
       const [nf,ng]=fuente(3200,'highpass',.7);
-      au={a,m,o1,o2,o3,lp,mot,lfo,lg,af,ag,rf,rg,sq,sg,nf,ng,buf,est:{rpm:800,marcha:1,corte:0,gas:false,motor:-1}};
+      au={a,m,o1,o2,o3,lp,mot,lfo,lg,af,ag,rf,rg,chir,tiembla:1,corre:0,nf,ng,buf,est:{rpm:800,marcha:1,corte:0,gas:false,motor:-1}};
     }catch{}
   }
   // iPhone: el sonido del juego sale aunque la tecla de silencio esté puesta
@@ -1983,7 +1985,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const BANDAS=[.26,.42,.58,.75,.9,1.04];
   function sonarMotor(dt){
     const a=au.a,t=a.currentTime,E=au.est,c=me,callado=tapado||salaVista||!c;
-    if(callado){au.mot.gain.setTargetAtTime(0,t,.05);au.ag.gain.setTargetAtTime(0,t,.05);au.rg.gain.setTargetAtTime(0,t,.05);au.sg.gain.setTargetAtTime(0,t,.05);au.ng.gain.setTargetAtTime(0,t,.05);return}
+    if(callado){au.mot.gain.setTargetAtTime(0,t,.05);au.ag.gain.setTargetAtTime(0,t,.05);au.rg.gain.setTargetAtTime(0,t,.05);for(const q of au.chir)q.g.gain.setTargetAtTime(0,t,.05);au.ng.gain.setTargetAtTime(0,t,.05);return}
     if(E.motor!==c.v){E.motor=c.v;E.M=motorDe(c.v);E.punta=Math.max(30,punta(c.spec||MODELOS[c.v]));E.marcha=1}
     const [cil,ral,tope]=E.M,s=Math.hypot(c.vx,c.vy),gas=!!c.gas&&!c.frozen,frenado=!!c.frozen;
     const banda=g=>E.punta*BANDAS[g-1];
@@ -2011,9 +2013,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     const vol=E.corte>0?.015:(gas?.11:.055)*(.55+.45*r);
     au.mot.gain.setTargetAtTime(vol,t,E.corte>0?.01:.04);
     au.af.frequency.setTargetAtTime(500+E.rpm*.32,t,.05);au.ag.gain.setTargetAtTime(gas?.03+.05*r:.008,t,.06);
-    const pat=!c.grass&&s>4?Math.max(clamp((c.slip-2.5)/9,0,1),c.piano?.35:0):0;
-    au.rg.gain.setTargetAtTime(pat*.14,t,.04);au.rf.frequency.setTargetAtTime(1150+pat*650,t,.06);
-    au.sq.frequency.setTargetAtTime(880+pat*260+Math.sin(t*37)*40,t,.03);au.sg.gain.setTargetAtTime(pat>.25?(pat-.25)*.05:0,t,.05);
+    const pat=!c.grass&&s>4?clamp((c.slip-2.5)/9,0,1):0,roce=Math.max(pat,!c.grass&&s>4&&c.piano?.35:0);
+    au.rg.gain.setTargetAtTime(roce*.06,t,.05);au.rf.frequency.setTargetAtTime(1900+roce*900,t,.08);
+    // El tono deriva y tiembla de a saltos chicos, nunca con un vaivén parejo
+    au.tiembla+=(.55+Math.random()*.9-au.tiembla)*.3;au.corre=clamp(au.corre+(Math.random()-.5)*.08,-.12,.12);
+    const tono=(640+pat*330+Math.min(s,45)*3)*(1+au.corre),fuerza=pat>.12?Math.pow((pat-.12)/.88,1.2):0;
+    for(const q of au.chir){const f=tono*q.k;q.b1.frequency.setTargetAtTime(f,t,.05);q.b2.frequency.setTargetAtTime(f,t,.05);q.g.gain.setTargetAtTime(fuerza*au.tiembla*(q.k===1?2.4:q.k<2?1.3:.6),t,.03)}
     au.ng.gain.setTargetAtTime(c.nosOn?.06:0,t,.08);
   }
   function golpe(fuerza){
@@ -4273,12 +4278,17 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(sala.auto.calcos)sala.auto.calcos.forEach((d,i)=>{const on=abierto==='calcos'&&i===calcoSel;d.material.emissive.setScalar(on?.25+.25*Math.sin(performance.now()/160):0)});
     sala.esc.background.set(mio?'#9aa0a5':'#000000');sala.garaje.visible=!mio;sala.taller.visible=mio;
     if(orbitaObj!=null){orbitaA+=wrap(orbitaObj-orbitaA)*(1-Math.exp(-dt*6));if(Math.abs(wrap(orbitaObj-orbitaA))<.002)orbitaObj=null}
-    else if((abierto&&abierto!=='calcos')||salaVista==='titulo')orbitaA-=dt*.18;
+    else if(salaVista==='titulo')orbitaA-=dt*.18;
     sala.auto.g.rotation.y=sala.espejo.g.rotation.y=orbitaA;
     const ancho=W>H,asp=W/H,panel=!!abierto;
     let dx=0,dy=0,ef=asp;
     if(panel){if(ancho){dx=Math.min(W*.52,440)/2;ef=asp*.48}else{const a=$('barra').getBoundingClientRect().bottom+22,b=$('local-panel').getBoundingClientRect().top;dy=b>a+40?H/2-(a+b)/2:H*.27;ef=asp*Math.min(1,(b-a)/(H*.32))}}else dy=H*(salaVista==='titulo'?.2:.12);
-    const Q=medidas(visto),alto=Q?Q.d.H*Q.e:1.6,d=Math.max(7.6,5.8/(2*Math.tan(15*Math.PI/180)*ef))*Math.max(1,alto/1.6);
+    const Q=medidas(visto),alto=Q?Q.d.H*Q.e:1.6,tg=2*Math.tan(15*Math.PI/180);
+    let d=Math.max(7.6,5.8/(tg*ef))*Math.max(1,alto/1.6);
+    if(panel){
+      const largo=Q?2*Q.Lg*(Q.e||1)+.4:4.8,fr=ancho?1:Math.max(.15,($('local-panel').getBoundingClientRect().top-$('barra').getBoundingClientRect().bottom-22)/H);
+      d=Math.max(largo/(tg*(ancho?ef:asp)*.94),alto/(tg*fr*.62),4.2);
+    }
     // Zoom: con una calco elegida la cámara se acerca a ella; con dos dedos se acerca o aleja
     {
       const o=new THREE.Vector3(0,1.15,d),zMax=Math.max(1,Math.min(4.5,o.length()/3.8));salaZoom.max=zMax;
@@ -5003,7 +5013,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Portada y garaje: el auto de arriba, grande
   function dibujarSala(dt){
     const tit=salaVista==='titulo',mio=esMio(visto),c=mio?{v:visto,color:fichaAuto(visto).pinta,pz:piezasDe(visto)}:{v:visto,color:MODELOS[visto].forma.pinta??0,pz:{}};
-    if(abierto)orbitaA-=dt*.18;
+    if(salaVista==='titulo')orbitaA-=dt*.18;
     const x=ctx,ancho=W>H,panel=!!abierto&&!tit;
     x.fillStyle=tit?'#3b3d42':'#101114';x.fillRect(0,0,W,H);
     if(tit){x.strokeStyle='rgba(0,0,0,.28)';x.lineWidth=7;x.lineCap='round';for(const [a,b] of [[-.1,.72],[.02,.84],[.5,.32]]){x.beginPath();x.moveTo(W*a,H*b);x.bezierCurveTo(W*.4,H*(b-.3),W*.7,H*(b+.1),W*1.1,H*(b-.42));x.stroke()}}
