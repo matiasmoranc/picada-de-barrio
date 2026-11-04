@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2a1q1t"></script>
+<script src="room.js?v=mw2ambnc"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1011,10 +1011,14 @@ const Sim=(()=>{
     // "Fiat 128 Super Europa" de arielandrade1611 (Sketchfab, CC BY 4.0)
     {nombre:'Fiat 128 Super Europa',tag:'Liviano y gritón',txt:'El 128 de barrio: poco motor, pero liviano y muy fácil de doblar.',m:900,power:80000,fmax:6600,brake:14500,mu:1.6,drag:2.5,forma:{glb:'f128',tipo:'sedan',pinta:0}},
     // "Volkswagen Golf R Mk7.5" de DR1KING100K (Sketchfab, CC BY 4.0)
-    {nombre:'Volkswagen Golf R',tag:'Turbo y 4x4',txt:'El Golf R 7.5: turbo, tracción en las cuatro y una salida de curva que no perdona.',awd:.4,m:1480,power:215000,fmax:11500,brake:19000,mu:1.78,drag:2.5,slide:.9,forma:{glb:'golf',tipo:'sedan',pinta:3}}
+    {nombre:'Volkswagen Golf R',tag:'Turbo y 4x4',txt:'El Golf R 7.5: turbo, tracción en las cuatro y una salida de curva que no perdona.',awd:.4,m:1480,power:215000,fmax:11500,brake:19000,mu:1.78,drag:2.5,slide:.9,forma:{glb:'golf',tipo:'sedan',pinta:3}},
+    // "Volkswagen Golf 7 mk7" de DR1KING100K (Sketchfab, CC BY 4.0), con el frente del 7.5
+    {nombre:'Volkswagen Golf 7.5',tag:'Turbo de todos los días',txt:'El Golf 7.5 común: turbo chico, cómodo y muy fácil de manejar rápido.',m:1300,power:110000,fmax:8800,brake:17000,mu:1.68,drag:2.3,forma:{glb:'golf7',tipo:'sedan',pinta:7}},
+    // "KA100 Go Kart (IAME)" de jessehuggan70 (Sketchfab, CC BY 4.0)
+    {nombre:'Kart IAME KA100',tag:'Kart de carrera',txt:'Un kart de competencia: pesa nada, dobla en el lugar y frena en seco. Poca punta.',m:320,power:60000,fmax:2900,brake:5200,rev:1200,mu:1.9,h:.3,rear:1.1,slide:.8,forma:{glb:'kart',tipo:'sedan',pinta:2}}
   ].map(modelo);
   // Velocidad final de cada auto en km/h: de fábrica y con el motor preparado al máximo
-  const VEL={"Rural":[160,220],"Flecha":[195,245],"Picudo":[130,195],"Crucero":[200,250],"Pegote":[140,200],"Bólido":[215,260],"Tanque":[190,240],"Pluma":[130,195],"Clavado":[150,210],"Deriva":[185,240],"Yaguareté":[210,260],"Rayo":[230,275],"Cóndor":[265,300],"Cometa":[285,320],"Zorro":[195,245],"Lince":[240,280],"Patrón":[225,270],"Leoncito":[165,220],"Cubito":[140,200],"Bichito":[130,195],"Baulero":[150,210],"Noble":[155,215],"Fierro":[205,255],"Estepa":[130,195],"Baqueano":[150,210],"Caja Fuerte":[195,245],"Ladrillo":[185,240],"Pibe":[155,215],"Tango":[200,250],"Serrano":[180,235],"Turbina":[215,260],"Ripio":[220,265],"Chata":[175,230],"Peugeot 206":[150,210],"Ford Falcon Sprint":[160,220],"Fiat 128 Super Europa":[120,185],"Volkswagen Golf R":[200,250]};
+  const VEL={"Volkswagen Golf 7.5":[170,225],"Kart IAME KA100":[120,165],"Rural":[160,220],"Flecha":[195,245],"Picudo":[130,195],"Crucero":[200,250],"Pegote":[140,200],"Bólido":[215,260],"Tanque":[190,240],"Pluma":[130,195],"Clavado":[150,210],"Deriva":[185,240],"Yaguareté":[210,260],"Rayo":[230,275],"Cóndor":[265,300],"Cometa":[285,320],"Zorro":[195,245],"Lince":[240,280],"Patrón":[225,270],"Leoncito":[165,220],"Cubito":[140,200],"Bichito":[130,195],"Baulero":[150,210],"Noble":[155,215],"Fierro":[205,255],"Estepa":[130,195],"Baqueano":[150,210],"Caja Fuerte":[195,245],"Ladrillo":[185,240],"Pibe":[155,215],"Tango":[200,250],"Serrano":[180,235],"Turbina":[215,260],"Ripio":[220,265],"Chata":[175,230],"Peugeot 206":[150,210],"Ford Falcon Sprint":[160,220],"Fiat 128 Super Europa":[120,185],"Volkswagen Golf R":[200,250]};
   // Ajusta potencia y aire para que la punta caiga justo entre esos dos valores según el nivel del motor
   function puntaPorMotor(m,n){
     const r=VEL[m.nombre];if(!r)return;
@@ -2000,7 +2004,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Peugeot 206':[4,850,6600],'Volkswagen Golf R':[4,900,6800],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
+  const MOTOR_DE={'Volkswagen Golf 7.5':[4,800,6200],'Kart IAME KA100':[1,1900,12500],'Peugeot 206':[4,850,6600],'Volkswagen Golf R':[4,900,6800],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2614,7 +2618,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('reponer').onclick=()=>{reponer();$('reponer').blur()};
   // --- Barrio y locales ---
   const G=9.81;
-  const punta=m=>{let v=20;for(let i=0;i<40;i++)v=Math.cbrt(Math.max(1,(m.power-30*v*v)/m.drag));return v};
+  // Velocidad final: donde la potencia iguala al roce y al aire (búsqueda por mitades, siempre converge)
+  const punta=m=>{let lo=0,hi=200;for(let i=0;i<50;i++){const v=(lo+hi)/2;if(30*v*v+m.drag*v*v*v<m.power)lo=v;else hi=v}return lo};
   const datos=m=>({Velocidad:punta(m),Pique:Math.min(m.fmax,m.mu*m.m*G*.95)/m.m,Frenos:Math.min(m.brake,m.mu*m.m*G*.95)/m.m,Agarre:m.mu*m.rear,Derrape:m.slide*(1+m.awd*.6)*m.betaMax,Peso:m.m});
   const rangos={};
   for(const k of Object.keys(datos(MODELOS[0]))){const q=MODELOS.map(m=>datos(m)[k]);rangos[k]=[Math.min(...q),Math.max(...q)]}
@@ -2726,7 +2731,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
         ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
         ['Jugá con amigos','En Online creá una partida y pasales el enlace.'],
-        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0). Volkswagen Golf R: "Volkswagen Golf R Mk7.5" de DR1KING100K (CC BY 4.0).']
+        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0). Volkswagen Golf R: "Volkswagen Golf R Mk7.5" de DR1KING100K (CC BY 4.0). Volkswagen Golf 7.5: "Volkswagen Golf 7 mk7" de DR1KING100K (CC BY 4.0). Kart IAME KA100: "KA100 Go Kart (IAME)" de jessehuggan70 (CC BY 4.0).']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -3917,7 +3922,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function medidas(v){return glbDe(v)||kenneyDe(v)||armadoR(v)}
   // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
-  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false}};
+  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false},golf7:{url:'autos/golf7.glb',listo:false},kart:{url:'autos/kart.glb',listo:false}};
   function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
   function cargarGLBs(){
     if(!gl||!window.THREE||!THREE.GLTFLoader)return;
@@ -3927,7 +3932,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const nodos={};gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(o.name&&!nodos[o.name])nodos[o.name]=o});
       let info={};try{const c=nodos.carroceria;info=JSON.parse((c&&c.userData&&c.userData.picada)||'{}')}catch{}
       A.nodos=nodos;A.info=info;
-      A.K={glb:k,Lg:(info.largo||3.9)/2,W2:(info.ancho||1.75)/2*.9,e:1,d:{H:Math.min(info.alto||1.45,1.5),ens:0},ejes:info.ejes||[1.2,-1.3],rc:info.rc||.29,via:info.via||.72,suelo:.15};
+      A.K={glb:k,Lg:(info.largo||3.9)/2,W2:(info.ancho||1.75)/2*.9,e:1,d:{H:Math.min(info.alto||1.45,1.5),ens:0},ejes:info.ejes||[1.2,-1.3],rc:info.rc||.29,via:info.via||.72,escD:info.escD||1,viaD:info.viaD||0,suelo:.15};
       {const ms=[];if(nodos.carroceria)nodos.carroceria.traverse(o=>{if(o.isMesh)ms.push(o)});
         const rc=new THREE.Raycaster(),V=new THREE.Vector3(),D=new THREE.Vector3();
         A.K.techo=(x,z)=>{rc.set(V.set(x,6,z),D.set(0,-1,0));const h=rc.intersectObjects(ms,false)[0];return h?h.point.y:0};
@@ -4004,7 +4009,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Ruedas: goma, llanta y fondo del modelo; la cara de afuera del modelo mira a -Z
     const ruedas=[],gira=[],via=K.via+.06*(P.anc|0)/10,caida=(P.cam|0)/10*.2;
     for(const [ex,del] of [[K.ejes[0],1],[K.ejes[1],0]])for(const sg of [-1,1]){
-      const eje=new THREE.Group();eje.position.set(ex,K.rc,sg*via);g.add(eje);
+      const e=del?K.escD:1,vz=del&&K.viaD?K.viaD+.06*(P.anc|0)/10:via;
+      const eje=new THREE.Group();eje.position.set(ex,K.rc*e,sg*vz);eje.scale.setScalar(e);g.add(eje);
       const r=new THREE.Group();r.rotation.x=Math.PI/2+sg*caida;eje.add(r);
       const w=new THREE.Group();w.rotation.set(-Math.PI/2,sg>0?Math.PI:0,0);w.scale.z=1+.45*(P.anc|0)/10;r.add(w);
       for(const n of ['goma','llanta','rueda_fondo'])if(A.nodos[n]){const k=copia(A.nodos[n]);k.position.set(0,0,0);k.rotation.set(0,0,0);w.add(k)}
