@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Picada">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2ambnc"></script>
+<script src="room.js?v=mw2cj3rp"></script>
 </head>
 <body>
 <title>Picada de Barrio</title>
@@ -1015,10 +1015,21 @@ const Sim=(()=>{
     // "Volkswagen Golf 7 mk7" de DR1KING100K (Sketchfab, CC BY 4.0), con el frente del 7.5
     {nombre:'Volkswagen Golf 7.5',tag:'Turbo de todos los días',txt:'El Golf 7.5 común: turbo chico, cómodo y muy fácil de manejar rápido.',m:1300,power:110000,fmax:8800,brake:17000,mu:1.68,drag:2.3,forma:{glb:'golf7',tipo:'sedan',pinta:7}},
     // "KA100 Go Kart (IAME)" de jessehuggan70 (Sketchfab, CC BY 4.0)
-    {nombre:'Kart IAME KA100',tag:'Kart de carrera',txt:'Un kart de competencia: pesa nada, dobla en el lugar y frena en seco. Poca punta.',m:320,power:60000,fmax:2900,brake:5200,rev:1200,mu:1.9,h:.3,rear:1.1,slide:.8,forma:{glb:'kart',tipo:'sedan',pinta:2}}
+    {nombre:'Kart IAME KA100',tag:'Kart de carrera',txt:'Un kart de competencia: pesa nada, dobla en el lugar y frena en seco. Poca punta.',m:320,power:60000,fmax:2900,brake:5200,rev:1200,mu:1.9,h:.3,rear:1.1,slide:.8,forma:{glb:'kart',tipo:'sedan',pinta:2}},
+    // Autos conocidos adaptados de Sketchfab (créditos en Cómo jugar)
+    {nombre:"Porsche 911 Turbo",tag:"Turbo de cola pesada",txt:"El 930 Turbo del 75: el motor atrás empuja fuerte y la cola se quiere ir.",m:1300,power:220000,fmax:10500,brake:18000,mu:1.72,rear:1.06,slide:0.9,forma:{glb:'porsche',tipo:'sedan',pinta:30}},
+    {nombre:"Toyota Supra MK4",tag:"Seis en línea turbo",txt:"El Supra A80: largo, ancho y con un turbo que no se cansa nunca.",m:1500,power:240000,fmax:10500,brake:19000,mu:1.75,rear:1.07,slide:0.91,forma:{glb:'supra',tipo:'sedan',pinta:4}},
+    {nombre:"Ford Mustang 1965",tag:"V8 americano",txt:"El Mustang del 65: un V8 que ruge, pesado y de cola suelta.",m:1350,power:180000,fmax:9800,brake:15000,mu:1.55,rear:1.08,slide:0.9,forma:{glb:'mustang',tipo:'sedan',pinta:35}},
+    {nombre:"Ferrari F40",tag:"Superauto",txt:"La F40: biturbo, liviana y rapidísima. Hay que saber frenarla.",m:1250,power:330000,fmax:11500,brake:24000,mu:1.9,rear:1.06,forma:{glb:'f40',tipo:'sedan',pinta:0}},
+    {nombre:"BMW M3 E46 GTR",tag:"V8 de carrera",txt:"El M3 GTR de calle: agarre de pista y un V8 que grita arriba.",m:1350,power:260000,fmax:11000,brake:22000,mu:1.85,rear:1.07,slide:0.9,forma:{glb:'m3',tipo:'sedan',pinta:15}},
+    {nombre:"Mitsubishi Lancer Evo 6",tag:"4x4 de rally",txt:"El Evo VI: tracción integral y turbo, sale de la curva como un tiro.",awd:0.5,m:1360,power:210000,fmax:11500,brake:20000,mu:1.82,slide:0.9,forma:{glb:'evo',tipo:'sedan',pinta:0}},
+    {nombre:"Subaru Impreza WRX STi",tag:"Bóxer y 4x4",txt:"El Impreza STi: bóxer turbo, cuatro ruedas tirando y mucho agarre.",awd:0.5,m:1400,power:215000,fmax:11500,brake:20000,mu:1.8,slide:0.9,forma:{glb:'impreza',tipo:'sedan',pinta:3}},
+    {nombre:"Honda Civic Type R",tag:"VTEC hasta el corte",txt:"El Civic Type R del 98: liviano y con un motor que vive arriba.",m:1100,power:140000,fmax:9000,brake:17000,mu:1.75,forma:{glb:'civic',tipo:'sedan',pinta:7}},
+    {nombre:"Volkswagen Golf GTI Mk1",tag:"El primer GTI",txt:"El Golf GTI del 76: chiquito, liviano y muy divertido.",m:850,power:90000,fmax:7600,brake:15000,mu:1.62,forma:{glb:'golf1',tipo:'sedan',pinta:18}},
+    {nombre:"Volkswagen Escarabajo",tag:"El de siempre",txt:"El Escarabajo del 68: poco motor, pero indestructible y simpático.",m:820,power:70000,fmax:6000,brake:13500,mu:1.55,forma:{glb:'beetle',tipo:'sedan',pinta:0}}
   ].map(modelo);
   // Velocidad final de cada auto en km/h: de fábrica y con el motor preparado al máximo
-  const VEL={"Volkswagen Golf 7.5":[170,225],"Kart IAME KA100":[120,165],"Rural":[160,220],"Flecha":[195,245],"Picudo":[130,195],"Crucero":[200,250],"Pegote":[140,200],"Bólido":[215,260],"Tanque":[190,240],"Pluma":[130,195],"Clavado":[150,210],"Deriva":[185,240],"Yaguareté":[210,260],"Rayo":[230,275],"Cóndor":[265,300],"Cometa":[285,320],"Zorro":[195,245],"Lince":[240,280],"Patrón":[225,270],"Leoncito":[165,220],"Cubito":[140,200],"Bichito":[130,195],"Baulero":[150,210],"Noble":[155,215],"Fierro":[205,255],"Estepa":[130,195],"Baqueano":[150,210],"Caja Fuerte":[195,245],"Ladrillo":[185,240],"Pibe":[155,215],"Tango":[200,250],"Serrano":[180,235],"Turbina":[215,260],"Ripio":[220,265],"Chata":[175,230],"Peugeot 206":[150,210],"Ford Falcon Sprint":[160,220],"Fiat 128 Super Europa":[120,185],"Volkswagen Golf R":[200,250]};
+  const VEL={"Porsche 911 Turbo":[215,265],"Toyota Supra MK4":[225,275],"Ford Mustang 1965":[180,235],"Ferrari F40":[265,305],"BMW M3 E46 GTR":[235,280],"Mitsubishi Lancer Evo 6":[210,255],"Subaru Impreza WRX STi":[210,255],"Honda Civic Type R":[190,240],"Volkswagen Golf GTI Mk1":[160,215],"Volkswagen Escarabajo":[120,175],"Volkswagen Golf 7.5":[170,225],"Kart IAME KA100":[120,165],"Rural":[160,220],"Flecha":[195,245],"Picudo":[130,195],"Crucero":[200,250],"Pegote":[140,200],"Bólido":[215,260],"Tanque":[190,240],"Pluma":[130,195],"Clavado":[150,210],"Deriva":[185,240],"Yaguareté":[210,260],"Rayo":[230,275],"Cóndor":[265,300],"Cometa":[285,320],"Zorro":[195,245],"Lince":[240,280],"Patrón":[225,270],"Leoncito":[165,220],"Cubito":[140,200],"Bichito":[130,195],"Baulero":[150,210],"Noble":[155,215],"Fierro":[205,255],"Estepa":[130,195],"Baqueano":[150,210],"Caja Fuerte":[195,245],"Ladrillo":[185,240],"Pibe":[155,215],"Tango":[200,250],"Serrano":[180,235],"Turbina":[215,260],"Ripio":[220,265],"Chata":[175,230],"Peugeot 206":[150,210],"Ford Falcon Sprint":[160,220],"Fiat 128 Super Europa":[120,185],"Volkswagen Golf R":[200,250]};
   // Ajusta potencia y aire para que la punta caiga justo entre esos dos valores según el nivel del motor
   function puntaPorMotor(m,n){
     const r=VEL[m.nombre];if(!r)return;
@@ -2004,7 +2015,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   // Cada auto suena distinto: cilindros, ralentí y corte
   const MOTORES={kamaro:[8,750,6200],mobil:[8,650,5200],fenyr:[10,1000,8800],italia:[8,1000,8600],lamb:[12,1000,9000],ghini:[6,900,7800],rally:[4,900,7600],coupe:[4,850,6800],jeep:[6,750,5300],armor:[6,700,5200],van:[4,750,5000]};
-  const MOTOR_DE={'Volkswagen Golf 7.5':[4,800,6200],'Kart IAME KA100':[1,1900,12500],'Peugeot 206':[4,850,6600],'Volkswagen Golf R':[4,900,6800],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
+  const MOTOR_DE={"Porsche 911 Turbo":[6,850,7000],"Toyota Supra MK4":[6,800,7200],"Ford Mustang 1965":[8,650,5800],"Ferrari F40":[8,1000,7800],"BMW M3 E46 GTR":[8,900,8300],"Mitsubishi Lancer Evo 6":[4,900,7500],"Subaru Impreza WRX STi":[4,850,7200],"Honda Civic Type R":[4,1000,8600],"Volkswagen Golf GTI Mk1":[4,850,6500],"Volkswagen Escarabajo":[4,800,4800],'Volkswagen Golf 7.5':[4,800,6200],'Kart IAME KA100':[1,1900,12500],'Peugeot 206':[4,850,6600],'Volkswagen Golf R':[4,900,6800],'Ford Falcon Sprint':[6,700,5200],'Fiat 128 Super Europa':[4,900,6400],'Fierro':[6,700,5200],'Serrano':[4,900,7800],'Tango':[6,850,7200],'Chata':[8,650,4800],'Caja Fuerte':[8,700,6000],'Turbina':[4,850,7200],'Ripio':[4,900,7000],'Bichito':[4,850,6000],'Cubito':[4,850,6200],'Noble':[4,800,5800],'Baulero':[4,800,5900],'Ladrillo':[4,750,5800],'Pibe':[4,850,6400],'Estepa':[4,750,5400],'Baqueano':[4,700,4800]};
   function motorDe(v){const n=MODELOS[v].nombre,k=typeof KAUTO!=='undefined'&&KAUTO[n]?KAUTO[n][0]:'coupe';return MOTOR_DE[n]||MOTORES[k]||[4,850,6800]}
   function petardo(cuando,fuerza){
     if(!au||mute)return;
@@ -2731,7 +2742,7 @@ if(typeof module!=='undefined')module.exports=Sim;
         ['Ganá plata','Circuito paga por puesto y paga más en Difícil. Derrape da medallas. Práctica no paga, pero tiene tu fantasma.'],
         ['Mejorá tu auto','Todos los autos son gratis. En el Garaje comprás mejoras y piezas. Las piezas suben tu estilo: más estilo, más premios.'],
         ['Jugá con amigos','En Online creá una partida y pasales el enlace.'],
-        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0). Volkswagen Golf R: "Volkswagen Golf R Mk7.5" de DR1KING100K (CC BY 4.0). Volkswagen Golf 7.5: "Volkswagen Golf 7 mk7" de DR1KING100K (CC BY 4.0). Kart IAME KA100: "KA100 Go Kart (IAME)" de jessehuggan70 (CC BY 4.0).']
+        ['Créditos','Autos de Kenney (kenney.nl, CC0). Peugeot 206: modelo "2000 Peugeot 206" de tonielpro520 en Sketchfab (CC BY 4.0), adaptado con techo solar. Ford Falcon Sprint: "1973 Ford Falcon Sprint" de supranakamura y "Llanta Falcon Sprint" de cristian1996coronel (CC BY 4.0). Fiat 128 Super Europa: modelo de arielandrade1611 (CC BY 4.0). Volkswagen Golf R: "Volkswagen Golf R Mk7.5" de DR1KING100K (CC BY 4.0). Volkswagen Golf 7.5: "Volkswagen Golf 7 mk7" de DR1KING100K (CC BY 4.0). Kart IAME KA100: "KA100 Go Kart (IAME)" de jessehuggan70 (CC BY 4.0). Porsche 911 Turbo: "FREE 1975 Porsche 911 (930) Turbo" de lionsharp (CC BY 4.0). Toyota Supra MK4: "TOYOTA SUPRA MK4 (A80)" de temich_ (CC BY-NC 4.0). Ford Mustang 1965: "Ford Mustang 1965" de Pooya_dh (CC BY-NC 4.0). Ferrari F40: "Ferrari f40" de BlackSnow02 (CC BY 4.0). BMW M3 E46 GTR: "BMW M3 GTR E46 Street ACschnitzer BlackEdition" de Alex.Ka. (CC BY-NC 4.0). Mitsubishi Lancer Evo 6: "Mitsubishi Lancer Evolution 6" de heynic / vecarz.com (CC BY 4.0). Subaru Impreza WRX STi: "Subaru Impreza WRX STi 2004 Custom" de MACULTARTS (CC BY 4.0). Honda Civic Type R: "Honda Civic Type R -98" de tiedtke (CC BY 4.0). Volkswagen Golf GTI Mk1: "1976 Volkswagen Golf GTI Mk1" de ddiaz-design (CC BY-NC-SA 4.0). Volkswagen Escarabajo: "1968 Volkswagen Beetle" de ddiaz-design (CC BY-NC-SA 4.0).']
       ].forEach(([h,x],i)=>{const p=el('div','paso');p.append(el('i',null,i+1));const q=el('span');q.append(el('b',null,h),el('small',null,x));p.append(q);d.append(p)});
       c.append(d);
     }
@@ -3922,7 +3933,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function medidas(v){return glbDe(v)||kenneyDe(v)||armadoR(v)}
   // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
-  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false},golf7:{url:'autos/golf7.glb',listo:false},kart:{url:'autos/kart.glb',listo:false}};
+  const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false},golf7:{url:'autos/golf7.glb',listo:false},kart:{url:'autos/kart.glb',listo:false},porsche:{url:'autos/porsche.glb',listo:false},supra:{url:'autos/supra.glb',listo:false},mustang:{url:'autos/mustang.glb',listo:false},f40:{url:'autos/f40.glb',listo:false},m3:{url:'autos/m3.glb',listo:false},evo:{url:'autos/evo.glb',listo:false},impreza:{url:'autos/impreza.glb',listo:false},civic:{url:'autos/civic.glb',listo:false},golf1:{url:'autos/golf1.glb',listo:false},beetle:{url:'autos/beetle.glb',listo:false}};
   function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
   function cargarGLBs(){
     if(!gl||!window.THREE||!THREE.GLTFLoader)return;
