@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2zdvat"></script>
+<script src="room.js?v=mw30xeud"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -130,7 +130,24 @@ label{font-weight:700;display:block;margin-bottom:3px}
 #lista-sala{list-style:none;margin:0;padding:0 14px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
 #lista-sala:empty{display:none}
 #auto-sala{display:flex;align-items:center;gap:8px;margin:8px 14px 0;font-weight:700}
-#auto-sala select{flex:1;min-width:0;font:inherit;font-weight:600;padding:7px 8px;border-radius:8px;border:2px solid var(--tinta);background:#fff;color:#111}
+#auto-sala{background:var(--carta,#1b1d27);border-radius:12px;padding:6px 8px;color:#fff}
+#auto-sala>div{flex:1;min-width:0;display:grid;line-height:1.15}
+#auto-sala small{color:var(--suave,#aab);font-weight:500;font-size:.8rem}
+#auto-sala b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#mini-yo,.mini-auto{width:64px;height:40px;object-fit:contain;flex:none}
+#mini-yo:not([src]),.mini-auto:not([src]){visibility:hidden}
+#cambiar-auto{flex:none;background:var(--oro,#ffd23f);color:#14151a;font-weight:700;border-radius:10px;padding:8px 12px;min-height:40px}
+#cambiar-auto[aria-expanded="true"]{background:#2a2d38;color:#fff}
+#elegir-autos{margin:6px 14px 0;background:#101116;border-radius:12px;padding:8px;display:grid;gap:8px}
+#elegir-autos[hidden]{display:none}
+#grilla-autos{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px;max-height:min(38vh,300px);overflow:auto;touch-action:pan-y}
+#grilla-autos button{display:grid;justify-items:center;gap:2px;background:#1f2230;color:#fff;border:2px solid transparent;border-radius:10px;padding:4px 4px 6px;font-size:.78rem;font-weight:600;line-height:1.1}
+#grilla-autos button img{width:84px;height:50px;object-fit:contain}
+#grilla-autos button[aria-pressed="true"]{border-color:var(--oro,#ffd23f)}
+#modificar-auto{background:#2a2d38;color:#fff;font-weight:700;border-radius:10px;min-height:44px}
+#volver-sala{position:fixed;left:14px;right:14px;bottom:max(12px,env(safe-area-inset-bottom,0px));z-index:40;min-height:54px;border-radius:14px;background:var(--oro,#ffd23f);color:#14151a;font:400 1.15rem var(--display);box-shadow:0 6px 20px rgba(0,0,0,.5)}
+#volver-sala[hidden]{display:none}
+#lista-sala .mini-auto{grid-row:1/span 2}
 #lista-sala li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 7px;align-items:center;background:var(--crema);border-radius:4px;padding:4px 8px;line-height:1.1}
 #lista-sala i{grid-row:1/span 2;width:16px;height:16px;border-radius:50%;border:2px solid var(--tinta)}
 #lista-sala li{color:var(--tinta)}
@@ -746,7 +763,8 @@ html,body{background:#000;touch-action:manipulation}
 #ajustes-sala .paso button{width:38px;height:38px;border-radius:10px;background:#2a2d38;color:#fff;font-size:1.4rem;font-weight:700}
 #ajustes-sala .paso button:disabled{opacity:.35}
 #ajustes-sala[data-solo] {grid-template-columns:1fr}
-#circuitos.sola{grid-template-columns:minmax(0,260px);justify-content:center;max-height:none}
+#circuitos.sola{grid-template-columns:130px;justify-content:start;max-height:none;overflow:visible}
+#circuitos.sola button{font-size:.8rem}
 #circuitos.sola button{opacity:1}
 #circuitos.sola button canvas{pointer-events:none}
 /* Micrófono */
@@ -762,6 +780,9 @@ html,body{background:#000;touch-action:manipulation}
   #lista-sala{display:flex;flex:none;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 14px 2px;touch-action:pan-x;scrollbar-width:none}
   #lista-sala::-webkit-scrollbar{display:none}
   #lista-sala li{flex:none;width:132px;padding:5px 9px}
+  #lista-sala{display:grid;grid-template-columns:1fr;overflow:visible;touch-action:auto;gap:5px}
+  #lista-sala li{width:auto;padding:4px 10px 4px 6px}
+  #circuitos.sola{flex:none;min-height:0}
   #panel-pista{flex:1 1 auto;display:flex;flex-direction:column;gap:8px}
   #circuitos{flex:1 1 auto;min-height:190px;max-height:none}
   #invitar,#salon,.titulo-sala,#pie{flex:none}
@@ -881,7 +902,8 @@ html,body{background:#000;touch-action:manipulation}
       <p id="salon"></p>
       <div id="fila-jug"><h3 class="titulo-sala">Jugadores</h3><button type="button" id="mic-sala" class="boton-mic" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11Z"/></svg><span>Hablar</span></button></div>
       <ul id="lista-sala"></ul>
-      <label id="auto-sala"><span>Tu auto</span><select id="elegir-auto-sala"></select></label>
+      <div id="auto-sala"><img id="mini-yo" alt=""><div><small>Tu auto</small><b id="nombre-yo"></b></div><button type="button" id="cambiar-auto">Cambiar auto</button></div>
+      <div id="elegir-autos" hidden><div id="grilla-autos"></div><button type="button" id="modificar-auto">Modificar en el taller</button></div>
       <div class="panel" id="panel-pista">
         <div id="ajustes-sala">
           <div id="bots-sala" class="paso"><span>Bots</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
@@ -898,6 +920,7 @@ html,body{background:#000;touch-action:manipulation}
       </div>
     </form>
   </div>
+  <button type="button" id="volver-sala" hidden>◀ Volver a la partida</button>
   <div id="editor" hidden>
     <div id="editor-barra">
       <label>Sensibilidad <b id="sens-valor">1,00</b><input type="range" id="sens" min=".5" max="2" step=".05"></label>
@@ -2312,7 +2335,22 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // La antigüedad sigue al día aunque la pantalla esté bloqueada o la pestaña en segundo plano
   setInterval(()=>{if(room)room.presence({an:Math.round(performance.now()-entroT)}).catch(()=>{});cuidarVitrina();salon()},1000);
-  let listaVista='',seUnio=false;
+  let listaVista='',seUnio=false,salaTaller=false;
+  // Grilla de autos chicos en la sala: se toca uno y queda elegido
+  function pintarGrillaAutos(){
+    const g=$('grilla-autos');g.textContent='';
+    MODELOS.forEach((m,i)=>{const b=document.createElement('button'),im=document.createElement('img');b.type='button';im.alt='';
+      const f=miniAuto(i,i===modelo?fichaAuto(i).pinta:(esMio(i)?fichaAuto(i).pinta:m.forma.pinta??0));if(f)im.src=f;
+      b.append(im,document.createTextNode(m.nombre));b.setAttribute('aria-pressed',i===modelo);
+      b.onclick=()=>{if(race&&race.state==='go')return;modelo=visto=i;pref.modelo=i;guardar(pref);aplicarAuto();listaVista='';salon();pintarGrillaAutos()};
+      g.append(b)});
+  }
+  function abrirElegirAutos(si){$('elegir-autos').hidden=!si;$('cambiar-auto').setAttribute('aria-expanded',si);$('cambiar-auto').textContent=si?'Listo':'Cambiar auto';if(si)pintarGrillaAutos()}
+  $('cambiar-auto').onclick=()=>abrirElegirAutos($('elegir-autos').hidden);
+  // Modificar: va al taller sin salir de la partida (la voz sigue) y un botón grande trae de vuelta
+  $('modificar-auto').onclick=()=>{if(!codigo)return;abrirElegirAutos(false);salaTaller=true;tab('garaje');$('volver-sala').hidden=false};
+  function volverSala(){if(!salaTaller)return;salaTaller=false;$('volver-sala').hidden=true;cerrarLocal();aGaraje(seUnio);if(me)me.frozen=!!(race&&race.state==='count');listaVista='';salon()}
+  $('volver-sala').onclick=volverSala;
   const textoNombre=v=>String(v||'Piloto').slice(0,12);
   const miNombre=()=>me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto';
   function salon(){
@@ -2321,25 +2359,23 @@ if(typeof module!=='undefined')module.exports=Sim;
     const gente=[];
     if(codigo){
       const autoN=v=>Number.isInteger(v)&&v>=0&&v<MODELOS.length?MODELOS[v].nombre:'';
-      gente.push({n:miNombre()+' (vos)',c:color,a:autoN(modelo),est:miMic?'🎙':'',jefe:!anfitrion});
-      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),est:esBot(k)?'Bot':(e.pr.mi?'🎙':''),jefe:e===anfitrion});
-      for(const c of cars)if(c.kind==='bot')gente.push({n:c.name,c:c.color,a:autoN(c.v),est:'Bot',jefe:false});
+      gente.push({n:miNombre()+' (vos)',c:color,a:autoN(modelo),f:miniAuto(modelo,fichaAuto(modelo).pinta),est:miMic?'🎙':'',jefe:!anfitrion});
+      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),f:Number.isInteger(e.pr.v)?miniAuto(e.pr.v,colorOk(e.pr.c)?e.pr.c:0):'',est:esBot(k)?'Bot':(e.pr.mi?'🎙':''),jefe:e===anfitrion});
+      for(const c of cars)if(c.kind==='bot')gente.push({n:c.name,c:c.color,a:autoN(c.v),f:miniAuto(c.v,c.color),est:'Bot',jefe:false});
     }
     const clave=JSON.stringify(gente);
     if(clave!==listaVista){
       listaVista=clave;const l=$('lista-sala');l.textContent='';
       for(const g of gente){
-        const li=document.createElement('li'),i=document.createElement('i'),b=document.createElement('b'),m=document.createElement('small');
-        i.style.background=COLORES[g.c];b.textContent=g.n;m.textContent=[g.a,g.jefe?'👑 Anfitrión':'',g.est].filter(Boolean).join(' · ');li.append(i,b,m);l.append(li);
+        const li=document.createElement('li'),i=document.createElement('img'),b=document.createElement('b'),m=document.createElement('small');
+        i.className='mini-auto';i.alt='';if(g.f)i.src=g.f;b.textContent=g.n;m.textContent=[g.a,g.jefe?'👑 Anfitrión':'',g.est].filter(Boolean).join(' · ');li.append(i,b,m);l.append(li);
       }
     }
     if(codigo)$('texto-invitar').hidden=personas()>0;
     // Selector de auto en la sala: se puede cambiar mientras no haya carrera largada
-    {const sel=$('elegir-auto-sala');
-      if(!sel.options.length){MODELOS.forEach((m,i)=>{const o=document.createElement('option');o.value=i;o.textContent=m.nombre;sel.append(o)});
-        sel.onchange=()=>{const v=+sel.value;if(!Number.isInteger(v)||v<0||v>=MODELOS.length)return;modelo=visto=v;pref.modelo=v;guardar(pref);aplicarAuto();listaVista='';salon()}}
-      if(document.activeElement!==sel&&+sel.value!==modelo)sel.value=modelo;
-      sel.disabled=!!(race&&race.state==='go')}
+    {const f=miniAuto(modelo,fichaAuto(modelo).pinta),im=$('mini-yo');if(f&&im.getAttribute('src')!==f)im.src=f;
+      $('nombre-yo').textContent=MODELOS[modelo].nombre;
+      const corre=!!(race&&race.state==='go');$('cambiar-auto').hidden=corre;if(corre&&!$('elegir-autos').hidden)abrirElegirAutos(false)}
     const pista=TRACKS[trackIdx].name;let t;
     if(!codigo)t=pista+'.';
     else if(race)t='Hay una carrera en curso en '+pista+'.';
@@ -2453,6 +2489,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('mic').onclick=()=>{$('mic').blur();cambiarMic()};
   $('mic-sala').onclick=cambiarMic;
   function dejarPartida(){
+    salaTaller=false;$('volver-sala').hidden=true;abrirElegirAutos(false);
     apagarMic();vueltasSala=0;
     const r=room;room=null;codigo=null;
     if(r&&r.leave)r.leave().catch(()=>{});
@@ -2559,6 +2596,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   });
   function freeze(v){for(const c of cars)if(c.kind!=='net')c.frozen=v}
   function adopt(id,t0,now){
+    if(salaTaller){volverSala();$('portada').hidden=true}
     if(race)doneRaces.add(race.id);
     if(cine)terminarCine();
     race={id,t0,state:'count',first:null};
@@ -2831,7 +2869,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function pintarCasco(){
     const hub=['titulo','correr','garaje','online','premios'].includes(actual);
-    $('tabs').hidden=!hub||!!abierto;$('barra').hidden=!(hub||actual==='opciones'||actual==='ayuda');
+    $('tabs').hidden=!hub||!!abierto||salaTaller;if(salaTaller&&actual!=='garaje'){salaTaller=false;$('volver-sala').hidden=true}$('volver-sala').hidden=!salaTaller||!!abierto;$('barra').hidden=!(hub||actual==='opciones'||actual==='ayuda');
     for(const b of $('tabs').children){if(b.dataset.p===actual)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')}
   }
   function ir(p){historia.push(actual);mostrar(p)}
@@ -4328,6 +4366,28 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // Para la vista de arriba se saca una foto del modelo desde arriba, una vez por auto
   let topo=null;const fotos=new Map();
+  const minis=new Map();let miniEsc=null;
+  function miniAuto(v,color){
+    if(!gl||!Number.isInteger(v)||!MODELOS[v])return '';
+    if(MODELOS[v].forma.glb&&!glbDe(v))return '';
+    const k=v+'|'+color;if(minis.has(k))return minis.get(k);
+    const AN=256,AL=160;
+    if(!miniEsc){const esc=new THREE.Scene();esc.add(new THREE.HemisphereLight('#ffffff','#5d6066',1));const l=new THREE.DirectionalLight('#fff4e4',.8);l.position.set(4,8,5);esc.add(l);
+      const cam=new THREE.PerspectiveCamera(24,AN/AL,.1,60);
+      miniEsc={esc,cam,rt:new THREE.WebGLRenderTarget(AN,AL),px:new Uint8Array(AN*AL*4)}}
+    let url='';
+    try{
+      const m=armarAuto({v,color,pz:{},num:7,a:0,vx:0,vy:0},miniEsc.esc),L=(medidas(v)||{Lg:2}).Lg,d=L*4.6;
+      miniEsc.cam.position.set(d*.62,d*.32,d*.72);miniEsc.cam.lookAt(0,.5,0);
+      const antes=gl.getRenderTarget(),cc=gl.getClearColor(new THREE.Color()),ca=gl.getClearAlpha();
+      gl.setRenderTarget(miniEsc.rt);gl.setClearColor(0x000000,0);gl.clear();gl.render(miniEsc.esc,miniEsc.cam);gl.readRenderTargetPixels(miniEsc.rt,0,0,AN,AL,miniEsc.px);
+      gl.setRenderTarget(antes);gl.setClearColor(cc,ca);soltarSala(m);
+      const cv=document.createElement('canvas');cv.width=AN;cv.height=AL;const x=cv.getContext('2d'),im=x.createImageData(AN,AL);
+      for(let y=0;y<AL;y++)im.data.set(miniEsc.px.subarray((AL-1-y)*AN*4,(AL-y)*AN*4),y*AN*4);
+      x.putImageData(im,0,0);url=cv.toDataURL('image/png');
+    }catch(e){console.warn(e)}
+    if(minis.size>80)minis.clear();minis.set(k,url);return url;
+  }
   function fotoKenney(c,K){
     const AN=480,AL=296;
     if(!topo){const esc=new THREE.Scene();esc.add(new THREE.HemisphereLight('#ffffff','#6d7076',.95));const l=new THREE.DirectionalLight('#fff4e4',.7);l.position.set(3,12,-4);esc.add(l);
