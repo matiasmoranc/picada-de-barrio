@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2oxgcy"></script>
+<script src="room.js?v=mw2tp3o6"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -588,6 +588,12 @@ html,body{background:#000;touch-action:manipulation}
 #i-mejora{display:none!important}
 #carga-auto{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:5px solid rgba(255,255,255,.18);border-top-color:var(--oro,#ffd23f);animation:girar .8s linear infinite;pointer-events:none;z-index:2}
 #carga-auto[hidden]{display:none}
+#arranque{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;background:radial-gradient(circle at 50% 38%,#1c2030,#07080c 70%);color:#fbf6ea;transition:opacity .45s;touch-action:none}
+#arranque.listo{opacity:0;pointer-events:none}
+#arranque h1{margin:0;font:900 min(22vw,120px)/1 system-ui,sans-serif;font-style:italic;letter-spacing:.06em;color:#ffd23f;text-shadow:0 4px 0 #b3361b,0 10px 30px rgba(0,0,0,.6)}
+#arranque .barra{width:min(70vw,320px);height:10px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+#arranque .barra i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,#ffd23f,#ff7a1a);transition:width .25s}
+#arranque p{margin:0;font:600 .95rem system-ui,sans-serif;opacity:.75}
 @keyframes girar{to{transform:rotate(360deg)}}
 #i-mejora{display:flex;align-items:center;gap:12px;text-align:left;background:var(--carta);border:1px solid var(--linea);border-radius:14px;padding:9px 14px;color:#fff}
 #i-mejora>span{flex:1;min-width:0;display:grid;gap:3px}
@@ -798,6 +804,7 @@ html,body{background:#000;touch-action:manipulation}
   <canvas id="lienzo" aria-label="Pista de carreras vista desde arriba"></canvas>
   <canvas id="capa" aria-hidden="true" hidden></canvas>
   <div id="carga-auto" hidden></div>
+  <div id="arranque"><h1>TRAX</h1><div class="barra"><i id="arranque-b"></i></div><p id="arranque-t">Cargando autos…</p></div>
   <div id="tactil" hidden>
     <div id="ayuda-volante">Arrastrá el dedo a la izquierda o a la derecha</div>
     <div class="mando" id="volante" hidden><i id="riel"></i><i id="perilla"></i><span>DESLIZÁ</span></div>
@@ -4084,8 +4091,15 @@ if(typeof module!=='undefined')module.exports=Sim;
   // --- Autos modelados en Blender: se cargan una vez y cada auto los clona ---
   const GLBS={p206:{url:'autos/p206.glb',listo:false},falcon:{url:'autos/falcon.glb',listo:false},f128:{url:'autos/f128.glb',listo:false},golf:{url:'autos/golf.glb',listo:false},golf7:{url:'autos/golf7.glb',listo:false},kart:{url:'autos/kart.glb',listo:false},porsche:{url:'autos/porsche.glb',listo:false},supra:{url:'autos/supra.glb',listo:false},mustang:{url:'autos/mustang.glb',listo:false},f40:{url:'autos/f40.glb',listo:false},m3:{url:'autos/m3.glb',listo:false},evo:{url:'autos/evo.glb',listo:false},impreza:{url:'autos/impreza.glb',listo:false},civic:{url:'autos/civic.glb',listo:false},golf1:{url:'autos/golf1.glb',listo:false},beetle:{url:'autos/beetle.glb',listo:false}};
   function glbDe(v){const f=MODELOS[v]&&MODELOS[v].forma;if(!f||!f.glb||!gl)return null;const A=GLBS[f.glb];return A&&A.listo?A.K:null}
+  // Pantalla de arranque: muestra cuántos autos van y se va cuando están todos (con tope de tiempo por si la red falla)
+  const arranque={hechos:0,fin:false};
+  function sacarArranque(){if(arranque.fin)return;arranque.fin=true;const a=$('arranque');if(!a)return;a.classList.add('listo');setTimeout(()=>a.remove(),500)}
+  function avanceArranque(){const n=Object.keys(GLBS).length;arranque.hechos++;
+    const b=$('arranque-b'),t=$('arranque-t');if(b)b.style.width=Math.round(arranque.hechos/n*100)+'%';if(t)t.textContent='Cargando autos… '+arranque.hechos+'/'+n;
+    if(arranque.hechos>=n)setTimeout(sacarArranque,350)}
+  setTimeout(sacarArranque,40000);
   function cargarGLBs(){
-    if(!gl||!window.THREE||!THREE.GLTFLoader)return;
+    if(!gl||!window.THREE||!THREE.GLTFLoader){sacarArranque();return}
     const ld=new THREE.GLTFLoader();
     if(THREE.DRACOLoader){const dl=new THREE.DRACOLoader();dl.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');ld.setDRACOLoader(dl)}
     let pri='';try{pri=MODELOS[modelo].forma.glb||''}catch{}
@@ -4108,7 +4122,11 @@ if(typeof module!=='undefined')module.exports=Sim;
       // Lo que ya estaba armado con el auto de repuesto se rearma con el modelo
       if(sala)sala.k=null;
       if(v3)for(const [a,m] of [...v3.autos]){soltarSala(m);v3.autos.delete(a)}
-    },undefined,e=>console.warn('No se pudo cargar',A.url,e));
+      // Se arma una vez fuera de pantalla para que el primer cambio de auto en el garaje no se trabe
+      try{const pr=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,50),v=MODELOS.findIndex(m=>m.forma&&m.forma.glb===k);
+        if(v>=0){const a=armarAuto({v,color:MODELOS[v].forma.pinta??0,pz:{},num:7,a:0,vx:0,vy:0},pr);gl.compile(pr,cam);soltarSala(a)}}catch(e){}
+      avanceArranque();
+    },undefined,e=>{console.warn('No se pudo cargar',A.url,e);avanceArranque()});
   }
   let INTERIOR_GLB=null,PILOTO=null;
   // Piloto del kart: casco del color del auto, visera oscura, buzo, brazos al volante y piernas hacia los pedales
