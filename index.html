@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw2tp3o6"></script>
+<script src="room.js?v=mw2zdvat"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -657,7 +657,7 @@ html,body{background:#000;touch-action:manipulation}
 /* Solo el nombre, sin recuadro, para que el auto se vea siempre */
 #g-cuenta,#g-tag{display:none!important}
 #g-ficha{background:none!important;padding:2px 120px 0 2px}
-#g-nombre{font-size:1.45rem;text-shadow:0 2px 6px rgba(0,0,0,.85)}
+#g-nombre{display:inline-block;max-width:100%;box-sizing:border-box;font-size:1.15rem;line-height:1.15;text-shadow:none;background:rgba(10,11,15,.72);border-radius:10px;padding:5px 11px}
 #local.con-panel #g-ficha{padding:0}
 #local.con-panel #g-nombre{font-size:1.05rem;opacity:.9}
 #g-datos{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;background:rgba(14,15,20,.9);padding:9px 12px;font-size:.92rem}
@@ -746,6 +746,9 @@ html,body{background:#000;touch-action:manipulation}
 #ajustes-sala .paso button{width:38px;height:38px;border-radius:10px;background:#2a2d38;color:#fff;font-size:1.4rem;font-weight:700}
 #ajustes-sala .paso button:disabled{opacity:.35}
 #ajustes-sala[data-solo] {grid-template-columns:1fr}
+#circuitos.sola{grid-template-columns:minmax(0,260px);justify-content:center;max-height:none}
+#circuitos.sola button{opacity:1}
+#circuitos.sola button canvas{pointer-events:none}
 /* Micrófono */
 .boton-mic{display:inline-flex;align-items:center;gap:5px}
 .boton-mic svg{width:18px;height:18px;flex:none}
@@ -2318,8 +2321,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     const gente=[];
     if(codigo){
       const autoN=v=>Number.isInteger(v)&&v>=0&&v<MODELOS.length?MODELOS[v].nombre:'';
-      gente.push({n:miNombre()+' (vos)',c:color,a:autoN(modelo),est:(miMic?'🎙 ':'')+(entered?'en pista':'preparándose'),jefe:!anfitrion});
-      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),est:esBot(k)?'Bot':(e.pr.mi?'🎙 ':'')+(e.pr.s?'en pista':'preparándose'),jefe:e===anfitrion});
+      gente.push({n:miNombre()+' (vos)',c:color,a:autoN(modelo),est:miMic?'🎙':'',jefe:!anfitrion});
+      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),est:esBot(k)?'Bot':(e.pr.mi?'🎙':''),jefe:e===anfitrion});
       for(const c of cars)if(c.kind==='bot')gente.push({n:c.name,c:c.color,a:autoN(c.v),est:'Bot',jefe:false});
     }
     const clave=JSON.stringify(gente);
@@ -2327,7 +2330,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       listaVista=clave;const l=$('lista-sala');l.textContent='';
       for(const g of gente){
         const li=document.createElement('li'),i=document.createElement('i'),b=document.createElement('b'),m=document.createElement('small');
-        i.style.background=COLORES[g.c];b.textContent=g.n;m.textContent=(g.a?g.a+' · ':'')+(g.jefe?'Creó la partida · ':'')+g.est;li.append(i,b,m);l.append(li);
+        i.style.background=COLORES[g.c];b.textContent=g.n;m.textContent=[g.a,g.jefe?'👑 Anfitrión':'',g.est].filter(Boolean).join(' · ');li.append(i,b,m);l.append(li);
       }
     }
     if(codigo)$('texto-invitar').hidden=personas()>0;
@@ -2340,8 +2343,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     const pista=TRACKS[trackIdx].name;let t;
     if(!codigo)t=pista+'.';
     else if(race)t='Hay una carrera en curso en '+pista+'.';
-    else if(anfitrion)t=pista+' · '+vueltas+(vueltas===1?' vuelta':' vueltas')+'. Larga '+textoNombre(anfitrion.pr.n)+' cuando estén todos en pista.';
-    else t=pista+' · '+vueltas+(vueltas===1?' vuelta':' vueltas')+'. Cuando estén todos en pista, tocá Largar carrera.';
+    else if(anfitrion)t='Entrá a la pista y esperá que '+textoNombre(anfitrion.pr.n)+' largue la carrera.';
+    else t='Elegí la pista, entrá y largá cuando estén todos.';
     $('proximo').textContent=t;
   }
   // Vitrina: desde el inicio se ven las partidas abiertas, y quien manda cada partida la anuncia ahí
@@ -2577,10 +2580,10 @@ if(typeof module!=='undefined')module.exports=Sim;
   function pintarCircuito(){
     const libre=!anfitrion;
     if(!libre)serieSala=!!TRACKS[trackIdx].juego;
-    for(const [i,b] of [...$('circuitos').children].entries()){b.setAttribute('aria-pressed',i===trackIdx);b.disabled=!libre;b.hidden=!!TRACKS[i].juego!==serieSala}
-    $('serie-sala').hidden=$('bots-sala').hidden=!libre;
+    for(const [i,b] of [...$('circuitos').children].entries()){b.setAttribute('aria-pressed',i===trackIdx);b.disabled=!libre;b.hidden=libre?!!TRACKS[i].juego!==serieSala:i!==trackIdx}
+    $('serie-sala').hidden=$('bots-sala').hidden=$('ajustes-sala').hidden=!libre;$('circuitos').classList.toggle('sola',!libre);
     {const n=vueltasOnline();$('vuelta-num').textContent=n;$('vuelta-menos').disabled=!libre||n<=1;$('vuelta-mas').disabled=!libre||n>=10;if(libre)$('ajustes-sala').removeAttribute('data-solo');else $('ajustes-sala').setAttribute('data-solo','')}$('bot-num').textContent=botsSala;$('serie-f1').setAttribute('aria-pressed',!serieSala);$('serie-juego').setAttribute('aria-pressed',serieSala);
-    $('quien-pista').textContent=libre?'Elegí dónde se corre':'La elige '+String(anfitrion.pr.n||'quien creó la partida').slice(0,12);
+    {const n=vueltasOnline();$('quien-pista').textContent=libre?'Elegí dónde se corre':TRACKS[trackIdx].name+' · '+n+(n===1?' vuelta':' vueltas')+' · la eligió '+String(anfitrion.pr.n||'el anfitrión').slice(0,12)}
     salon();
   }
   // Manda quien lleva más tiempo en pista: si se va, pasa al siguiente
@@ -2973,7 +2976,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const l=ordenGaraje(),i=visto,m=MODELOS[i],mio=esMio(i),sp=mio?specDe(i):m,d=datos(sp);
     $('g-nombre').textContent=m.nombre;$('g-tag').textContent=m.txt;
     $('g-cuenta').textContent='Auto '+(l.indexOf(i)+1)+' de '+l.length+(i===modelo?' · Elegido':'');
-    $('g-estilo').textContent=textoEstrellas(estrellas(i))+(bonoEstilo()?' · +'+bonoEstilo()+'% en premios':' · Sumá estilo con piezas');
+    $('g-estilo').textContent='Estilo '+textoEstrellas(estrellas(i))+(bonoEstilo()?' · ganás +'+bonoEstilo()+'% de plata':' · poné piezas para ganar más plata');
     const dl=$('g-datos');dl.textContent='';
     barrasDe(sp,dl);
     dl.append(el('p','g-resumen',(m.awd?'4x4':'Tracción trasera')+' · '+Math.round(sp.power/745.7)+' HP · '+Math.round(d.Velocidad*3.6)+' km/h'));
