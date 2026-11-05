@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw3nlnfi"></script>
+<script src="room.js?v=mw3npnni"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -4179,6 +4179,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       A.listo=true;
       // Lo que ya estaba armado con el auto de repuesto se rearma con el modelo
       if(sala)sala.k=null;
+      try{sprites.clear();fotos.clear()}catch{}
       if(v3)for(const [a,m] of [...v3.autos]){soltarSala(m);v3.autos.delete(a)}
       // Se arma una vez fuera de pantalla para que el primer cambio de auto en el garaje no se trabe
       try{const pr=new THREE.Scene(),cam=new THREE.PerspectiveCamera(40,1,.1,50),v=MODELOS.findIndex(m=>m.forma&&m.forma.glb===k);
@@ -4412,12 +4413,17 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!topo){const esc=new THREE.Scene();esc.add(new THREE.HemisphereLight('#ffffff','#6d7076',.95));const l=new THREE.DirectionalLight('#fff4e4',.7);l.position.set(3,12,-4);esc.add(l);
       const cam=new THREE.OrthographicCamera(-3,3,1.85,-1.85,.1,40);cam.position.set(0,15,0);cam.up.set(0,0,-1);cam.lookAt(0,0,0);
       topo={esc,cam,rt:new THREE.WebGLRenderTarget(AN,AL),px:new Uint8Array(AN*AL*4)}}
-    const m=armarKenney(c,topo.esc,K,true),antes=gl.getRenderTarget(),cc=gl.getClearColor(new THREE.Color()),ca=gl.getClearAlpha();
+    const m=K.glb?armarGLB(c,topo.esc,K):armarKenney(c,topo.esc,K,true);
+    // Modelo 3D: sin la sombra redonda y centrado en la foto
+    if(K.glb){const fuera=[];m.g.traverse(o=>{if(o.isMesh&&o.material===SOMBRA)fuera.push(o)});for(const o of fuera)o.visible=false;}
+    const antes=gl.getRenderTarget(),cc=gl.getClearColor(new THREE.Color()),ca=gl.getClearAlpha();
     gl.setRenderTarget(topo.rt);gl.setClearColor(0x000000,0);gl.render(topo.esc,topo.cam);gl.readRenderTargetPixels(topo.rt,0,0,AN,AL,topo.px);
     gl.setRenderTarget(antes);gl.setClearColor(cc,ca);soltarSala(m);
     const cv=document.createElement('canvas');cv.width=AN;cv.height=AL;const x=cv.getContext('2d'),im=x.createImageData(AN,AL);
     for(let y=0;y<AL;y++)im.data.set(topo.px.subarray((AL-1-y)*AN*4,(AL-y)*AN*4),y*AN*4);
-    x.putImageData(im,0,0);return cv;
+    // Modelo 3D: se centra por lo que se ve en la foto
+    let dx=0,dy=0;if(K.glb){let x0=AN,x1=-1,y0=AL,y1=-1;for(let y=0;y<AL;y+=2)for(let i=0;i<AN;i+=2)if(im.data[(y*AN+i)*4+3]>20){if(i<x0)x0=i;if(i>x1)x1=i;if(y<y0)y0=y;if(y>y1)y1=y}if(x1>=0){dx=Math.round(AN/2-(x0+x1)/2);dy=Math.round(AL/2-(y0+y1)/2)}}
+    x.putImageData(im,dx,dy);return cv;
   }
   function cuerpoKenney(x,c,K){
     const P=c.pz||{},k=c.v+'|'+c.color+'|'+JSON.stringify(P);
@@ -5533,7 +5539,9 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
   }
   // Carrocería vista de arriba: cada pieza comprada se nota en el dibujo
+  const esKart=v=>{const f=MODELOS[v]&&MODELOS[v].forma;return !!(f&&f.glb==='kart'&&glbDe(v))};
   function cuerpoAuto(x,c){
+    if(esKart(c.v)&&cuerpoKenney(x,{...c,pz:{...(c.pz||{}),neon:0}},glbDe(c.v)))return;
     {const K=kenneyDe(c.v);if(K&&cuerpoKenney(x,c,K))return}
     {const R=armadoR(c.v);if(R){cuerpoReal(x,c,R);return}}
     const P=c.pz||{},f=MODELOS[c.v].forma||{},col=COLORES[c.color],kit=P.kit|0,tipo=f.tipo||'sedan',L=tipo==='mini'?2.02:2.2,A=kit>=3?1.04:tipo==='cuna'?1:.96,trompa=tipo==='cuna'?.62:tipo==='mini'?.86:.78;
@@ -5565,7 +5573,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(P.aleron||f.ala){x.fillStyle='rgba(0,0,0,.3)';x.fillRect(-L+.1,-1,.3,2);x.fillStyle='#1d1f23';x.fillRect(-L+.14,-.98,.14+(P.aleron|0)*.05,1.96)}
     if(P.escape){x.fillStyle='#b9bec6';for(const z of P.escape===1?[-.4,.4]:[-.5,-.28,.28,.5])x.fillRect(-L-.14,z-.06,.16,.12)}
   }
-  function dibujarAuto(x,c,delta){ruedasAuto(x,c,delta);cuerpoAuto(x,c)}
+  function dibujarAuto(x,c,delta){if(!esKart(c.v))ruedasAuto(x,c,delta);cuerpoAuto(x,c)}
   // Cada auto se pinta una vez y después se estampa: así la carrera no se pone lenta
   const sprites=new Map();
   function spriteDe(c){
@@ -5580,9 +5588,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   function autoEnPista(x,c,now){
     const cs=Math.cos(c.a),sn=Math.sin(c.a);
-    if(calidad<2){x.save();x.translate(c.x+.28,c.y+.4);x.rotate(c.a);x.drawImage(sombraAuto(),-2.75,-1.6,5.5,3.2);x.restore()}
+    if(calidad<2){const e=esKart(c.v)?.5:1;x.save();x.translate(c.x+.28*e,c.y+.4*e);x.rotate(c.a);x.drawImage(sombraAuto(),-2.75*e,-1.6*e,5.5*e,3.2*e);x.restore()}
     x.save();x.translate(c.x,c.y);x.rotate(c.a);
-    ruedasAuto(x,c,c.delta||0);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);
+    if(!esKart(c.v))ruedasAuto(x,c,c.delta||0);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);
     const Lc=-((medidas(c.v)||{Lg:2.2}).Lg);
     if(c.brk||c.mano){x.fillStyle='#ff3a24';x.fillRect(Lc,-.72,.15,.46);x.fillRect(Lc,.26,.15,.46);x.fillStyle='rgba(255,50,30,.28)';x.beginPath();x.arc(Lc-.1,-.5,.6,0,6.3);x.arc(Lc-.1,.5,.6,0,6.3);x.fill()}
     if(c.nosOn){const l=1.2+Math.random()*1.2;x.fillStyle='#39c6ff';x.beginPath();x.moveTo(Lc,-.34);x.lineTo(Lc-l,0);x.lineTo(Lc,.34);x.closePath();x.fill();x.fillStyle='#e6fbff';x.beginPath();x.moveTo(Lc,-.16);x.lineTo(Lc-l*.5,0);x.lineTo(Lc,.16);x.closePath();x.fill()}
