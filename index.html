@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw4ilrzm"></script>
+<script src="room.js?v=mw4jcv2s"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -1872,9 +1872,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   // Bots de la sala: el 30% de arriba más rápido que Difícil y el resto baja de a poco hasta casi Fácil
   function nivelBot(i,n){
     const top=Math.max(1,Math.ceil(n*.3));
-    if(i<top){const f=top>1?i/(top-1):0;return {ritmo:1.01-.008*f,motor:1.1-.03*f,torpe:.15+.08*f,ag:1.55-.05*f}}
+    if(i<top){const f=top>1?i/(top-1):0;return {ritmo:1.02-.01*f,motor:1,torpe:.12+.08*f,ag:1.6-.05*f}}
     const r=n-top>1?(i-top)/(n-top-1):0;
-    return {ritmo:.99-.12*r,motor:.99-.13*r,torpe:.45+1*r,ag:1.35-1.1*r};
+    return {ritmo:.99-.12*r,motor:1,torpe:.45+1*r,ag:1.35-1.1*r};
   }
   let botsSala=0;
   function addBots(){
@@ -1887,6 +1887,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     BOTS.slice(0,n).forEach(([name,col,v],i)=>{
       const L=online?nivelBot(orden[i],n):{ritmo:D.ritmo+(i%3-1)*.022,motor:D.motor,torpe:D.torpe,ag:D.agresividad||0};
       const c=newCar({kind:'bot',v,spec:{...base,power:base.power*L.motor,forma:MODELOS[v].forma},name,color:col+(col===color?2:0),num:i+7,lane:[-2.5,2.5,0,-1.2,1.2][i%5],skill:L.ritmo,torpe:L.torpe,ag:L.ag});
+      if(online){c.nivel=n>1?orden[i]/(n-1):0;c.ag0=c.ag;c.sk0=c.skill;c.to0=c.torpe;c.empuje=0}
       place(c,Math.round(track.N*(n>5?(i+.5)/n:.1+i*.27))%track.N,c.lane);cars.push(c);
     });
   }
@@ -2618,7 +2619,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     const mine=me?Math.max(0,keysSorted.indexOf(myKey)):0;
     if(me){const g=gridSpot(mine%14);place(me,g.idx,g.off);resetRun(me);me.ghost=2}
     let slot=keysSorted.length||1;
-    for(const c of cars)if(c.kind==='bot'){const g=gridSpot(slot++);place(c,g.idx,g.off);c.meta=g.off;c.stuck=0;resetRun(c)}
+    // Los bots largan ordenados por nivel: los más rápidos adelante, así no quedan trabados en el pelotón
+    for(const c of cars.filter(c=>c.kind==='bot').sort((a,b)=>(a.nivel||0)-(b.nivel||0))){const g=gridSpot(slot++);place(c,g.idx,g.off);c.meta=g.off;c.stuck=0;resetRun(c)}
   }
   let cortada=null;
   function cortarCarrera(txt){
@@ -5817,6 +5819,27 @@ if(typeof module!=='undefined')module.exports=Sim;
     const a=p[i+2],b=p[i+5],c={v:f.v,color:7,pz:{},x:p[i]+(p[i+3]-p[i])*u,y:p[i+1]+(p[i+4]-p[i+1])*u};
     x.save();x.globalAlpha=.42;x.translate(c.x,c.y);x.rotate(a+wrap(b-a)*u);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
   }
+  // Ritmo de los bots de la sala: miran al mejor jugador de verdad (vos o los que entraron) y se acomodan.
+  // El de mejor nivel apunta a ir a la par, el peor unos 140 m atrás; si quedan lejos empujan más, si se pasan aflojan
+  function adaptarBots(dt){
+    if(modo!=='online'||!race||race.state!=='go'||!track.length)return;
+    let lider=-1;
+    if(me&&!me.finT)lider=Sim.progressValue(me);
+    for(const [k,r] of remotes)if(!esBot(k)&&r.car&&!r.car.stale&&typeof r.car.p==='number')lider=Math.max(lider,r.car.p);
+    if(lider<0)return;
+    for(const c of cars){
+      if(c.kind!=='bot'||c.ag0==null)continue;
+      const d=(Sim.progressValue(c)-lider)*track.length,meta=c.nivel<.3?45-150*c.nivel:-20-140*(c.nivel-.3),err=d-meta;
+      // Solo cambia cómo maneja: si va atrás de donde debería, arriesga más (dobla al límite, apura, se equivoca menos);
+      // si va adelante, maneja más tranquilo. Motor y agarre son siempre los del auto
+      const obj=clamp(-err/120,-.6,1);
+      c.empuje+=(obj-c.empuje)*(1-Math.exp(-dt*.8));
+      const a=c.empuje;
+      c.ag=a>0?c.ag0+a*(Math.max(c.ag0,1.62)-c.ag0):Math.max(0,c.ag0+a*.4);
+      c.skill=a>0?c.sk0+a*Math.max(0,1.03-c.sk0):c.sk0+a*.04;
+      c.torpe=a>0?c.to0*(1-.8*a):c.to0;
+    }
+  }
   const DT=1/120;let acc=0,last=performance.now(),netT=0;
   const conTrafico=()=>TRAF.act.length?cars.concat(TRAF.act):cars;
   const inputs=c=>c.kind==='me'?(window.__botMe?Sim.botInput(c,DT,conTrafico()):inp()):Sim.botInput(c,DT,conTrafico());
@@ -5824,6 +5847,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const now=performance.now(),dt=Math.min(.05,(now-last)/1000);last=now;
     acc+=dt;
     moverTrafico(now);
+    adaptarBots(dt);
     while(acc>=DT){
       acc-=DT;
       Sim.step(cars,inputs,DT,now,leadOf,ev);
