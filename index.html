@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw3npnni"></script>
+<script src="room.js?v=mw4ilrzm"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -518,6 +518,10 @@ html,body{background:#000;touch-action:manipulation}
 /* Tablero de carrera */
 #tablero{max-width:66%}
 .chip{background:rgba(10,11,15,.74);border-radius:10px}
+#chip-red{display:inline-flex;align-items:center;gap:5px}
+#chip-red i,#red-sala i{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--c,#8a8f99)}
+#red-sala{display:flex;align-items:center;gap:6px;margin:4px 14px 0;font-size:.85rem;color:var(--suave,#aab);font-weight:600}
+#red-sala[hidden]{display:none}
 #posicion{display:flex;align-items:baseline;gap:5px;padding:4px 11px}
 #posicion b{font-size:1.75em;margin:0;color:var(--oro)}
 #posicion small{color:var(--suave);font-size:.85rem}
@@ -860,6 +864,7 @@ html,body{background:#000;touch-action:manipulation}
         <div class="chip" id="posicion"></div>
         <div class="chip" id="reloj"></div>
         <div class="chip" id="chip-partida" hidden></div>
+        <div class="chip" id="chip-red" hidden></div>
       </div>
       <div class="fila">
         <button class="boton-hud" id="largar">Largar carrera</button>
@@ -916,6 +921,7 @@ html,body{background:#000;touch-action:manipulation}
       <div id="fila-jug"><h3 class="titulo-sala">Jugadores</h3><button type="button" id="mic-sala" class="boton-mic" aria-pressed="false" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11Z"/></svg><span>Hablar</span></button></div>
       <div id="auto-sala"><img id="mini-yo" alt=""><div><small id="quien-yo">Vos</small><b id="nombre-yo"></b></div><button type="button" id="modificar-auto" hidden>Modificar</button><button type="button" id="cambiar-auto">Cambiar auto</button></div>
       <div id="elegir-autos" hidden><div id="grilla-autos"></div></div>
+      <p id="red-sala" hidden></p>
       <ul id="lista-sala"></ul>
       <div class="panel" id="panel-pista">
         <div id="ajustes-sala">
@@ -1861,15 +1867,27 @@ if(typeof module!=='undefined')module.exports=Sim;
     dificil:{n:'Difícil',ritmo:1,motor:1,torpe:.35,paga:1.4,agresividad:1.5}
   };
   const dificultad=()=>DIFICULTADES[pref.dif]||DIFICULTADES.normal;
-  const BOTS=[['Tito',0,2],['Coca',1,4],['Beto',3,8],['Lola',5,1],['Nacho',6,9]];
+  const BOTS=[['Tito',0,2],['Coca',1,4],['Beto',3,8],['Lola',5,1],['Nacho',6,9],['Pipo',8,7],['Ruso',4,10],['Mora',19,12],['Cacho',2,11],['Vicky',12,3],
+    ['Tano',14,13],['Juli',9,6],['Pocho',16,14],['Fede',13,0],['Toti',10,15],['Gringo',17,5],['Lucho',11,2],['Maru',24,8],['Chino',20,9],['Flaca',21,4]];
+  // Bots de la sala: el 30% de arriba más rápido que Difícil y el resto baja de a poco hasta casi Fácil
+  function nivelBot(i,n){
+    const top=Math.max(1,Math.ceil(n*.3));
+    if(i<top){const f=top>1?i/(top-1):0;return {ritmo:1.01-.008*f,motor:1.1-.03*f,torpe:.15+.08*f,ag:1.55-.05*f}}
+    const r=n-top>1?(i-top)/(n-top-1):0;
+    return {ritmo:.99-.12*r,motor:.99-.13*r,torpe:.45+1*r,ag:1.35-1.1*r};
+  }
   let botsSala=0;
   function addBots(){
     if(cars.some(c=>c.kind==='bot'))return;
     // Los rivales corren con la misma preparación que tu auto: así cualquier auto es competitivo
     const D=dificultad(),base=specDe(modelo);
-    BOTS.slice(0,modo==='online'?botsSala:3).forEach(([name,col,v],i)=>{
-      const c=newCar({kind:'bot',v,spec:{...base,power:base.power*D.motor,forma:MODELOS[v].forma},name,color:col+(col===color?2:0),num:i+7,lane:[-2.5,2.5,0,-1.2,1.2][i],skill:D.ritmo+(i%3-1)*.022,torpe:D.torpe,ag:D.agresividad||0});
-      place(c,Math.round(track.N*(.1+i*.27)),c.lane);cars.push(c);
+    const online=modo==='online',n=online?botsSala:3;
+    // En la sala el nivel de cada uno se reparte al azar entre los bots, así el más rápido no es siempre el mismo
+    const orden=[...Array(n).keys()];if(online)for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[orden[i],orden[j]]=[orden[j],orden[i]]}
+    BOTS.slice(0,n).forEach(([name,col,v],i)=>{
+      const L=online?nivelBot(orden[i],n):{ritmo:D.ritmo+(i%3-1)*.022,motor:D.motor,torpe:D.torpe,ag:D.agresividad||0};
+      const c=newCar({kind:'bot',v,spec:{...base,power:base.power*L.motor,forma:MODELOS[v].forma},name,color:col+(col===color?2:0),num:i+7,lane:[-2.5,2.5,0,-1.2,1.2][i%5],skill:L.ritmo,torpe:L.torpe,ag:L.ag});
+      place(c,Math.round(track.N*(n>5?(i+.5)/n:.1+i*.27))%track.N,c.lane);cars.push(c);
     });
   }
   const removeBots=()=>{for(let i=cars.length-1;i>=0;i--)if(cars[i].kind==='bot')cars.splice(i,1)};
@@ -2298,7 +2316,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const h=pr.h;
     if(Array.isArray(h)&&typeof h[0]==='string'&&esBot(h[0])&&creador()&&h[5]!==r.golpeBot&&h.slice(1,5).every(v=>typeof v==='number'&&isFinite(v))){
       r.golpeBot=h[5];
-      const b=cars.filter(q=>q.kind==='bot')[+h[0][3]];
+      const b=cars.filter(q=>q.kind==='bot')[parseInt(h[0].slice(3),10)];
       if(b)Sim.impulseAt(b,b.x+clamp(h[3],-3,3),b.y+clamp(h[4],-3,3),clamp(h[1],-30000,30000),clamp(h[2],-30000,30000));
     }
     if(race&&pr.x===race.id&&ent===anfitrion)cortarCarrera('El creador terminó la carrera');
@@ -2316,9 +2334,9 @@ if(typeof module!=='undefined')module.exports=Sim;
   function botsDe(p,now){
     if(p.sameTab)return;
     const pr=p.presence||{},fin='-'+p.peer.slice(0,4),vistos=new Set();
-    for(const q of Array.isArray(pr.b)?pr.b.slice(0,5):[]){
+    for(const q of Array.isArray(pr.b)?pr.b.slice(0,20):[]){
       if(!Array.isArray(q))continue;
-      const k='bot'+clamp(q[0]|0,0,4)+fin;vistos.add(k);
+      const k='bot'+clamp(q[0]|0,0,19)+fin;vistos.add(k);
       syncRemote({peer:k,presence:{n:q[1],c:q[2],v:q[3],s:q[4],t:pr.t,k:q[5],p:q[6],f:q[7],r:pr.r,an:0}},now);
     }
     for(const k of [...enSala.keys()])if(esBot(k)&&k.endsWith(fin)&&!vistos.has(k))dropRemote(k);
@@ -2350,6 +2368,21 @@ if(typeof module!=='undefined')module.exports=Sim;
   // La antigüedad sigue al día aunque la pantalla esté bloqueada o la pestaña en segundo plano
   setInterval(()=>{if(room)room.presence({an:Math.round(performance.now()-entroT)}).catch(()=>{});cuidarVitrina();salon()},1000);
   let listaVista='',seUnio=false,salaTaller=false;
+  // Calidad de la conexión con un jugador: ida y vuelta medida con el eco, y si dejó de llegar
+  const NIVEL_RED=[['Buena','#2ecc71'],['Regular','#f2c230'],['Mala','#e5383b']];
+  function redDe(r){const ms=Math.round(r.oneWay*2),viejo=performance.now()-r.recv;return {ms,n:viejo>1500?2:ms<130?0:ms<260?1:2}}
+  function miRed(){
+    const l=[...remotes.entries()].filter(([k])=>!esBot(k)).map(([,r])=>redDe(r));
+    if(!l.length)return null;
+    const ms=l.map(x=>x.ms).sort((a,b)=>a-b)[l.length>>1];return {ms,n:Math.round(l.reduce((a,x)=>a+x.n,0)/l.length)};
+  }
+  function pintarRed(){
+    const m=codigo?miRed():null,c=$('chip-red'),p=$('red-sala');
+    c.hidden=p.hidden=!m;if(!m)return;
+    const [t,col]=NIVEL_RED[m.n],txt='Tu conexión: '+t+' · '+m.ms+' ms';
+    for(const e of [c,p]){if(e.dataset.t===txt)continue;e.dataset.t=txt;e.textContent='';const i=document.createElement('i');i.style.setProperty('--c',col);e.append(i,e===c?t+' · '+m.ms+' ms':txt)}
+  }
+  setInterval(pintarRed,1000);
   // Grilla de autos chicos en la sala: se toca uno y queda elegido
   function pintarGrillaAutos(){
     const g=$('grilla-autos');g.textContent='';
@@ -2377,8 +2410,10 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(codigo){
       const autoN=v=>Number.isInteger(v)&&v>=0&&v<MODELOS.length?MODELOS[v].nombre:'';
       $('quien-yo').textContent=miNombre()+' (vos)'+(!anfitrion?' · 👑 Anfitrión':'')+(miMic?' · 🎙':'');
-      for(const [k,e] of enSala)gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),f:Number.isInteger(e.pr.v)?miniAuto(e.pr.v,colorOk(e.pr.c)?e.pr.c:0):'',est:esBot(k)?'Bot':(e.pr.mi?'🎙':''),jefe:e===anfitrion});
-      for(const c of cars)if(c.kind==='bot')gente.push({n:c.name,c:c.color,a:autoN(c.v),f:miniAuto(c.v,c.color),est:'Bot',jefe:false});
+      for(const [k,e] of enSala)if(!esBot(k))gente.push({n:textoNombre(e.pr.n),c:colorOk(e.pr.c)?e.pr.c:0,a:autoN(e.pr.v),f:Number.isInteger(e.pr.v)?miniAuto(e.pr.v,colorOk(e.pr.c)?e.pr.c:0):'',est:esBot(k)?'Bot':[(e.pr.mi?'🎙':''),remotes.get(k)?'📶 '+NIVEL_RED[redDe(remotes.get(k)).n][0]:''].filter(Boolean).join(' · '),jefe:e===anfitrion});
+      // Los bots van todos juntos en una fila
+      {const nb=cars.filter(c=>c.kind==='bot').length+[...enSala.keys()].filter(esBot).length,b1=cars.find(c=>c.kind==='bot');
+        if(nb)gente.push({n:nb===1?'1 bot':nb+' bots',c:0,a:nb>1?'Cada uno con distinto nivel':'',f:b1?miniAuto(b1.v,b1.color):'',est:'',jefe:false})}
     }
     const clave=JSON.stringify(gente);
     if(clave!==listaVista){
@@ -5043,7 +5078,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Rayas de la grilla y línea de largada
     const c0=[t.x[0],0,t.y[0]],tx=t.tx[0],ty=t.ty[0],nx=t.nx[0],ny=t.ny[0],P=(u,v,y=.04)=>[c0[0]+tx*u+nx*v,y,c0[2]+ty*u+ny*v],cs=HALF*2/12;
     for(let a=0;a<2;a++)for(let b=0;b<12;b++){const u=a*1.5-1.5,v=-HALF+b*cs;q.push([P(u,v),P(u+1.5,v),P(u+1.5,v+cs),P(u,v+cs),(a+b)%2?kA:rgb('#14151a')])}
-    for(let f=0;f<14;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.04;
+    for(let f=0;f<22;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.04;
       const Q=(u,v)=>[t.x[k]+t.tx[k]*u+t.nx[k]*v,y,t.y[k]+t.ty[k]*u+t.ny[k]*v],caja=(u0,u1,v0,v1)=>q.push([Q(u0,v0),Q(u1,v0),Q(u1,v1),Q(u0,v1),lin]);
       caja(2.6,2.88,o-1.35,o+1.35);caja(1.5,2.6,o-1.35,o-1.2);caja(1.5,2.6,o+1.2,o+1.35)}
     const g=new THREE.Group();g.add(franjas(q));
@@ -5195,7 +5230,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     {
       const q=[],c0=[t.x[0],0,t.y[0]],tx=t.tx[0],ty=t.ty[0],nx=t.nx[0],ny=t.ny[0],P=(u,v,y=.035)=>[c0[0]+tx*u+nx*v,y,c0[2]+ty*u+ny*v],cs=HALF*2/12;
       for(let a=0;a<2;a++)for(let b=0;b<12;b++){const u=a*1.5-1.5,v=-HALF+b*cs;q.push([P(u,v),P(u+1.5,v),P(u+1.5,v+cs),P(u,v+cs),(a+b)%2?cla:osc])}
-      for(let f=0;f<14;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.03+(t.alt?t.alt[k]:0);
+      for(let f=0;f<22;f++){const g=gridSpot(f),k=(g.idx+N*2)%N,o=g.off,y=.03+(t.alt?t.alt[k]:0);
       const Q=(u,v)=>[t.x[k]+t.tx[k]*u+t.nx[k]*v,y,t.y[k]+t.ty[k]*u+t.ny[k]*v],caja=(u0,u1,v0,v1)=>q.push([Q(u0,v0),Q(u1,v0),Q(u1,v1),Q(u0,v1),cla]);
       caja(2.6,2.88,o-1.35,o+1.35);caja(1.5,2.6,o-1.35,o-1.2);caja(1.5,2.6,o+1.2,o+1.35)}
       deco.add(franjas(q));
