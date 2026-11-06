@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw4kr1ok"></script>
+<script src="room.js?v=mw57n7ka"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -1547,7 +1547,7 @@ const Sim=(()=>{
     const t=track,N=t.N,speed=Math.hypot(c.vx,c.vy);
     if(speed<1.2&&!c.frozen)c.stuck+=dt;else c.stuck=0;
     if(c.stuck>2.5){rescatar(c,c.idx,0);c.stuck=0}
-    const look=(c.idx+Math.round((7+speed*.55)/t.sp))%N,cs=Math.cos(c.a),sn=Math.sin(c.a);
+    const look=(c.idx+Math.round((7+speed*(c.la??.55))/t.sp))%N,cs=Math.cos(c.a),sn=Math.sin(c.a);
     // De base va por la línea de carrera, cada uno con su mañana
     let meta=t.linea[look]*(c.lf||.8)+c.lane*.35*(c.lf?.3:1),gasOk=true,trafico=1e9;
     const adentro=Math.sign(t.curva[(c.idx+Math.round(30/t.sp))%N]);
@@ -1574,7 +1574,7 @@ const Sim=(()=>{
         meta=(c.off||0)-Math.sign(la||1)*1.3;
       }
     }
-    meta=clamp(meta,-HALF+1.8,HALF-1.8);
+    meta=clamp(meta,-HALF+(c.wd??1.8),HALF-(c.wd??1.8));
     c.meta+=(meta-c.meta)*(1-Math.exp(-dt*2.4));
     const tx=t.x[look]+t.nx[look]*c.meta-c.x,ty=t.y[look]+t.ny[look]*c.meta-c.y;
     const err=wrap(Math.atan2(ty,tx)-c.a);
@@ -2402,7 +2402,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('cambiar-auto').onclick=()=>abrirElegirAutos($('elegir-autos').hidden);
   // Modificar: va al taller sin salir de la partida (la voz sigue) y un botón grande trae de vuelta
   $('modificar-auto').onclick=()=>{if(!codigo)return;abrirElegirAutos(false);salaTaller=true;tab('garaje');$('volver-sala').hidden=false};
-  function volverSala(){if(!salaTaller)return;salaTaller=false;$('volver-sala').hidden=true;cerrarLocal();aGaraje(seUnio);if(me)me.frozen=!!(race&&race.state==='count');listaVista='';salon()}
+  function volverSala(){if(!salaTaller)return;salaTaller=false;$('volver-sala').hidden=true;cerrarLocal();for(const id of ['bienvenida','menu','local','inicio','final'])$(id).hidden=true;$('reserva').append($('panel-controles'));aGaraje(seUnio);if(me)me.frozen=!!(race&&race.state==='count');listaVista='';salon()}
   $('volver-sala').onclick=volverSala;
   const textoNombre=v=>String(v||'Piloto').slice(0,12);
   const miNombre=()=>me?me.name:$('nombre').value.trim().slice(0,12)||'Piloto';
@@ -5827,7 +5827,8 @@ if(typeof module!=='undefined')module.exports=Sim;
   // va por la línea abierta y usa el nitro en las rectas, recargándolo como quien derrapa. El auto es el mismo de siempre
   function manejoBot(c,a){
     const q=1-(c.nivel||0);
-    c.cf=1+q*Math.max(0,.15+.15*a);c.bf=1+q*Math.max(0,.3+.3*a);c.lf=.8+.2*q;c.tp=1.25+.75*q;c.rg=q*Math.max(0,.03+.07*a);
+    const p=Math.max(0,1+a);
+    c.cf=1+q*.3*p;c.bf=1+q*.3*p;c.la=.55+q*.33*p;c.lf=.8+.45*q;c.wd=1.8-.9*q;c.tp=1.25+.75*q;c.rg=q*.05*p;
   }
   function adaptarBots(dt){
     if(modo!=='online'||!race||race.state!=='go'||!track.length)return;
