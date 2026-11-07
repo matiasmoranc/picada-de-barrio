@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw5k7snk"></script>
+<script src="room.js?v=mw5o9n7x"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -566,6 +566,7 @@ html,body{background:#000;touch-action:manipulation}
 #juego.cine #hud,#juego.cine #tactil{visibility:hidden}
 #repe,#podio{position:absolute;inset:0;z-index:13;color:#fff;pointer-events:auto}
 #repe[hidden],#podio[hidden]{display:none}
+#repe i{position:absolute;left:16px;top:calc(max(14px,env(safe-area-inset-top,0px)) + 1.9rem);font-style:normal;font-weight:700;font-size:1rem;text-shadow:0 2px 8px #000;opacity:.92}
 #repe{background:linear-gradient(#000 0,transparent 12%,transparent 85%,#000 100%)}
 #repe b{position:absolute;left:16px;top:max(14px,env(safe-area-inset-top,0px));font:400 1.4rem var(--display,inherit);letter-spacing:.08em;color:var(--oro,#ffd23f);text-shadow:0 2px 8px #000}
 #repe b::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#e5383b;margin-right:.4em;vertical-align:.08em;animation:parpadeo 1s steps(2) infinite}
@@ -910,7 +911,7 @@ html,body{background:#000;touch-action:manipulation}
     <div class="mando" id="pedal-mano"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6 26 3 44 70 70 84 98 80V97H62L28 80Z" fill="#fbf6ea"/></svg><span>MANO</span></div>
   </div>
   <div id="clasif" hidden><div id="cl-carta"><small id="cl-k">Clasificación</small><h2 id="cl-t"></h2><p id="cl-p"></p><ol id="cl-lista"></ol><div id="cl-bot"><button type="button" id="cl-si"></button><button type="button" id="cl-no"></button></div></div></div>
-  <div id="repe" hidden><b>REPETICIÓN</b><span>Tocá para saltar</span></div>
+  <div id="repe" hidden><b>REPETICIÓN</b><i id="repe-sub"></i><span>Tocá para saltar</span></div>
   <div id="podio" hidden><h2 id="podio-t"></h2><p id="podio-n"></p><span>Tocá para ver los resultados</span></div>
   <div id="cine" hidden><div id="cine-tarjeta"><small id="cine-sub"></small><b id="cine-nombre"></b></div><span>Tocá para saltar</span></div>
   <div id="hud" hidden>
@@ -2964,16 +2965,70 @@ if(typeof module!=='undefined')module.exports=Sim;
     c.append(box);
   }
   // --- Repetición: se guardan los últimos segundos de todos los autos ---
-  const REPE={f:[],ult:0};let repe=null,podio=null;
+  const REPE={f:[],ult:0,ev:[],par:new Map()},REPE_MS=30000;let repe=null,podio=null;
+  // Quién va delante de quién: si dos autos cercanos se cambian el orden, es un adelantamiento
+  function mirarPases(now){
+    const enCarrera=c=>!c.stale&&!c.frozen&&!(c.ghost>0)&&c.kind!=='ghost'&&(c.kind==='net'?c.f==null:c.finT==null);
+    const L=cars.filter(enCarrera).map(c=>[c,(c.kind==='net'?c.p||0:Sim.progressValue(c))*track.length]);
+    for(let i=0;i<L.length;i++)for(let j=i+1;j<L.length;j++){
+      const [a,pa]=L[i],[b,pb]=L[j],g=pa-pb;
+      let m=REPE.par.get(a);if(!m)REPE.par.set(a,m=new Map());
+      let q=m.get(b);if(!q){m.set(b,q={lado:0,signo:Math.sign(g),cruce:now});}
+      if(Math.sign(g)!==q.signo){q.signo=Math.sign(g);q.cruce=now}
+      if(Math.abs(g)<3)continue;
+      const lado=Math.sign(g);if(lado===q.lado)continue;
+      const antes=q.lado;q.lado=lado;
+      if(!antes||Math.hypot(a.x-b.x,a.y-b.y)>40||now-q.cruce>6000)continue;
+      const [x,y]=lado>0?[a,b]:[b,a];
+      REPE.ev.push({t:q.cruce,a:x,b:y,yo:x===me||y===me});
+    }
+    REPE.ev.sort((u,v)=>u.t-v.t);
+    while(REPE.ev.length&&now-REPE.ev[0].t>REPE_MS)REPE.ev.shift();
+  }
   function grabarRepe(now){
-    if(!gl||pref.liviano||!race||race.state!=='go'){if(!repe)REPE.f.length=0;return}
+    if(!gl||pref.liviano||!race||race.state!=='go'){if(!repe){REPE.f.length=0;REPE.ev.length=0;REPE.par.clear()}return}
     if(now-REPE.ult<50)return;REPE.ult=now;
     REPE.f.push({t:now,c:cars.filter(c=>!c.stale).map(c=>[c,c.x,c.y,c.a,c.vx,c.vy,c.delta||0,(c.brk||c.mano)?1:0,c.nosOn?1:0,c.idx])});
-    while(REPE.f.length&&now-REPE.f[0].t>6500)REPE.f.shift();
+    while(REPE.f.length&&now-REPE.f[0].t>REPE_MS)REPE.f.shift();
+    if(me&&me.finT==null)mirarPases(now);
+  }
+  // Cámara de tele al costado de la pista, unos metros adelante de donde estaba el auto
+  function camaraAl(c,lado){
+    const t=track,N=t.N,k=(c.idx+Math.round(9/t.sp))%N,L=HALF+2.5;
+    if(!lado){const l=(c.x-t.x[k])*t.nx[k]+(c.y-t.y[k])*t.ny[k];lado=l<0?-1:1}
+    return {x:t.x[k]+t.nx[k]*L*lado,y:t.y[k]+t.ny[k]*L*lado,h:1.9+Sim.altDe(c)};
+  }
+  // La última curva que hice: el punto más cerrado del último tramo con curva
+  function ultimaCurva(F){
+    const t=track,thr=.012;let mejor=null,ya=false;
+    for(let i=F.length-1;i>=0;i--){
+      const e=F[i].c.find(z=>z[0]===me);if(!e)continue;
+      const k=e[9]|0,v=Math.abs(t.curva[k]||0);
+      if(!ya){if(v>thr)ya=true;else continue}
+      if(v<thr*.6)break;
+      if(!mejor||v>mejor.v)mejor={v,t:F[i].t,k};
+    }
+    return mejor;
   }
   function programarRepe(now){
     if(!gl||pref.liviano||repe||!me||sinMovimiento())return;
-    repe={cruce:now,desde:now-3600,hasta:now+650,empieza:now+800,on:false};
+    const ev=REPE.ev.filter(e=>e.t<=now&&e.t>now-REPE_MS+3000);
+    const pase=[...ev].reverse().find(e=>e.yo)||ev[ev.length-1];
+    let te=now,foco=me,fija=null,titulo='REPETICIÓN',sub='';
+    if(pase){
+      te=pase.t;foco=pase.a;titulo='ÚLTIMO ADELANTAMIENTO';sub=pase.a.name+' pasa a '+pase.b.name;
+      const f=REPE.f.find(z=>z.t>=te),e=f&&f.c.find(z=>z[0]===foco);
+      if(e)fija=camaraAl({x:e[1],y:e[2],idx:e[9]});
+    }else{
+      const cv=ultimaCurva(REPE.f);
+      if(cv&&now-cv.t>900){
+        te=cv.t;titulo='ÚLTIMA CURVA';
+        const f=REPE.f.find(z=>z.t>=te),e=f&&f.c.find(z=>z[0]===me);
+        if(e)fija=camaraAl({x:e[1],y:e[2],idx:e[9]},-Math.sign(track.curva[cv.k])||1);
+      }
+    }
+    if(te===now)repe={cruce:now,te:now,post:1e9,foco:me,fija:null,titulo,sub,desde:now-3600,hasta:now+650,empieza:now+800,on:false};
+    else{const hasta=Math.min(te+1700,now+650);repe={cruce:now,te,post:650,foco,fija,titulo,sub,desde:te-2800,hasta,empieza:now+800,on:false}}
   }
   function iniciarRepe(){
     const q=repe;
@@ -2981,6 +3036,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(q.frames.length<10||!pista){repe=null;siguePodio();return}
     if(!v3||v3.pista!==pista)armar3D();
     q.on=true;q.tr=q.frames[0].t;q.px=new Map();q.cam=new THREE.PerspectiveCamera(50,1,.3,340);
+    $('repe').querySelector('b').textContent=q.titulo;$('repe-sub').textContent=q.sub;
     $('juego').classList.add('cine');$('repe').hidden=false;
   }
   function terminarRepe(){
@@ -2991,7 +3047,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   $('repe').addEventListener('pointerdown',()=>terminarRepe());
   function dibujarRepe(now,dt){
-    const q=repe,F=q.frames,lenta=q.tr>q.cruce-750;
+    const q=repe,F=q.frames,lenta=q.tr>q.te-750&&q.tr<q.te+q.post;
     q.tr+=dt*1000*(lenta?.38:1);
     if(q.tr>=F[F.length-1].t){terminarRepe();return}
     let i=0;while(i<F.length-2&&F[i+1].t<=q.tr)i++;
@@ -3003,13 +3059,15 @@ if(typeof module!=='undefined')module.exports=Sim;
       vivos.add(p);mover3D(auto3D(p),p,now,dt);
     }
     for(const [o,m] of v3.autos)m.g.visible=vivos.has(o)&&m.g.visible;
-    const yo=q.px.get(me);
+    const yo=q.px.get(q.foco)||q.px.get(me);
     if(yo){
       const cm=q.cam,t=track,asp=W/H;cm.aspect=asp;
       if(!lenta){
         // Atrás y al costado, bajito, como en la tele
         const fx=Math.cos(yo.a),fy=Math.sin(yo.a);cm.fov=asp<1?60:46;
         cm.position.set(yo.x-fx*7.5-fy*2.4,1.5+Sim.altDe(yo),yo.y-fy*7.5+fx*2.4);cm.lookAt(yo.x+fx*4,.7,yo.y+fy*4);
+      }else if(q.fija){
+        cm.fov=asp<1?52:38;cm.position.set(q.fija.x,q.fija.h,q.fija.y);cm.lookAt(yo.x,.9+Sim.altDe(yo),yo.y);
       }else{
         // Cámara fija al costado de la línea de llegada
         const L=HALF+2.5,s0=t.salida||1;cm.fov=asp<1?52:38;
