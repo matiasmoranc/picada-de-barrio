@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw831vu6"></script>
+<script src="room.js?v=mw867gr7"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -573,6 +573,8 @@ html,body{background:#000;touch-action:manipulation}
 #repe b{position:absolute;left:16px;top:max(14px,env(safe-area-inset-top,0px));font:400 1.4rem var(--display,inherit);letter-spacing:.08em;color:var(--oro,#ffd23f);text-shadow:0 2px 8px #000}
 #repe b::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:#e5383b;margin-right:.4em;vertical-align:.08em;animation:parpadeo 1s steps(2) infinite}
 @keyframes parpadeo{50%{opacity:0}}
+#reloj small{display:block;font-size:.72em;opacity:.8;font-weight:600;font-variant-numeric:tabular-nums}
+#reloj{font-variant-numeric:tabular-nums}
 #repe span,#podio span{position:absolute;right:14px;bottom:max(18px,env(safe-area-inset-bottom,0px));font-weight:700;opacity:.8}
 #podio{display:grid;align-content:start;justify-items:center;text-align:center;padding-top:max(26px,env(safe-area-inset-top,0px));background:linear-gradient(rgba(0,0,0,.55),transparent 30%)}
 #podio h2{margin:0;font:400 min(11vw,3rem)/1 var(--display,inherit);color:var(--oro,#ffd23f);text-shadow:0 3px 0 #000,0 8px 24px rgba(0,0,0,.6)}
@@ -6589,7 +6591,9 @@ if(typeof module!=='undefined')module.exports=Sim;
         a.textContent=String(e.pr.n||'Piloto').slice(0,12);v.textContent=!c?'garaje':c.car.stale?'sin señal':'en pista';
         d.append(a,v);tab.append(d);
       }
-      rel.textContent=me.bestLap?'Mejor '+tiempo(me.bestLap):(me.lapStart?tiempo(now-me.lapStart):'Sin vuelta');
+      // El reloj vuelve a cero en cada pasada por la meta; un momento muestra la vuelta que terminó
+      const enCurso=me.lapStart?(me.lastLap&&now-me.lapStart<2500?'Vuelta '+tiempo(me.lastLap):tiempo(now-me.lapStart)):'Sin vuelta',mejor=me.bestLap?'Mejor '+tiempo(me.bestLap):'';
+      if(rel.dataset.t!==enCurso+mejor){rel.dataset.t=enCurso+mejor;rel.textContent=enCurso;if(mejor){const m=document.createElement('small');m.textContent=mejor;rel.append(m)}}
     }
     {const m=!en3D();if($('mirar').hidden!==m){$('mirar').hidden=m;if(m&&touch.mirar){for(const [k,p] of pads)if(p.z==='mirar')pads.delete(k);renderPedals()}}}
     $('garaje').hidden=!!race||modo!=='online';{const m=modo!=='online'||!vozPosible();if($('mic').hidden!==m)$('mic').hidden=m}$('largar').hidden=!!race||!!anfitrion||modo!=='online';$('abandonar').hidden=modo!=='evento'&&modo!=='practica';$('reiniciar').hidden=$('terminar').hidden=!(race&&modo==='online'&&creador());
