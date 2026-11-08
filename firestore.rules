@@ -1,0 +1,25 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{base}/documents {
+    // La partida de cada jugador: solo la puede leer y escribir su dueño
+    match /jugadores/{uid} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['datos', 't'])
+        && request.resource.data.datos is string && request.resource.data.datos.size() < 900000
+        && request.resource.data.t is int;
+    }
+    // Ranking del desafío del día: lo ve cualquiera; cada uno solo escribe su tiempo y solo si lo mejora
+    match /diario/{fecha}/t/{uid} {
+      allow read: if true;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && fecha.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.keys().hasOnly(['u', 'n', 't', 'v'])
+        && request.resource.data.t is int && request.resource.data.t >= 15000 && request.resource.data.t <= 900000
+        && request.resource.data.n is string && request.resource.data.n.size() <= 12
+        && request.resource.data.u is string && request.resource.data.u.matches('^[0-9a-f]{8}$')
+        && request.resource.data.v is int
+        && (resource == null || request.resource.data.t < resource.data.t);
+    }
+  }
+}
