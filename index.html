@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw7310wq"></script>
+<script src="room.js?v=mw81zqbe"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -868,6 +868,26 @@ html,body{background:#000;touch-action:manipulation}
   .dock .premios-p span{padding:2px 6px}
   .dock .premios-p small{display:inline;margin-right:5px}
 }
+/* Correr: todo el cuerpo scrollea, las pistas no quedan encerradas; el panel de abajo queda pegado */
+#menu .sel-pista{height:auto!important;min-height:100%;gap:8px}
+#menu .sel-pista>.pistas-ev{flex:1 0 auto;overflow:visible;padding-bottom:4px}
+#menu .sel-pista>.dock{position:sticky;bottom:0;z-index:2;margin-top:auto;box-shadow:0 -10px 18px 6px var(--fondo)}
+#menu-cuerpo>.d-banner{padding:6px 12px;margin-bottom:8px}
+#menu-cuerpo>.d-banner em{display:none}
+#menu-cuerpo>.d-banner>i{font-size:1.5rem}
+.dock{gap:6px!important;padding:8px 10px 10px!important}
+.dock-t{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.dock-t p{margin:0!important;font-size:.95rem}
+.dock-op{display:flex;gap:6px}
+.dock-op>.seg:first-child:not(:only-child){flex:3}
+.dock-op>.seg{flex:2;min-width:0}
+.dock .dock-op .seg button{min-height:34px;padding:3px 2px}
+.dock-ir{display:flex;gap:6px;align-items:stretch}
+.dock-ir>.premios-p{flex:1;min-width:0;display:flex;gap:4px}
+.dock-ir>.premios-p span{flex:1;min-width:0;padding:3px 4px!important;display:grid;align-content:center;text-align:center}
+.dock-ir>.premios-p b{font-size:.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock-ir>.fr{flex:0 0 42%;min-height:46px;margin:0}
+.dock-ir>.premios-p small{display:block!important;margin:0!important;font-size:.75rem}
 /* Resultados */
 #final{z-index:28;padding:0;background:linear-gradient(170deg,#1b1d27,#0b0c10);place-items:start center}
 #planilla{width:100%;max-width:560px;min-height:100%;background:none;padding:max(16px,env(safe-area-inset-top,0px)) 16px max(16px,env(safe-area-inset-bottom,0px));gap:9px;align-content:start}
@@ -3590,19 +3610,21 @@ if(typeof module!=='undefined')module.exports=Sim;
     TRACKS.forEach((tr,i)=>{
       if(ruta?!tr.ruta:(!!tr.juego!==delJuego||tr.ruta))return;
       const b=el('button');b.type='button';b.setAttribute('aria-pressed',i===e.p);b.append(miniPista(i),el('span',null,tr.name));
-      b.onclick=()=>{const q=lista.scrollTop;e.p=i;rehacer();const n=$('menu-cuerpo').querySelector('.pistas-ev');if(n)n.scrollTop=q};lista.append(b);
+      b.onclick=()=>{e.p=i;rehacer()};lista.append(b);
     });
     const dock=el('div','dock'),d=datosPista(e.p),info=el('div','dock-t');
     info.append(el('h3',null,TRACKS[e.p].name),el('p',null,d.km+' km · '+d.curvas+' curvas'+(e.tipo==='circuito'?' · '+vueltasDe(e.p)+' vueltas':e.tipo==='autopista'?' · 1 vuelta con tráfico':'')+' · '+['fácil','media','difícil'][d.nivel-1]));
     dock.append(info);
-    if(e.tipo==='circuito'||e.tipo==='autopista')dock.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
-    if(TRACKS[e.p].tema!=='noche')dock.append(seg([['De día',false],['De noche',true]],!!pref.noche,v=>{pref.noche=v;rehacer()}));
+    const ops=el('div','dock-op');
+    if(e.tipo==='circuito'||e.tipo==='autopista')ops.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
+    if(TRACKS[e.p].tema!=='noche')ops.append(seg([['Día',false],['Noche',true]],!!pref.noche,v=>{pref.noche=v;rehacer()}));
+    if(ops.children.length)dock.append(ops);
     const pr=el('div','premios-p'),tag=(a,b)=>{const q=el('span');q.append(el('small',null,a),el('b',null,b));pr.append(q)},bono=1+bonoEstilo()/100;
     if(e.tipo==='circuito'||e.tipo==='autopista')PREMIOS_MAQUINA.slice(0,3).forEach((p,i)=>tag((i+1)+'º',pesos(p*bono*dificultad().paga)));
     else if(e.tipo==='derrape'){Sim.setTrack(e.p);const med=medallas();Sim.setTrack(trackIdx);med.forEach(m=>tag(m.n+' · '+m.min.toLocaleString('es-AR'),pesos(m.p)))}
     else{const f=(pref.fantasmas||{})[TRACKS[e.p].name];tag('Tu récord',f?tiempo(f.t):'Sin vueltas');tag('Fantasma',f?'Listo':'Hacé una vuelta')}
     const u=el('button','fr grande-c','¡A correr!');u.type='button';u.onclick=()=>correr(e.tipo,e.p);
-    dock.append(pr,u);box.append(lista,dock);c.append(box);
+    const ir=el('div','dock-ir');ir.append(pr,u);dock.append(ir);box.append(lista,dock);c.append(box);
   }
   function pintarPremios(c,t){
     t.textContent='Tus premios';
