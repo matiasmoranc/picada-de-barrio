@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw867gr7"></script>
+<script src="room.js?v=mw8mby2u"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -6092,6 +6092,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const q=v3,c=focus();if(!c)return;
     const vivos=new Set();
     for(const a of cars){if(a.stale)continue;vivos.add(a);mover3D(auto3D(a),a,now,dt)}
+    fantasma3D(now,dt,vivos);
     if(track.ruta)for(const p of TRAF.pool){vivos.add(p);const m=auto3D(p);if(p.q)mover3D(m,p,now,dt);else m.g.visible=false}
     for(const [a,m] of q.autos)if(!vivos.has(a)){soltarSala(m);q.autos.delete(a)}
     marcas3D();humo3D();chispas3D();camara3D(c,dt);
@@ -6615,12 +6616,37 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(modo!=='practica'||!me||!me.lapStart||now<grabT)return;
     grabT=now+100;grabando.push(+me.x.toFixed(1),+me.y.toFixed(1),+me.a.toFixed(2));
   }
-  function dibujarFantasma(x,now){
-    const f=modo==='practica'&&me&&me.lapStart?fantasmaDe():null;if(!f)return;
+  // Dónde va el fantasma ahora: la vuelta grabada cada 0,1 s, interpolada
+  function poseFantasma(now){
+    const f=modo==='practica'&&me&&me.lapStart?fantasmaDe():null;if(!f||!Array.isArray(f.p))return null;
     const q=(now-me.lapStart)/100,i=Math.floor(q)*3,u=q-Math.floor(q),p=f.p;
-    if(i+5>=p.length)return;
-    const a=p[i+2],b=p[i+5],c={v:f.v,color:7,pz:{},x:p[i]+(p[i+3]-p[i])*u,y:p[i+1]+(p[i+4]-p[i+1])*u};
-    x.save();x.globalAlpha=.42;x.translate(c.x,c.y);x.rotate(a+wrap(b-a)*u);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
+    if(i<0||i+5>=p.length)return null;
+    const a=p[i+2],b=p[i+5];
+    return {f,x:p[i]+(p[i+3]-p[i])*u,y:p[i+1]+(p[i+4]-p[i+1])*u,a:a+wrap(b-a)*u,vx:(p[i+3]-p[i])*10,vy:(p[i+4]-p[i+1])*10};
+  }
+  function dibujarFantasma(x,now){
+    const o=poseFantasma(now);if(!o)return;
+    const c={v:o.f.v,color:7,pz:{}};
+    x.save();x.globalAlpha=.42;x.translate(o.x,o.y);x.rotate(o.a);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
+  }
+  let fant3={v:-1};
+  function fantasma3D(now,dt,vivos){
+    const o=poseFantasma(now);if(!o)return;
+    if(fant3.v!==o.f.v)fant3={v:o.f.v,color:7,pz:{},pzk:'{}',kind:'fantasma',ghost:0,idx:-1,delta:0};
+    const g=fant3,l=Sim.locate(o.x,o.y,g.idx);
+    g.x=o.x;g.y=o.y;g.a=o.a;g.vx=o.vx;g.vy=o.vy;g.idx=l?l.i:-1;
+    vivos.add(g);
+    const m=auto3D(g);
+    if(!m.trans){
+      // Materiales propios y transparentes, así los demás autos no cambian
+      m.g.traverse(e=>{
+        if(!e.isMesh&&!e.isSprite)return;
+        const uno=x=>{const c=x.clone();c.transparent=true;c.opacity=Math.min(c.opacity??1,.4);c.depthWrite=false;m.extra.push(c);return c};
+        e.material=Array.isArray(e.material)?e.material.map(uno):uno(e.material);e.castShadow=false;e.renderOrder=2;
+      });
+      if(m.nitro)m.nitro.visible=false;m.trans=true;
+    }
+    mover3D(m,g,now,dt);
   }
   // Ritmo de los bots de la sala: miran al mejor jugador de verdad (vos o los que entraron) y se acomodan.
   // El de mejor nivel apunta a ir a la par, el peor unos 140 m atrás; si quedan lejos empujan más, si se pasan aflojan
