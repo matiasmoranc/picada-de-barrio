@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw8mby2u"></script>
+<script src="room.js?v=mw9wxe4p"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -668,6 +668,19 @@ html,body{background:#000;touch-action:manipulation}
 .d-tabla li{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;padding:6px 10px;border-radius:10px;background:var(--carta);font-weight:700;color:#fff}
 .d-tabla li.yo{background:var(--oro);color:#14151a}
 .d-tabla h3{margin:0}
+.d-medallero{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.d-medallero li{display:grid;grid-template-columns:2.2em minmax(0,1fr) repeat(3,2.3em);gap:6px;align-items:center;padding:6px 10px;border-radius:10px;background:var(--carta);font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.d-medallero li>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-medallero li>b{text-align:center}
+.d-medallero li.cab{background:none;padding-block:0;color:var(--suave);font-size:.85rem;letter-spacing:.05em;text-transform:uppercase}
+.d-medallero li.cab>span:nth-child(n+3){text-align:center}
+.d-medallero li.yo{background:var(--oro);color:#14151a}
+.d-podios{display:grid;gap:8px}
+.d-podios section{background:var(--carta);border-radius:12px;padding:8px 12px;display:grid;gap:3px}
+.d-podios small{color:var(--suave);font-weight:600}
+.d-podios p{margin:0;display:grid;grid-template-columns:1.6em minmax(0,1fr) auto;gap:6px;font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.d-podios p>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.d-podios p.yo{color:var(--oro)}
 .diario h3{margin:4px 0 0;font:400 1.15rem var(--display);color:#fff}
 .diario .grande-c,.diario .d-ir{min-height:56px;font-size:1.3rem;width:100%}
 #carga-auto{position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:5px solid rgba(255,255,255,.18);border-top-color:var(--oro,#ffd23f);animation:girar .8s linear infinite;pointer-events:none;z-index:2}
@@ -2952,6 +2965,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   async function cuidarDiario(){
     if(actual==='diario'||actual==='titulo')nubeTabla();
+    if(actual==='diario')cargarPodios();
     if(!base)return;
     const quiere=actual==='diario'||actual==='titulo'||!!(evento&&evento.tipo==='diario'),nombre='diario-'+hoyUTC();
     if(salaDiario&&(!quiere||salaDiario.name!==nombre)){const v=salaDiario;salaDiario=null;if(v.leave)v.leave().catch(()=>{})}
@@ -3065,7 +3079,50 @@ if(typeof module!=='undefined')module.exports=Sim;
     else box.append(el('p','d-nota','Nadie corrió todavía. ¡Hacé el primer tiempo!'));
     const cambia=new Date(Date.UTC(+d.f.slice(0,4),+d.f.slice(5,7)-1,+d.f.slice(8,10)+1)).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'});
     box.append(el('p','d-nota','La tabla se comparte con los jugadores que entran al juego. Cambia todos los días a las '+cambia+'.'));
+    historialDiario(box);
     c.append(box);
+  }
+  // --- Historial: el podio de cada día que ya terminó. Los días pasados no cambian, así que se bajan una sola vez ---
+  const HIST_DESDE='2026-11-08';
+  const diasPasados=()=>{const l=[],hoy=hoyUTC();for(let t=Date.parse(HIST_DESDE+'T00:00:00Z');;t+=864e5){const f=new Date(t).toISOString().slice(0,10);if(f>=hoy)break;l.push(f)}return l};
+  let podiosT=-1e9,podiosBajando=false;
+  async function cargarPodios(){
+    if(!nube||!nube.user||podiosBajando||performance.now()-podiosT<60000)return;
+    const P=pref.podios||(pref.podios={}),faltan=diasPasados().filter(f=>!P[f]).slice(-20);
+    podiosT=performance.now();if(!faltan.length)return;
+    podiosBajando=true;let cambio=false;
+    try{
+      await Promise.all(faltan.map(async f=>{
+        const q=await nube.db.collection('diario').doc(f).collection('t').orderBy('t').limit(3).get();
+        P[f]=q.docs.map(x=>{const r=x.data();return [String(r.u||''),textoNombre(r.n),r.t|0]});cambio=true;
+      }));
+    }catch(e){console.warn('Sin historial',e)}
+    podiosBajando=false;
+    if(cambio){guardar(pref);if(actual==='diario')pintarMenu('diario')}
+  }
+  function historialDiario(box){
+    const P=pref.podios||{},dias=diasPasados().filter(f=>P[f]&&P[f].length).reverse();
+    box.append(el('h3',null,'Medallero'));
+    if(!dias.length){
+      box.append(el('p','d-nota',enNube?(nube&&nube.user?'Todavía no terminó ningún desafío con tiempos. El podio de hoy entra al medallero a las '+new Date(Date.UTC(+hoyUTC().slice(0,4),+hoyUTC().slice(5,7)-1,+hoyUTC().slice(8,10)+1)).toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit'})+'.':'Cargando el historial…'):'El historial se ve abriendo el juego desde el link de GitHub.'));
+      return;
+    }
+    // Se cuenta por jugador (su partida), con el nombre que usó la última vez
+    const J=new Map();
+    for(const f of [...dias].reverse())P[f].forEach((r,i)=>{if(!r[0])return;let j=J.get(r[0]);if(!j)J.set(r[0],j={u:r[0],n:r[1],m:[0,0,0]});j.n=r[1];j.m[i]++});
+    const L=[...J.values()].sort((a,b)=>b.m[0]-a.m[0]||b.m[1]-a.m[1]||b.m[2]-a.m[2]||a.n.localeCompare(b.n));
+    const ol=el('ol','d-medallero'),cab=el('li','cab');cab.append(el('span'),el('span',null,'Piloto'),el('span',null,'1º'),el('span',null,'2º'),el('span',null,'3º'));ol.append(cab);
+    L.slice(0,20).forEach((j,i)=>{const li=el('li',j.u===pref.uid?'yo':null);li.append(el('span',null,(i+1)+'º'),el('span',null,j.n+(j.u===pref.uid?' (vos)':'')),...j.m.map(v=>el('b',null,v||'·')));ol.append(li)});
+    box.append(ol);
+    box.append(el('h3',null,'Últimos podios'));
+    const lp=el('div','d-podios');
+    for(const f of dias.slice(0,7)){
+      const q=desafioDe(f),d=el('section'),fe=new Date(f+'T12:00:00Z').toLocaleDateString('es',{weekday:'short',day:'numeric',month:'short'});
+      d.append(el('small',null,fe+' · '+TRACKS[q.p].name+' · '+MODELOS[q.v].nombre));
+      P[f].forEach((r,i)=>{const p=el('p',r[0]===pref.uid?'yo':null);p.append(el('i',null,['🥇','🥈','🥉'][i]),el('span',null,r[1]),el('span',null,tiempo(r[2])));d.append(p)});
+      lp.append(d);
+    }
+    box.append(lp);
   }
   // --- Repetición: se guardan los últimos segundos de todos los autos ---
   const REPE={f:[],ult:0,ev:[],par:new Map()},REPE_MS=30000;let repe=null,podio=null;
