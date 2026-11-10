@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw9wxe4p"></script>
+<script src="room.js?v=mw9xtq14"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -582,6 +582,16 @@ html,body{background:#000;touch-action:manipulation}
 #podio-video{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(max(18px,env(safe-area-inset-bottom,0px)) + 44px);font:700 1.1rem var(--display,inherit);letter-spacing:.04em;color:#14151a;background:var(--oro,#ffd23f);border:0;border-radius:999px;padding:12px 22px;box-shadow:0 6px 18px rgba(0,0,0,.5);cursor:pointer}
 #clasif{position:absolute;inset:0;z-index:26;display:grid;place-items:center;padding:16px;background:rgba(8,9,12,.55)}
 #clasif[hidden]{display:none}
+#vuelta-d{position:absolute;inset:0;z-index:26;display:grid;place-items:center;padding:16px;background:rgba(8,9,12,.5)}
+#vuelta-d[hidden]{display:none}
+.vd-carta{width:min(380px,100%);box-sizing:border-box;background:var(--carta,#1b1d27);color:#fff;border-radius:16px;padding:16px;display:grid;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:center}
+.vd-carta small{color:var(--oro,#ffd23f);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.vd-carta h2{margin:0;font:400 2.6rem/1 var(--display,inherit);font-variant-numeric:tabular-nums}
+.vd-carta p{margin:0;color:var(--suave,#aab);font-weight:600;line-height:1.3}
+.vd-bot{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.vd-bot button{min-height:52px;border-radius:12px;border:0;font:400 1.15rem var(--display,inherit);cursor:pointer}
+#vd-otra{background:var(--oro,#ffd23f);color:#14151a}
+#vd-salir{background:rgba(255,255,255,.08);color:#fff}
 #cl-carta{width:min(400px,100%);box-sizing:border-box;background:var(--carta,#1b1d27);color:#fff;border-radius:16px;padding:16px;display:grid;gap:8px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
 #cl-k{color:var(--oro,#ffd23f);font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
 #cl-carta h2{margin:0;font:400 1.6rem var(--display,inherit);line-height:1.05}
@@ -948,6 +958,7 @@ html,body{background:#000;touch-action:manipulation}
     <div class="mando" id="mirar" hidden><span>MIRAR ATRÁS</span></div>
     <div class="mando" id="pedal-mano"><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M8 6 26 3 44 70 70 84 98 80V97H62L28 80Z" fill="#fbf6ea"/></svg><span>MANO</span></div>
   </div>
+  <div id="vuelta-d" hidden><div class="vd-carta"><small>Desafío del día</small><h2 id="vd-t"></h2><p id="vd-p"></p><div class="vd-bot"><button type="button" id="vd-otra">Hacer de nuevo</button><button type="button" id="vd-salir">Salir</button></div></div></div>
   <div id="clasif" hidden><div id="cl-carta"><small id="cl-k">Clasificación</small><h2 id="cl-t"></h2><p id="cl-p"></p><ol id="cl-lista"></ol><div id="cl-bot"><button type="button" id="cl-si"></button><button type="button" id="cl-no"></button></div></div></div>
   <div id="repe" hidden><b>REPETICIÓN</b><i id="repe-sub"></i><span>Tocá para saltar</span></div>
   <div id="podio" hidden><h2 id="podio-t"></h2><p id="podio-n"></p><button type="button" id="podio-video" hidden>⬇ Descargar repetición</button><span>Tocá para ver los resultados</span></div>
@@ -2914,12 +2925,37 @@ if(typeof module!=='undefined')module.exports=Sim;
     modo='practica';evento={tipo:'diario',pista:q.p,noche:q.noche,v:q.v};vueltas=LAPS;
     autoDiario(q.v);me.frozen=false;
     setCircuito(q.p);
+    largadaD={x:me.x,y:me.y,a:me.a,idx:me.idx};$('vuelta-d').hidden=true;
     mostrarJuego(true);
     const d=datoDiario();
     // Las medallas se miden con el mejor bot manejando este mismo auto
     if(!d.oro){const b=Sim.newCar({kind:'bot',v:q.v,spec:{...MODELOS[q.v]},skill:1.02,torpe:.12,ag:1.6,nivel:0,lane:0});manejoBot(b,0);simDiario=[simVuelta(b,antesDeLinea())]}
     aviso('Desafío del día: hacé tu mejor vuelta');
   }
+  // Cartel al cruzar la meta: el tiempo de la vuelta y qué hacer
+  let largadaD=null;
+  function cartelVueltaD(lap,valida,antes){
+    if(!(evento&&evento.tipo==='diario')||!me)return;
+    const d=datoDiario(),m=tiemposMedalla(d);
+    $('vd-t').textContent=tiempo(lap);
+    let p;
+    if(!valida)p='Vuelta no válida: te saliste del recorrido.';
+    else if(!antes||lap<antes)p=antes?'¡Nuevo récord del día! Mejoraste '+((antes-lap)/1000).toFixed(2)+' s.':'¡Tu primer tiempo de hoy!';
+    else p='+'+((lap-antes)/1000).toFixed(2)+' s de tu récord ('+tiempo(antes)+').';
+    if(m&&valida){const prox=m.find(x=>d.yo>x.t);if(prox)p+=' Para '+prox.n.toLowerCase()+': '+tiempo(prox.t)+'.';else if(d.med>=3)p+=' Tenés el oro.'}
+    $('vd-p').textContent=p;
+    me.frozen=true;me.vx=me.vy=0;$('vuelta-d').hidden=false;
+  }
+  function otraVueltaD(){
+    $('vuelta-d').hidden=true;if(!me||!largadaD)return;
+    Object.assign(me,largadaD);
+    me.vx=me.vy=me.w=me.steer=me.delta=me.uf=me.ur=me.lax=me.lay=me.suelto=me.cola=me.betaAnt=0;
+    resetRun(me);me.ghost=0;me.frozen=false;me.nos=1;grabando=[];
+    for(const c of cars)c.l=c.r=null;cam.init=false;if(v3)v3.ini=false;
+    aviso('Desafío del día: hacé tu mejor vuelta');
+  }
+  $('vd-otra').onclick=otraVueltaD;
+  $('vd-salir').onclick=()=>{$('vuelta-d').hidden=true;alMenu('diario')};
   function revisarMedallas(){
     const d=datoDiario(),m=tiemposMedalla(d);if(!m||!d.yo)return;
     let n=0;m.forEach((x,i)=>{if(d.yo<=x.t)n=i+1});
@@ -3585,7 +3621,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('gastar').onclick=()=>alMenu();
   $('otra').onclick=()=>{const q=evento;alMenu();correr(q.tipo,q.pista)};
   $('al-garaje').onclick=()=>alMenu('garaje');
-  $('abandonar').onclick=()=>alMenu(evento&&evento.tipo==='diario'?'diario':'correr');
+  $('abandonar').onclick=()=>($('vuelta-d').hidden=true,alMenu)(evento&&evento.tipo==='diario'?'diario':'correr');
   $('largar').onclick=()=>{
     if(race)return;
     const now=performance.now();
@@ -6759,7 +6795,7 @@ if(typeof module!=='undefined')module.exports=Sim;
             const f=fantasmaDe(),nuevo=modo==='practica'&&grabando.length>30&&(!f||lap<f.t);
             aviso('Vuelta '+tiempo(lap)+(nuevo?' · ¡Récord!':f&&modo==='practica'?' · +'+((lap-f.t)/1000).toFixed(2):ant?(lap<ant?' · ¡Tu mejor!':' · +'+((lap-ant)/1000).toFixed(2)):''));
             if(nuevo){(pref.fantasmas||(pref.fantasmas={}))[claveFantasma()]={t:Math.round(lap),p:grabando,v:me.v,f:hoyUTC()};guardar(pref)}
-            if(evento&&evento.tipo==='diario')vueltaDiario(lap,grabando.length>30);
+            if(evento&&evento.tipo==='diario'){const antes=datoDiario().yo;vueltaDiario(lap,grabando.length>30);cartelVueltaD(lap,grabando.length>30,antes)}
             if(clasif&&clasif.fase==='vuelta')terminarClasif(lap);
           }
         }
