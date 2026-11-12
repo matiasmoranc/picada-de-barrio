@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mwdta1gp"></script>
+<script src="room.js?v=mwe4lsmc"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -953,13 +953,50 @@ html,body{background:#000;touch-action:manipulation}
 #planilla .fila-fin button,#seguir{min-height:48px}
 #otra{min-height:56px!important;font-size:1.2rem}
 #seguir{background:var(--oro)!important;color:#14151a}
+/* Lobby: logo más chico, tarjeta de piloto, selector de auto y desafío compacto */
+#bienvenida .logo.trax{font-size:min(11vw,8vh,52px)}
+#bienvenida .logo{margin-inline:auto}
+#i-perfil{display:grid;gap:6px;background:rgba(10,11,15,.78);border:1px solid var(--linea);border-radius:16px;padding:8px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#i-perfil #t-piloto label{text-shadow:none;color:var(--suave);font-size:.9rem;min-width:3.4em}
+#i-perfil #nombre{background:rgba(255,255,255,.08);min-height:34px;padding:5px 10px}
+#i-perfil #i-cuenta{background:none;padding:0;border-radius:0;font-size:.9rem;color:var(--suave)}
+#i-perfil #i-google{min-height:30px;padding:4px 10px;font-size:.88rem}
+#i-sel{display:flex;align-items:center;gap:8px}
+#i-sel[hidden]{display:none}
+#i-ant,#i-sig{flex:none;width:44px;height:44px;border-radius:50%;border:1px solid var(--linea);background:rgba(10,11,15,.72);color:#fff;font:400 2rem/1 var(--display);display:grid;place-items:center;padding:0 0 4px;cursor:pointer}
+#i-ant[hidden],#i-sig[hidden]{visibility:hidden;display:grid}
+#i-auto{flex:1;min-width:0;display:grid;gap:5px;background:rgba(10,11,15,.72);border:1px solid var(--linea);border-radius:16px;padding:7px 12px 9px;color:#fff;text-align:center;min-height:0;cursor:pointer}
+#i-auto-n{font:400 1.25rem/1.05 var(--display);color:var(--oro);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#i-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.i-st{display:grid;gap:3px;text-align:left}
+.i-st small{font-size:.72rem;font-weight:700;color:var(--suave);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+.i-st i{display:block;height:5px;border-radius:3px;background:rgba(255,255,255,.14);overflow:hidden}
+.i-st u{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#ffd23f,#ff7a1a)}
+#i-diario{padding:8px 14px;gap:10px}
+#i-diario>span{gap:1px}
+#i-diario small{font-size:.78rem}
+#i-diario b{font-size:1rem}
+#i-diario em{font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Cartel de la primera vez */
+#ce-nom-l{display:grid;gap:6px;text-align:left;font-weight:700;color:var(--suave)}
+#ce-nom-l[hidden],#ce-p[hidden],#ce-google[hidden],#ce-invitado[hidden],#ce-s[hidden],#ce-listo[hidden]{display:none}
+#ce-nombre{font:700 1.2rem var(--texto);padding:10px 12px;border-radius:12px;border:1px solid var(--linea);background:rgba(255,255,255,.08);color:#fff;-webkit-user-select:text;user-select:text;box-sizing:border-box;width:100%}
+#ce-listo{min-height:52px;border-radius:12px;border:0;background:var(--oro,#ffd23f);color:#14151a;font:400 1.25rem var(--display,inherit);cursor:pointer}
+/* Pantalla de carga con el mismo logo del lobby */
+body #arranque h1{color:transparent;background:linear-gradient(#ffe600 18%,#ffb01f 50%,#f03a1c 88%);-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 4px 0 #000) drop-shadow(0 10px 24px rgba(0,0,0,.6));transform:rotate(-2deg) skewX(-10deg);padding:0 .1em}
+body #arranque .barra i{transition:width .15s linear}
+body #arranque-tip{min-height:2.6em;max-width:min(80vw,340px);text-align:center;font-weight:600!important;opacity:.6!important;line-height:1.3}
+/* Mismo estilo de tarjeta en todas las pantallas: grandes con borde suave y radio 16, filas con radio 10 */
+.modo,.sel-pista>.pista-ficha,.paso,.grupo-op,.d-cab,.p-carta,#con-codigo,#abiertas,#invitar,.dock,.d-podios section,#resultados,#i-carrera.invita{border-radius:16px;border:1px solid var(--linea)}
+.premios-p span,#menu .pistas-ev button,.d-tabla li,.d-medallero li,.fila-p,#lista-sala li,.p-stats span{border-radius:10px}
+.d-med span{border-radius:12px}
 </style>
 <div id="juego">
   <canvas id="tres" aria-hidden="true" hidden></canvas>
   <canvas id="lienzo" aria-label="Pista de carreras vista desde arriba"></canvas>
   <canvas id="capa" aria-hidden="true" hidden></canvas>
   <div id="carga-auto" hidden></div>
-  <div id="arranque"><h1>TRAX</h1><div class="barra"><i id="arranque-b"></i></div><p id="arranque-t">Cargando autos…</p></div>
+  <div id="arranque"><h1>TRAX</h1><div class="barra"><i id="arranque-b"></i></div><p id="arranque-t">Cargando autos…</p><p id="arranque-tip"></p></div>
   <div id="tactil" hidden>
     <div id="ayuda-volante">Arrastrá el dedo a la izquierda o a la derecha</div>
     <div class="mando" id="volante" hidden><i id="riel"></i><i id="perilla"></i><span>DESLIZÁ</span></div>
@@ -1073,9 +1110,12 @@ html,body{background:#000;touch-action:manipulation}
   </div>
   <div id="bienvenida">
     <h1 class="logo trax" aria-label="TRAX"><span data-t="TRAX"><b>TRAX</b></span></h1>
+    <div id="i-perfil">
+    <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"></div>
     <div id="i-cuenta" hidden><span id="i-cuenta-t"></span><button type="button" id="i-google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>Entrar con Google</button></div>
-    <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"><button type="button" id="i-auto"></button></div>
+    </div>
     <div id="i-relleno"></div>
+    <div id="i-sel"><button type="button" id="i-ant" aria-label="Auto anterior">‹</button><button type="button" id="i-auto"><b id="i-auto-n"></b><span id="i-stats"></span></button><button type="button" id="i-sig" aria-label="Auto siguiente">›</button></div>
     <section id="i-carrera" aria-label="Próxima carrera">
       <div class="i-fila"><small id="i-modo"></small><button type="button" id="i-cambiar">Cambiar</button></div>
       <h2 id="i-pista"></h2>
@@ -1083,15 +1123,17 @@ html,body{background:#000;touch-action:manipulation}
       <p id="i-premio"></p>
       <button class="fr" id="jugar"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M12 6 92 50 12 94Z"/></svg><span id="i-cta">Correr</span></button>
     </section>
-    <button type="button" id="i-diario"><span><small>Desafío del día</small><b id="i-d-n"></b><em id="i-d-t"></em></span><i aria-hidden="true">›</i></button>
+    <button type="button" id="i-diario"><span><small id="i-d-s">Desafío del día</small><b id="i-d-n"></b><em id="i-d-t"></em></span><i aria-hidden="true">›</i></button>
     <button type="button" id="i-mejora"><span><small>Próxima mejora</small><b id="i-m-n"></b><i class="prog"><u id="i-m-u"></u></i></span><em id="i-m-t"></em></button>
   </div>
   <div id="cuenta-elegir" hidden><div class="ce-carta">
-    <h2>¿Cómo querés jugar?</h2>
-    <p>Con Google tus autos quedan guardados y los ves desde cualquier dispositivo.</p>
+    <h2 id="ce-h">¿Cómo querés jugar?</h2>
+    <label id="ce-nom-l">Tu nombre de piloto<input id="ce-nombre" maxlength="12" autocomplete="off" placeholder="Ej: Tito"></label>
+    <p id="ce-p">Con Google tus autos quedan guardados y los ves desde cualquier dispositivo.</p>
     <button type="button" id="ce-google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>Entrar con Google</button>
     <button type="button" id="ce-invitado">Jugar como invitado</button>
-    <small>Como invitado se guarda solo en este teléfono. Podés entrar con Google cuando quieras.</small>
+    <button type="button" id="ce-listo">¡Listo!</button>
+    <small id="ce-s">Como invitado se guarda solo en este teléfono. Podés entrar con Google cuando quieras.</small>
   </div></div>
   <div id="menu" hidden>
     <button class="atras" id="menu-atras"><i></i>Atrás</button>
@@ -1966,8 +2008,10 @@ if(typeof module!=='undefined')module.exports=Sim;
       $('i-modo').textContent='Te invitaron a correr';if(invitacion.p!=null)$('i-pista').textContent=TRACKS[invitacion.p].name;
       $('i-meta').textContent=invitacion.v!=null?'Todos con el '+MODELOS[invitacion.v].nombre:'Partida online';$('i-premio').textContent='Tocá y entrás directo a la pista';
     }
-    $('i-auto').textContent=MODELOS[modelo].nombre;
-    {const n=bannerDiario('');$('i-d-n').textContent=n.querySelector('b').textContent;$('i-d-t').textContent=n.querySelector('em').textContent}
+    pintarSelAuto();
+    {const n=bannerDiario('');$('i-d-n').textContent=n.querySelector('b').textContent;$('i-d-t').textContent=n.querySelector('em').textContent;
+      const r=Date.parse(hoyUTC()+'T00:00:00Z')+864e5-Date.now(),h=Math.floor(r/36e5);
+      $('i-d-s').textContent='Desafío del día · '+(h>=1?'quedan '+h+' h':'quedan '+Math.max(1,Math.ceil(r/6e4))+' min')}
     $('i-mejora').hidden=!m;
     if(m){
       const f=libre()?1:clamp(pref.plata/m.p,0,1);
@@ -3106,11 +3150,27 @@ if(typeof module!=='undefined')module.exports=Sim;
     $('i-cuenta').hidden=!nube||!u;
     if(u)$('i-cuenta-t').textContent=anon?'Jugando como invitado':'✓ '+(u.email||'Cuenta de Google');
     $('i-google').hidden=!anon;
-    $('cuenta-elegir').hidden=!(u&&anon&&enLobby&&!pref.cuentaElegida);
+    // La primera vez: el nombre del piloto y, si hay nube, Google o invitado
+    const pideCuenta=!!(u&&anon&&!pref.cuentaElegida),pideNombre=!pref.nombreVisto&&(!pref.nombre||pref.nombre==='Piloto');
+    const esperaNube=enNube&&!u&&performance.now()<7000;
+    const ver=enLobby&&!esperaNube&&(pideCuenta||pideNombre),ce=$('cuenta-elegir');
+    if(ver&&ce.hidden){$('ce-nombre').value=pref.nombre&&pref.nombre!=='Piloto'?pref.nombre:''}
+    ce.hidden=!ver;
+    $('ce-h').textContent=pideCuenta?'¿Cómo querés jugar?':'¿Cómo te llamás?';
+    $('ce-nom-l').hidden=!pideNombre;
+    for(const id of ['ce-p','ce-google','ce-invitado','ce-s'])$(id).hidden=!pideCuenta;
+    $('ce-listo').hidden=pideCuenta;
   }
-  setInterval(()=>{if(nube)cuentaLobby()},800);
-  $('ce-invitado').onclick=()=>{pref.cuentaElegida=1;guardar(pref);cuentaLobby()};
-  $('ce-google').onclick=()=>{pref.cuentaElegida=1;guardar(pref);cuentaLobby();conGoogle()};
+  setInterval(cuentaLobby,800);
+  function nombreElegido(){
+    const n=$('ce-nombre').value.trim().slice(0,12);
+    if(n){pref.nombre=n;$('nombre').value=n;if(me)me.name=n}
+    pref.nombreVisto=1;
+  }
+  $('ce-invitado').onclick=()=>{nombreElegido();pref.cuentaElegida=1;guardar(pref);cuentaLobby()};
+  $('ce-google').onclick=()=>{nombreElegido();pref.cuentaElegida=1;guardar(pref);cuentaLobby();conGoogle()};
+  $('ce-listo').onclick=()=>{nombreElegido();guardar(pref);cuentaLobby()};
+  $('ce-nombre').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();($('ce-listo').hidden?$('ce-invitado'):$('ce-listo')).click()}};
   $('i-google').onclick=()=>conGoogle();
   function pintarCuenta(){
     if(nube)cuentaLobby();
@@ -3766,6 +3826,20 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('i-cambiar').onclick=()=>{subirAlAuto();tab('correr')};
   $('i-diario').onclick=()=>{subirAlAuto();ir('diario')};
   $('i-auto').onclick=()=>{subirAlAuto();tab('garaje')};
+  // Selector del lobby: el auto elegido, sus stats y flechas para pasar entre los tuyos
+  function pintarSelAuto(){
+    $('i-auto-n').textContent=MODELOS[modelo].nombre;
+    let d;try{d=datos(specDe(modelo))}catch{d=datos(MODELOS[modelo])}
+    const st=$('i-stats');st.textContent='';
+    for(const [k,n] of [['Velocidad','Velocidad'],['Pique','Aceleración'],['Agarre','Agarre']]){
+      const [lo,hi]=rangos[k],f=el('span','i-st'),b=el('i'),u=el('u');
+      u.style.width=clamp(10+90*(d[k]-lo)/(hi-lo),6,100)+'%';b.append(u);f.append(el('small',null,n),b);st.append(f);
+    }
+    const varios=pref.autos.length>1;$('i-ant').hidden=$('i-sig').hidden=!varios;
+  }
+  const pasarAuto=d=>{if(race&&race.state==='go')return;visto=modelo;cambiarAuto(d);pintarInicio()};
+  $('i-ant').onclick=()=>pasarAuto(-1);
+  $('i-sig').onclick=()=>pasarAuto(1);
   $('i-mejora').onclick=()=>{subirAlAuto();tab('garaje');abrirPanel('mecanico')};
   $('b-plata').onclick=$('b-nivel').onclick=()=>{subirAlAuto();tab('premios')};
   $('b-op').onclick=()=>{subirAlAuto();if(actual!=='opciones')ir('opciones')};
@@ -5020,9 +5094,11 @@ if(typeof module!=='undefined')module.exports=Sim;
   const arranque={hechos:0,fin:false};
   function sacarArranque(){if(arranque.fin)return;arranque.fin=true;const a=$('arranque');if(!a)return;a.classList.add('listo');setTimeout(()=>a.remove(),500)}
   function avanceArranque(){const n=Object.keys(GLBS).length;arranque.hechos++;
-    const b=$('arranque-b'),t=$('arranque-t');if(b)b.style.width=Math.round(arranque.hechos/n*100)+'%';if(t)t.textContent='Cargando autos… '+arranque.hechos+'/'+n;
+    const b=$('arranque-b'),t=$('arranque-t'),p=Math.round(arranque.hechos/n*100);if(b)b.style.width=p+'%';if(t)t.textContent=p>=100?'¡Listo!':'Cargando autos… '+p+'%';
     if(arranque.hechos>=n)setTimeout(sacarArranque,350)}
   setTimeout(sacarArranque,40000);
+  {const T=['Frená antes de la curva y acelerá a la salida.','En el Desafío del día todos corren con el mismo auto.','En el garaje podés pintar tu auto y ponerle calcos.','El nitro rinde más en las rectas largas.','Entrá con Google y tus autos te siguen a cualquier teléfono.'],t=$('arranque-tip');
+    if(t){let i=Math.floor(Math.random()*T.length);const v=()=>{t.textContent=T[i++%T.length]};v();const h=setInterval(()=>{if(arranque.fin)clearInterval(h);else v()},3500)}}
   function cargarGLBs(){
     if(!gl||!window.THREE||!THREE.GLTFLoader){sacarArranque();return}
     const ld=new THREE.GLTFLoader();
@@ -5927,13 +6003,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     // Tribuna con público
     const tr=pista.tribuna,m=new THREE.Mesh(new THREE.PlaneGeometry(42,12),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(tribunaCanvas()),side:THREE.DoubleSide}));
     m.position.set(tr.x,5,tr.y);m.rotation.order='YXZ';m.rotation.y=-tr.a;m.rotation.x=(t.nx[0]*(tr.x-t.x[0])+t.ny[0]*(tr.y-t.y[0])>0?-1:1)*.9;g.add(m);
-    // Árboles o edificios alrededor
-    const cono=new THREE.ConeGeometry(2.8,7,8),tronco=new THREE.CylinderGeometry(.4,.5,1.6,6),caja=new THREE.BoxGeometry(1,1,1),copa=new THREE.MeshLambertMaterial({color:T.prop==='nevado'?'#e6eff5':T.prop==='cactus'?'#a37c54':'#4f7a3b'}),palo=new THREE.MeshLambertMaterial({color:'#6d4f35'}),muro=new THREE.MeshLambertMaterial({color:'#a8b4bd'});
-    for(const a of pista.props){
-      const d=Math.hypot(a.x-t.x[0],a.y-t.y[0]);if(d>190)continue;
-      if(T.prop==='edificio'){const h=6+a.w*14,b=new THREE.Mesh(caja,muro);b.scale.set(10,h,10);b.position.set(a.x,h/2,a.y);b.rotation.y=a.r;g.add(b)}
-      else{const u=new THREE.Mesh(cono,copa);u.scale.setScalar(a.e);u.position.set(a.x,4.6*a.e,a.y);const v=new THREE.Mesh(tronco,palo);v.position.set(a.x,.8,a.y);g.add(u,v)}
-    }
+    // Árboles, rocas, casas o edificios alrededor
+    mallasProps(pista.props.filter(a=>Math.hypot(a.x-t.x[0],a.y-t.y[0])<=190),T,m=>g.add(m));
     esc.add(g);
     return g;
   }
@@ -6084,23 +6155,8 @@ if(typeof module!=='undefined')module.exports=Sim;
       tx.magFilter=THREE.NearestFilter;tx.wrapS=tx.wrapT=THREE.RepeatWrapping;tx.repeat.set(1,h/56);
       const suelo=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx}));suelo.rotation.x=-Math.PI/2;suelo.position.set((x0+x1)/2,-.02,(y0+y1)/2);deco.add(suelo);
     }
-    // Árboles, cactus, faroles o edificios: una sola malla por tipo
-    {
-      const lista=pista.props,M4=new THREE.Matrix4(),Qt=new THREE.Quaternion(),V=new THREE.Vector3(),E=new THREE.Vector3(),Y=new THREE.Vector3(0,1,0);
-      const grupo=(geo,mat,items,fn)=>{if(!items.length)return;const im=new THREE.InstancedMesh(geo,mat,items.length);items.forEach((a,i)=>{fn(a,V,E);Qt.setFromAxisAngle(Y,-a.r);M4.compose(V,Qt,E);im.setMatrixAt(i,M4)});deco.add(im)};
-      if(T.prop==='edificio')grupo(new THREE.BoxGeometry(1,1,1),new THREE.MeshLambertMaterial({color:'#a8b4bd'}),lista,(a,v,e)=>{const h=6+a.w*14;v.set(a.x,h/2,a.y);e.set(10,h,10)});
-      else{
-        const faro=T.prop==='farol'?lista.filter(a=>a.w<.4):[],arb=lista.filter(a=>!faro.includes(a));
-        const copa=new THREE.MeshLambertMaterial({color:T.prop==='nevado'?'#e6eff5':T.prop==='cactus'?'#7f9a4a':'#4f7a3b'});
-        if(T.prop==='cactus')grupo(new THREE.CylinderGeometry(.5,.6,4,7),copa,arb,(a,v,e)=>{v.set(a.x,2*a.e,a.y);e.set(a.e,a.e,a.e)});
-        else{
-          grupo(new THREE.ConeGeometry(2.8,7,8),copa,arb,(a,v,e)=>{v.set(a.x,4.6*a.e,a.y);e.set(a.e,a.e,a.e)});
-          grupo(new THREE.CylinderGeometry(.4,.5,1.6,6),new THREE.MeshLambertMaterial({color:'#6d4f35'}),arb,(a,v,e)=>{v.set(a.x,.8,a.y);e.set(1,1,1)});
-        }
-        grupo(new THREE.CylinderGeometry(.12,.16,6,6),new THREE.MeshLambertMaterial({color:'#3b4048'}),faro,(a,v,e)=>{v.set(a.x,3,a.y);e.set(1,1,1)});
-        grupo(new THREE.SphereGeometry(.45,8,6),new THREE.MeshBasicMaterial({color:'#fff1c4',fog:false}),faro,(a,v,e)=>{v.set(a.x,6.1,a.y);e.set(1,1,1)});
-      }
-    }
+    // Árboles, rocas, casas, faroles o edificios: una sola malla por tipo
+    mallasProps(pista.props,T,m=>deco.add(m));
     if(pista.farolas&&pista.farolas.length){
       const L=pista.farolas,M4=new THREE.Matrix4(),V=new THREE.Vector3(),Q=new THREE.Quaternion(),E=new THREE.Vector3();
       const im=(geo,mat,fn)=>{const m=new THREE.InstancedMesh(geo,mat,L.length);L.forEach((f,i)=>{Q.identity();E.set(1,1,1);fn(f);M4.compose(V,Q,E);m.setMatrixAt(i,M4)});deco.add(m)};
@@ -6274,6 +6330,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   let pista=null;
   // Figuras del escenario vistas de arriba
   const PROPS={};
+  const TAM_PROP={techo:10,farol:7,pino:5.2,nevado:5.2,cactus:5.2,arbol:6.4,arbusto:2.8,seco:2.6,roca:3.4,casa:9};
   function figura(k){
     if(PROPS[k])return PROPS[k];
     const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d');x.translate(48,48);
@@ -6283,10 +6340,45 @@ if(typeof module!=='undefined')module.exports=Sim;
       disco(6,8,32,'rgba(0,0,0,.22)');disco(0,0,32,n[0]);disco(-3,-3,24,n[1]);disco(-6,-6,16,n[2]);disco(-9,-9,8,n[3]);
     }else if(k==='cactus'){
       disco(5,6,22,'rgba(0,0,0,.2)');disco(0,0,20,'#a37c54');disco(-4,-4,14,'#b98f63');disco(-7,-7,7,'#cfa77b');
+    }else if(k==='arbol'){
+      disco(7,8,34,'rgba(0,0,0,.22)');disco(0,0,34,'#3e6b2e');disco(-12,4,18,'#4c7d38');disco(10,-8,20,'#558a3e');disco(-6,-10,16,'#68a04b');disco(-10,-14,7,'#86bb62');
+    }else if(k==='arbusto'||k==='seco'){
+      const n=k==='arbusto'?['#3f6e2f','#5a8f40','#78ad57']:['#7d6a3e','#9c8752','#b8a36b'];
+      disco(6,7,30,'rgba(0,0,0,.2)');disco(-8,2,24,n[0]);disco(10,-2,22,n[0]);disco(0,-8,22,n[1]);disco(-4,-12,10,n[2]);
+    }else if(k==='roca'){
+      x.fillStyle='rgba(0,0,0,.25)';x.beginPath();x.moveTo(-28,-14);x.lineTo(4,-34);x.lineTo(36,-6);x.lineTo(26,30);x.lineTo(-20,34);x.lineTo(-40,6);x.fill();
+      x.fillStyle='#8e877c';x.beginPath();x.moveTo(-34,-18);x.lineTo(0,-40);x.lineTo(32,-12);x.lineTo(22,24);x.lineTo(-24,28);x.lineTo(-44,0);x.fill();
+      x.fillStyle='#ada597';x.beginPath();x.moveTo(-26,-16);x.lineTo(0,-32);x.lineTo(18,-14);x.lineTo(-4,4);x.fill();
+    }else if(k==='casa'){
+      x.fillStyle='rgba(0,0,0,.3)';x.fillRect(-30,-38,68,82);x.fillStyle='#a8452f';x.fillRect(-36,-44,68,82);
+      x.fillStyle='#c4573d';x.fillRect(-36,-44,34,82);x.fillStyle='#7d3122';x.fillRect(-3,-44,5,82);
     }else if(k==='techo'){
       x.fillStyle='rgba(0,0,0,.3)';x.fillRect(-36,-36,84,84);x.fillStyle='#8d8f92';x.fillRect(-42,-42,84,84);x.fillStyle='#a3a5a8';x.fillRect(-36,-36,72,72);x.fillStyle='#74777b';x.fillRect(-20,-22,20,14);x.fillRect(8,6,16,18);
     }else{disco(0,0,44,'rgba(255,226,150,.16)');disco(0,0,24,'rgba(255,226,150,.28)');disco(0,0,7,'#fff1c4')}
     return PROPS[k]=c;
+  }
+  // Paisaje en 3D: una sola malla instanciada por tipo de cosa
+  function mallasProps(lista,T,add){
+    if(!lista.length)return;
+    const M4=new THREE.Matrix4(),Qt=new THREE.Quaternion(),V=new THREE.Vector3(),E=new THREE.Vector3(),Y=new THREE.Vector3(0,1,0);
+    const grupo=(geo,mat,items,fn)=>{if(!items.length)return;const im=new THREE.InstancedMesh(geo,mat,items.length);items.forEach((a,i)=>{fn(a,V,E);Qt.setFromAxisAngle(Y,-a.r);M4.compose(V,Qt,E);im.setMatrixAt(i,M4)});add(im)};
+    const de=k=>lista.filter(a=>(a.k||'pino')===k),L=c=>new THREE.MeshLambertMaterial({color:c}),nieve=T.prop==='nevado';
+    const pinos=[...de('pino'),...de('nevado')],arb=de('arbol');
+    grupo(new THREE.ConeGeometry(2.8,7,8),L(nieve?'#e6eff5':'#4f7a3b'),pinos,(a,v,e)=>{v.set(a.x,4.6*a.e,a.y);e.setScalar(a.e)});
+    grupo(new THREE.IcosahedronGeometry(2.7,1),L('#5b8c3d'),arb,(a,v,e)=>{v.set(a.x,4.2*a.e,a.y);e.set(a.e,a.e*.9,a.e)});
+    grupo(new THREE.CylinderGeometry(.4,.5,1,6),L('#6d4f35'),[...pinos,...arb],(a,v,e)=>{const h=a.k==='arbol'?2.8*a.e:1.6;v.set(a.x,h/2,a.y);e.set(1,h,1)});
+    grupo(new THREE.IcosahedronGeometry(1.3,0),L('#6c9a46'),de('arbusto'),(a,v,e)=>{v.set(a.x,.8*a.e,a.y);e.set(a.e*1.2,a.e*.8,a.e)});
+    grupo(new THREE.IcosahedronGeometry(1.1,0),L('#9c8752'),de('seco'),(a,v,e)=>{v.set(a.x,.6*a.e,a.y);e.set(a.e*1.2,a.e*.7,a.e)});
+    grupo(new THREE.DodecahedronGeometry(1.5,0),L(nieve?'#aab5be':'#9a7f62'),de('roca'),(a,v,e)=>{v.set(a.x,.45*a.e,a.y);e.set(a.e*1.3,a.e*.75,a.e)});
+    grupo(new THREE.CylinderGeometry(.5,.6,4,7),L('#7f9a4a'),de('cactus'),(a,v,e)=>{v.set(a.x,2*a.e,a.y);e.setScalar(a.e)});
+    const casas=de('casa');
+    grupo(new THREE.BoxGeometry(7,4,8),L('#eadcc0'),casas,(a,v,e)=>{v.set(a.x,2,a.y);e.set(1,1,1)});
+    grupo(new THREE.ConeGeometry(6.2,3,4).rotateY(Math.PI/4),L('#b5533c'),casas,(a,v,e)=>{v.set(a.x,5.5,a.y);e.set(1,1,1.05)});
+    const ed=de('edificio');
+    ['#a8b4bd','#c7b9a3','#8f9ba8'].forEach((c,j)=>grupo(new THREE.BoxGeometry(1,1,1),L(c),ed.filter(a=>Math.floor(a.w*3)===j||(j===2&&a.w>=1)),(a,v,e)=>{const h=6+a.w*14;v.set(a.x,h/2,a.y);e.set(10,h,10)}));
+    const faro=de('farol');
+    grupo(new THREE.CylinderGeometry(.12,.16,6,6),L('#3b4048'),faro,(a,v,e)=>{v.set(a.x,3,a.y);e.set(1,1,1)});
+    grupo(new THREE.SphereGeometry(.45,8,6),new THREE.MeshBasicMaterial({color:'#fff1c4',fog:false}),faro,(a,v,e)=>{v.set(a.x,6.1,a.y);e.set(1,1,1)});
   }
   let figTribuna=null;
   function tribunaCanvas(){
@@ -6321,9 +6413,25 @@ if(typeof module!=='undefined')module.exports=Sim;
     const l=track.linea;
     // Escenario: se arma una vez por pista y solo se dibuja lo que está cerca de la cámara
     let sem=7+trackIdx*31;const rnd=()=>(sem=(sem*16807)%2147483647)/2147483647,props=[];
-    for(let i=0;i<190;i++){
-      const k=Math.floor(rnd()*N),o=(rnd()<.5?-1:1)*(WALL+6+rnd()*50),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o,m=(o>0?t.mD:t.mI)[k];
-      if(Math.abs(o)>m+3&&Math.abs(Sim.locate(px,py,-1).d)>WALL+4)props.push({x:px,y:py,e:.8+rnd()*.9,r:rnd()*6.3,w:rnd()});
+    const ruta=!!t.ruta,cuantos=ruta?190:Math.round(clamp(N*t.sp*.32,240,1100)),lejos=ruta?50:85,P=T0.prop;
+    // Qué hay según el tema: naturaleza en el campo, el desierto y la nieve; edificios en la ciudad
+    const tipo=o=>{const r=rnd(),a=Math.abs(o);
+      if(P==='edificio')return a>WALL+14&&r<.78?'edificio':'arbol';
+      if(P==='cactus')return r<.5?'cactus':r<.82?'roca':'seco';
+      if(P==='nevado')return r<.72?'nevado':'roca';
+      if(P==='farol')return r<.4?'farol':r<.75?'pino':'arbol';
+      return a>WALL+30&&r<.05?'casa':r<.46?'pino':r<.82?'arbol':'arbusto'};
+    const grande=k=>k==='casa'||k==='edificio';
+    const poner=(px,py,k,e)=>{
+      const L=Sim.locate(px,py,-1),mm=(L.d>0?t.mD:t.mI)[L.i]||0;
+      if(Math.abs(L.d)>Math.max(WALL+4,mm+3)+(grande(k)?6:0))props.push({x:px,y:py,e,r:rnd()*6.3,w:rnd(),k});
+    };
+    for(let i=0;i<cuantos;i++){
+      const k=Math.floor(rnd()*N),o=(rnd()<.5?-1:1)*(WALL+6+Math.pow(rnd(),1.7)*lejos),px=t.x[k]+t.nx[k]*o,py=t.y[k]+t.ny[k]*o,m=(o>0?t.mD:t.mI)[k];
+      if(Math.abs(o)<=m+3)continue;
+      const q=tipo(o);poner(px,py,q,.8+rnd()*.9);
+      // Grupitos alrededor: bosques, matorrales, pedregales
+      if(!ruta&&!grande(q)&&q!=='farol'&&rnd()<.45){const n=1+Math.floor(rnd()*3);for(let j=0;j<n;j++){const a=rnd()*6.3,d=3+rnd()*5;poner(px+Math.cos(a)*d,py+Math.sin(a)*d,q,.7+rnd()*.8)}}
     }
     const carteles=[];
     for(let i=0;i<N;i++){
@@ -6377,8 +6485,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(calidad<2){x.fillStyle=T.s2;const a=28,y0=Math.floor((cam.y-R)/a/2)*a*2;for(let y=y0;y<cam.y+R;y+=a*2)x.fillRect(cam.x-R,y,R*2,a)}
     for(const q of p.props){
       if(Math.abs(q.x-cam.x)>R||Math.abs(q.y-cam.y)>R)continue;
-      const k=T.prop==='farol'?(q.w<.4?'farol':'pino'):T.prop==='edificio'?'techo':T.prop==='cactus'?'cactus':T.prop==='nevado'?'nevado':'pino',e=(k==='techo'?10:k==='farol'?7:5.2)*q.e;
-      if(k==='techo'){x.save();x.translate(q.x,q.y);x.rotate(q.r);x.drawImage(figura(k),-e/2,-e/2,e,e);x.restore()}else x.drawImage(figura(k),q.x-e/2,q.y-e/2,e,e);
+      const k=q.k==='edificio'?'techo':q.k||'pino',e=(TAM_PROP[k]||5.2)*q.e;
+      if(k==='techo'||k==='casa'||k==='roca'){x.save();x.translate(q.x,q.y);x.rotate(q.r);x.drawImage(figura(k),-e/2,-e/2,e,e);x.restore()}else x.drawImage(figura(k),q.x-e/2,q.y-e/2,e,e);
     }
     const vis=p.vis;vis.length=0;
     for(const q of p.tramos){const dx=q.cx-cam.x,dy=q.cy-cam.y,m=R+q.r;if(dx*dx+dy*dy<m*m)vis.push(q)}
