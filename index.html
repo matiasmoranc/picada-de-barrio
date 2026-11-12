@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mwe4lsmc"></script>
+<script src="room.js?v=mwe75k51"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -977,6 +977,27 @@ html,body{background:#000;touch-action:manipulation}
 #i-diario small{font-size:.78rem}
 #i-diario b{font-size:1rem}
 #i-diario em{font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Campeonato */
+#camp-final{display:grid;gap:6px;background:var(--carta);border:1px solid var(--linea);border-radius:16px;padding:10px 12px}
+#camp-final[hidden]{display:none}
+#camp-final h3,.camp-carta h3{margin:0;font:400 1.15rem var(--display);color:var(--oro)}
+.camp-tabla{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.camp-tabla li{display:grid;grid-template-columns:2.2em minmax(0,1fr) auto;gap:8px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.06);font-weight:700;color:#fff;font-variant-numeric:tabular-nums}
+.camp-tabla li>span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.camp-tabla li.yo{background:var(--oro);color:#14151a}
+.camp-carta{display:grid;gap:8px;background:var(--carta);border:1px solid var(--linea);border-radius:16px;padding:12px}
+.camp-pistas{margin:0;padding:0;list-style:none;display:grid;gap:3px}
+.camp-pistas li{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;border-radius:10px;background:rgba(255,255,255,.05);font-weight:700;color:#fff}
+.camp-pistas li small{color:var(--suave);font-weight:600}
+.camp-pistas li.hecha{opacity:.65}
+.camp-pistas li.prox{outline:2px solid var(--oro)}
+.camp-dejar{background:none;border:0;color:var(--suave);text-decoration:underline;font-weight:700;min-height:40px;cursor:pointer}
+.camp-h{margin:0;color:var(--suave);font-weight:600}
+.camp-sel,.sel-pista>.camp-sel{display:flex;flex-wrap:wrap;gap:6px}
+.camp-sel button{width:auto;flex:none;background:var(--oro);color:#14151a;border:0;border-radius:999px;padding:6px 12px;font-weight:700;min-height:34px;cursor:pointer}
+.camp-grilla button{position:relative}
+.camp-n{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:50%;background:var(--oro);color:#14151a;font:400 1rem/26px var(--display);text-align:center;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+.sel-pista>.seg:first-of-type button{font-size:.9rem;padding-inline:2px}
 /* Cartel de la primera vez */
 #ce-nom-l{display:grid;gap:6px;text-align:left;font-weight:700;color:var(--suave)}
 #ce-nom-l[hidden],#ce-p[hidden],#ce-google[hidden],#ce-invitado[hidden],#ce-s[hidden],#ce-listo[hidden]{display:none}
@@ -1192,6 +1213,7 @@ body #arranque-tip{min-height:2.6em;max-width:min(80vw,340px);text-align:center;
       <div id="f-nivel"><span id="f-nivel-t"></span><i class="prog"><u id="f-nivel-u"></u></i></div>
       <p id="f-tip"></p>
       <ol id="resultados"></ol>
+      <div id="camp-final" hidden></div>
       <div class="fila-fin"><button id="otra">Correr otra vez</button><button id="al-garaje">Mejorar auto</button><button id="gastar">Cambiar pista</button></div>
       <button id="seguir">Seguir en pista</button>
     </div>
@@ -1995,6 +2017,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   function textoPremio(e){
     if(e.tipo==='circuito'||e.tipo==='autopista')return '1º gana '+pesos(PREMIOS_MAQUINA[0]*(1+bonoEstilo()/100)*dificultad().paga);
     if(e.tipo==='derrape')return 'Medalla de oro: '+pesos(1300);
+    if(e.tipo==='campeonato')return 'Campeón: '+pesos(premioCamp(0,(pref.camp?pref.camp.p:pref.campSel||[]).length||4));
     return 'No paga: corrés contra tu mejor vuelta';
   }
   function pintarInicio(){
@@ -3065,7 +3088,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     pintarInicio();
   }
   async function cuidarDiario(){
-    if(actual==='diario'||actual==='titulo')nubeTabla();
+    if(actual==='diario')nubeTabla();
+    if(evento&&evento.tipo==='diario')nubeLider();
     if(actual==='diario')cargarPodios();
     if(!base)return;
     const quiere=actual==='diario'||actual==='titulo'||!!(evento&&evento.tipo==='diario'),nombre='diario-'+hoyUTC();
@@ -3124,8 +3148,25 @@ if(typeof module!=='undefined')module.exports=Sim;
     nube.db.collection('diario').doc(f).collection('t').doc(nube.user.uid)
       .set({u:pref.uid,n:textoNombre(miNombre()),t:Math.round(t),v:desafioDe(f).v}).catch(()=>{});
   }
+  function nubeFantasma(t,p){
+    if(!nube||!nube.user||p.length>30000)return;
+    const f=hoyUTC();
+    nube.db.collection('diario').doc(f).collection('f').doc(nube.user.uid)
+      .set({u:pref.uid,n:textoNombre(miNombre()),t,v:desafioDe(f).v,p:p.join(',')}).catch(e=>console.warn('Sin fantasma',e));
+  }
+  async function nubeLider(){
+    if(!nube||!nube.user||!(evento&&evento.tipo==='diario')||nube.bajandoL||performance.now()-(nube.tLider||-1e9)<120000)return;
+    nube.tLider=performance.now();nube.bajandoL=true;
+    try{
+      const f=hoyUTC(),q=await nube.db.collection('diario').doc(f).collection('f').orderBy('t').limit(1).get();
+      const d=q.docs[0]&&q.docs[0].data();
+      if(d&&d.u!==pref.uid&&typeof d.p==='string'){const p=d.p.split(',').map(Number);if(p.length>=9&&p.every(Number.isFinite))liderF={t:d.t,p,v:d.v|0,n:textoNombre(d.n),f}}
+      else liderF=null;
+    }catch(e){console.warn('Sin fantasma del líder',e)}
+    nube.bajandoL=false;
+  }
   async function nubeTabla(){
-    if(!nube||!nube.user||performance.now()-nube.tTabla<20000)return;
+    if(!nube||!nube.user||performance.now()-nube.tTabla<120000)return;
     nube.tTabla=performance.now();
     try{
       const q=await nube.db.collection('diario').doc(hoyUTC()).collection('t').orderBy('t').limit(20).get();
@@ -3690,13 +3731,19 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(tot!==conDif)filas.push(['Estilo de tu auto +'+bonoEstilo()+'%',signo(tot-conDif)]);
       if(porPuntos)filas.push(['Derrapes',signo(porPuntos)]);
     }else{titulo='No llegaste';filas.push(['Sin llegar a la meta no hay premio','$0'])}
+    let campQ=null;
+    if(evento&&evento.camp&&pref.camp&&!deDerrape&&!conGente){
+      campQ=sumarCamp(lista);
+      if(campQ.fin){titulo=campQ.puesto===0?'¡Campeón!':'Campeonato: '+(campQ.puesto+1)+'º';if(campQ.premio){g+=campQ.premio;filas.push([campQ.puesto===0?'Premio de campeón':'Premio del campeonato ('+(campQ.puesto+1)+'º)',pesos(campQ.premio)])}}
+    }
     if(evento||conGente){
       const st=pref.stats||(pref.stats={c:0,v:0,p:0,o:0});
       st.c++;
       if(deDerrape){if(medallas().filter(m=>pts>=m.min).length===3)st.o++}
       else if(mio&&mio.fin!=null){if(pos===0)st.v++;if(pos<3)st.p++}
     }
-    if(g)mov((deDerrape?'Derrape':'Carrera')+' en '+TRACKS[trackIdx].name,g);
+    if(g)mov((deDerrape?'Derrape':campQ&&campQ.fin?'Campeonato':'Carrera')+' en '+TRACKS[trackIdx].name,g);
+    pintarCampFinal(campQ);
     pref.plata+=g;
     const sube=darRep(rep);pintarPlata();
     $('titulo-final').textContent=titulo;
@@ -3722,7 +3769,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   $('seguir').onclick=()=>{$('final').hidden=true};
   const signo=n=>(n<0?'−':'+')+pesos(Math.abs(n));
   $('gastar').onclick=()=>alMenu();
-  $('otra').onclick=()=>{const q=evento;alMenu();correr(q.tipo,q.pista)};
+  $('otra').onclick=()=>{if(campBoton==='sig'){alMenu();correrCamp();return}if(campBoton==='fin'){alMenu('correr');return}const q=evento;alMenu();correr(q.tipo,q.pista)};
   $('al-garaje').onclick=()=>alMenu('garaje');
   $('abandonar').onclick=()=>($('vuelta-d').hidden=true,alMenu)(evento&&evento.tipo==='diario'?'diario':'correr');
   $('largar').onclick=()=>{
@@ -3851,8 +3898,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     const b=el('button');b.type='button';b.dataset.p=p;b.append(svgDe(ic),el('span',null,n));
     b.onclick=()=>{subirAlAuto();if(actual!==p)tab(p)};$('tabs').append(b);
   }
-  const TITULO_EVENTO={circuito:'Circuito',derrape:'Derrape',practica:'Práctica'};
-  const DESC_EVENTO={circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
+  const TITULO_EVENTO={circuito:'Circuito',campeonato:'Campeonato',derrape:'Derrape',practica:'Práctica'};
+  const DESC_EVENTO={campeonato:'Elegí las pistas y las vueltas. Corrés todas contra los mismos 3 rivales y sumás puntos: el campeón se lleva un premio grande.',circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
   function pintarMenu(p){
     const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
     $('menu').hidden=false;$('menu').classList.toggle('sub',p==='opciones'||p==='ayuda'||p==='diario');
@@ -3896,6 +3943,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     };
     const box=el('div','sel-pista');
     box.append(seg(Object.keys(TITULO_EVENTO).map(k=>[TITULO_EVENTO[k],k]),e.tipo,v=>{e.tipo=v;eventoActual();rehacer()}),el('p','bajada',DESC_EVENTO[e.tipo]));
+    if(e.tipo==='campeonato'){pintarCamp(box,seg,rehacer);c.append(box);return}
     const delJuego=!!TRACKS[e.p].juego,ruta=e.tipo==='autopista';
     if(!ruta)box.append(seg([['Fórmula 1',false],['Del juego',true]],delJuego,v=>{e.p=TRACKS.findIndex(x=>!!x.juego===v&&!x.ruta);rehacer()}));
     const lista=el('div','pistas-ev');
@@ -3917,6 +3965,89 @@ if(typeof module!=='undefined')module.exports=Sim;
     else{const f=(pref.fantasmas||{})[TRACKS[e.p].name];tag('Tu récord',f?tiempo(f.t):'Sin vueltas');tag('Fantasma',f?'Listo':'Hacé una vuelta')}
     const u=el('button','fr grande-c','¡A correr!');u.type='button';u.onclick=()=>correr(e.tipo,e.p);
     const ir=el('div','dock-ir');ir.append(pr,u);dock.append(ir);box.append(lista,dock);c.append(box);
+  }
+  // --- Campeonato: varias pistas seguidas contra los mismos rivales, con puntos ---
+  const PUNTOS_CAMP=[25,18,15,12,10,8];
+  const premioCamp=(pos,n)=>Math.round(([1500,750,400][pos]||0)*n*dificultad().paga*(1+bonoEstilo()/100));
+  const nombreCamp=k=>k==='#yo'?(me?me.name:miNombre())+' (vos)':k;
+  function tablaCamp(C){
+    const ks=new Set(['#yo',...BOTS.slice(0,3).map(b=>b[0]),...Object.keys(C.pts)]);
+    const mejor=k=>Math.min(9,...C.res.map(r=>{const i=r.indexOf(k);return i<0?9:i}));
+    return [...ks].map(k=>({k,n:nombreCamp(k),pts:C.pts[k]||0,m:mejor(k)})).sort((a,b)=>b.pts-a.pts||a.m-b.m);
+  }
+  function tablaCampEl(C,cl){
+    const ol=el('ol','camp-tabla'+(cl?' '+cl:''));
+    tablaCamp(C).forEach((r,i)=>{const li=el('li',r.k==='#yo'?'yo':null);li.append(el('span',null,(i+1)+'º'),el('span',null,r.n),el('b',null,r.pts+' pts'));ol.append(li)});
+    return ol;
+  }
+  let campProx=false;
+  function empezarCamp(){
+    const sel=(pref.campSel||[]).filter(i=>TRACKS[i]&&!TRACKS[i].ruta);if(sel.length<2)return;
+    pref.camp={p:sel.slice(0,6),v:pref.campV||2,k:0,pts:{},res:[]};guardar(pref);correrCamp();
+  }
+  function correrCamp(){
+    const C=pref.camp;if(!C||C.k>=C.p.length)return;
+    subirAlAuto();campProx=true;correr('circuito',C.p[C.k]);
+  }
+  // Al terminar una carrera del campeonato: puntos, y si era la última, el premio grande
+  function sumarCamp(lista){
+    const C=pref.camp;
+    lista.forEach((x,i)=>{const k=x.yo?'#yo':x.name;C.pts[k]=(C.pts[k]||0)+(PUNTOS_CAMP[i]||0)});
+    C.res.push(lista.map(x=>x.yo?'#yo':x.name));C.k++;
+    const tabla=tablaCamp(C),puesto=tabla.findIndex(r=>r.k==='#yo'),fin=C.k>=C.p.length;
+    let premio=0;
+    if(fin){
+      premio=premioCamp(puesto,C.p.length);
+      const st=pref.stats||(pref.stats={c:0,v:0,p:0,o:0});if(puesto===0)st.camp=(st.camp||0)+1;
+      delete pref.camp;
+    }
+    guardar(pref);
+    return {C,tabla,puesto,fin,premio};
+  }
+  let campBoton=null;
+  function pintarCampFinal(q){
+    const box=$('camp-final');box.textContent='';box.hidden=!q;campBoton=null;
+    $('otra').textContent='Correr otra vez';
+    if(!q)return;
+    const C=q.C;
+    box.append(el('h3',null,q.fin?(q.puesto===0?'🏆 ¡Sos el campeón!':'Campeonato terminado · '+(q.puesto+1)+'º'):'Campeonato · carrera '+C.k+' de '+C.p.length),tablaCampEl(C));
+    if(q.fin){campBoton='fin';$('otra').textContent='Nuevo campeonato'}
+    else{campBoton='sig';$('otra').textContent='Siguiente: '+TRACKS[C.p[C.k]].name}
+  }
+  function pintarCamp(box,seg,rehacer){
+    const C=pref.camp;
+    if(C){
+      const card=el('div','camp-carta');
+      card.append(el('h3',null,'Carrera '+(C.k+1)+' de '+C.p.length+' · '+C.v+' vuelta'+(C.v>1?'s':'')));
+      const ol=el('ol','camp-pistas');
+      C.p.forEach((p,i)=>{const li=el('li',i<C.k?'hecha':i===C.k?'prox':null),g=i<C.k?C.res[i][0]:null;li.append(el('span',null,(i+1)+'. '+TRACKS[p].name),el('small',null,g?'Ganó '+nombreCamp(g).replace(' (vos)',' (vos)'):i===C.k?'Próxima':''));ol.append(li)});
+      card.append(ol,el('h3',null,'Tabla'),tablaCampEl(C));
+      const b=el('button','fr grande-c','Correr en '+TRACKS[C.p[C.k]].name);b.type='button';b.onclick=correrCamp;
+      const x=el('button','camp-dejar','Abandonar campeonato');x.type='button';x.onclick=()=>{if(confirm('¿Abandonar el campeonato? Se pierden los puntos.')){delete pref.camp;rehacer()}};
+      card.append(b,x);box.append(card);return;
+    }
+    const sel=pref.campSel||(pref.campSel=[]),e=eventoActual(),delJuego=!!TRACKS[e.p].juego;
+    box.append(el('p','camp-h',sel.length?'Tus pistas, en orden (tocá una para sacarla):':'Tocá de 2 a 6 pistas, en el orden en que las querés correr.'));
+    if(sel.length){const ch=el('div','camp-sel');sel.forEach((p,i)=>{const b=el('button',null,(i+1)+'. '+TRACKS[p].name+' ✕');b.type='button';b.onclick=()=>{sel.splice(i,1);rehacer()};ch.append(b)});box.append(ch)}
+    box.append(seg([['Fórmula 1',false],['Del juego',true]],delJuego,v=>{e.p=TRACKS.findIndex(x=>!!x.juego===v&&!x.ruta);rehacer()}));
+    const lista=el('div','pistas-ev camp-grilla');
+    TRACKS.forEach((tr,i)=>{
+      if(!!tr.juego!==delJuego||tr.ruta)return;
+      const k=sel.indexOf(i),b=el('button');b.type='button';b.setAttribute('aria-pressed',k>=0);b.append(miniPista(i),el('span',null,tr.name));
+      if(k>=0)b.append(el('i','camp-n',k+1));
+      b.onclick=()=>{if(k>=0)sel.splice(k,1);else if(sel.length<6)sel.push(i);else toast('Máximo 6 pistas');rehacer()};lista.append(b);
+    });
+    const dock=el('div','dock'),info=el('div','dock-t'),n=sel.length;
+    info.append(el('h3',null,n?n+' pista'+(n>1?'s':''):'Elegí las pistas'),el('p',null,n<2?'Mínimo 2 pistas':'Mismos 3 rivales en todas · 25, 18, 15 y 12 puntos'));
+    dock.append(info);
+    const ops=el('div','dock-op');
+    ops.append(seg([1,2,3,5].map(v=>[v+(v>1?' vueltas':' vuelta'),v]),pref.campV||2,v=>{pref.campV=v;rehacer()}));
+    ops.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
+    dock.append(ops);
+    const pr=el('div','premios-p'),m=Math.max(n,2);
+    ['Campeón','2º','3º'].forEach((t,i)=>{const q=el('span');q.append(el('small',null,t),el('b',null,pesos(premioCamp(i,m))));pr.append(q)});
+    const u=el('button','fr grande-c','¡Empezar!');u.type='button';u.disabled=n<2;u.onclick=empezarCamp;
+    const ir=el('div','dock-ir');ir.append(pr,u);dock.append(ir);box.append(lista,dock);
   }
   function pintarPremios(c,t){
     t.textContent='Tus premios';
@@ -4142,8 +4273,10 @@ if(typeof module!=='undefined')module.exports=Sim;
     abierto=null;salaVista=null;tapado=false;actual='juego';pintarCasco();
     const pr=tipo==='practica';
     modo=pr?'practica':'evento';evento={tipo,pista,noche:!!pref.noche&&TRACKS[pista].tema!=='noche'};vueltas=tipo==='derrape'?1:LAPS;
+    if(campProx&&pref.camp){evento.camp=1;campProx=false}
     aplicarAuto();me.frozen=false;
     setCircuito(pista);
+    if(evento.camp)vueltas=pref.camp.v;
     if(tipo==='circuito'||tipo==='autopista')addBots();
     mostrarJuego(true);
     if(pr)return;
@@ -6858,30 +6991,63 @@ if(typeof module!=='undefined')module.exports=Sim;
   }
   // --- Bucle ---
   // Fantasma: en Práctica se graba cada vuelta y la mejor queda guardada por pista
-  let grabando=[],grabT=0;
+  let grabando=[],grabT=0,grabPrev=null;
   const claveFantasma=()=>evento&&evento.tipo==='diario'?'diario':TRACKS[trackIdx].name;
   const fantasmaDe=()=>{const f=(pref.fantasmas||{})[claveFantasma()]||null;return f&&claveFantasma()==='diario'&&f.f!==hoyUTC()?null:f};
+  // Se graba la posición en tiempos exactos (0; 0,1; 0,2 s… desde la línea), interpolando entre cuadros.
+  // Antes se tomaba el primer cuadro después de cada 0,1 s: con el teléfono lento los puntos quedaban más separados
+  // y el fantasma, que se reproduce cada 0,1 s justo, iba más rápido que la vuelta de verdad.
   function grabar(now){
-    if(modo!=='practica'||!me||!me.lapStart||now<grabT)return;
-    grabT=now+100;grabando.push(+me.x.toFixed(1),+me.y.toFixed(1),+me.a.toFixed(2));
+    if(modo!=='practica'||!me||!me.lapStart){grabPrev=null;return}
+    const t=now-me.lapStart,cur={t,x:me.x,y:me.y,a:me.a};
+    if(grabando.length===0||!grabPrev||t<grabPrev.t)grabPrev=null;
+    for(let ts=grabando.length/3*100;ts<=t;ts+=100){
+      const p=grabPrev,u=p&&t>p.t?clamp((ts-p.t)/(t-p.t),0,1):1,q=p||cur;
+      grabando.push(+(q.x+(cur.x-q.x)*u).toFixed(1),+(q.y+(cur.y-q.y)*u).toFixed(1),+(q.a+wrap(cur.a-q.a)*u).toFixed(2));
+    }
+    grabPrev=cur;
   }
-  // Dónde va el fantasma ahora: la vuelta grabada cada 0,1 s, interpolada
-  function poseFantasma(now){
-    const f=modo==='practica'&&me&&me.lapStart?fantasmaDe():null;if(!f||!Array.isArray(f.p))return null;
+  // Los fantasmas viejos se grabaron con puntos más separados: se reparten de nuevo en el tiempo real de la vuelta
+  function rehacerFantasma(f){
+    if(!f||f.r===1||!Array.isArray(f.p)||f.p.length<9)return f;
+    const n=f.p.length/3,paso=f.t/(n-1),P=f.p,out=[];
+    for(let ts=0;ts<=f.t;ts+=100){
+      const q=Math.min(ts/paso,n-1.0001),i=Math.floor(q),u=q-i,a=i*3,b=a+3;
+      out.push(+(P[a]+(P[b]-P[a])*u).toFixed(1),+(P[a+1]+(P[b+1]-P[a+1])*u).toFixed(1),+(P[a+2]+wrap(P[b+2]-P[a+2])*u).toFixed(2));
+    }
+    f.p=out;f.r=1;return f;
+  }
+  if(pref.fantasmas){for(const k in pref.fantasmas)rehacerFantasma(pref.fantasmas[k]);guardar(pref)}
+  // El fantasma del que va primero hoy en el Desafío (lo baja la nube)
+  let liderF=null;
+  const fantasmasVivos=()=>{
+    if(modo!=='practica'||!me||!me.lapStart)return [];
+    const l=[],f=fantasmaDe();if(f&&Array.isArray(f.p))l.push({f,k:'yo',color:7});
+    if(liderF&&claveFantasma()==='diario'&&liderF.f===hoyUTC())l.push({f:liderF,k:'lider',color:9,nom:liderF.n});
+    return l;
+  };
+  // Dónde va un fantasma ahora: la vuelta grabada cada 0,1 s, interpolada
+  function poseDe(f,now){
     const q=(now-me.lapStart)/100,i=Math.floor(q)*3,u=q-Math.floor(q),p=f.p;
     if(i<0||i+5>=p.length)return null;
     const a=p[i+2],b=p[i+5];
     return {f,x:p[i]+(p[i+3]-p[i])*u,y:p[i+1]+(p[i+4]-p[i+1])*u,a:a+wrap(b-a)*u,vx:(p[i+3]-p[i])*10,vy:(p[i+4]-p[i+1])*10};
   }
   function dibujarFantasma(x,now){
-    const o=poseFantasma(now);if(!o)return;
-    const c={v:o.f.v,color:7,pz:{}};
-    x.save();x.globalAlpha=.42;x.translate(o.x,o.y);x.rotate(o.a);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
+    for(const G of fantasmasVivos()){
+      const o=poseDe(G.f,now);if(!o)continue;
+      const c={v:o.f.v,color:G.color,pz:{}};
+      x.save();x.globalAlpha=.42;x.translate(o.x,o.y);x.rotate(o.a);x.drawImage(spriteDe(c),-3,-1.85,6,3.7);x.restore();
+      if(G.nom){x.save();x.translate(o.x,o.y);x.rotate(cam.a+Math.PI/2);x.font='700 1.6px sans-serif';x.textAlign='center';x.fillStyle='rgba(0,0,0,.55)';x.fillText('👑 '+G.nom,.08,-3.1);x.fillStyle='#ffd23f';x.fillText('👑 '+G.nom,0,-3.2);x.restore()}
+    }
   }
-  let fant3={v:-1};
+  const fant3s={};
   function fantasma3D(now,dt,vivos){
-    const o=poseFantasma(now);if(!o)return;
-    if(fant3.v!==o.f.v)fant3={v:o.f.v,color:7,pz:{},pzk:'{}',kind:'fantasma',ghost:0,idx:-1,delta:0};
+    for(const G of fantasmasVivos()){const o=poseDe(G.f,now);if(o)fantasmaUno3D(o,G,now,dt,vivos)}
+  }
+  function fantasmaUno3D(o,G,now,dt,vivos){
+    let fant3=fant3s[G.k];
+    if(!fant3||fant3.v!==o.f.v)fant3=fant3s[G.k]={v:o.f.v,color:G.color,pz:{},pzk:'{}',kind:'fantasma',ghost:0,idx:-1,delta:0,name:G.nom||''};
     const g=fant3,l=Sim.locate(o.x,o.y,g.idx);
     g.x=o.x;g.y=o.y;g.a=o.a;g.vx=o.vx;g.vy=o.vy;g.idx=l?l.i:-1;
     vivos.add(g);
@@ -6950,12 +7116,12 @@ if(typeof module!=='undefined')module.exports=Sim;
           if(c===me){
             const f=fantasmaDe(),nuevo=modo==='practica'&&grabando.length>30&&(!f||lap<f.t);
             aviso('Vuelta '+tiempo(lap)+(nuevo?' · ¡Récord!':f&&modo==='practica'?' · +'+((lap-f.t)/1000).toFixed(2):ant?(lap<ant?' · ¡Tu mejor!':' · +'+((lap-ant)/1000).toFixed(2)):''));
-            if(nuevo){(pref.fantasmas||(pref.fantasmas={}))[claveFantasma()]={t:Math.round(lap),p:grabando,v:me.v,f:hoyUTC()};guardar(pref)}
+            if(nuevo){(pref.fantasmas||(pref.fantasmas={}))[claveFantasma()]={t:Math.round(lap),p:grabando,v:me.v,f:hoyUTC(),r:1};guardar(pref);if(claveFantasma()==='diario')nubeFantasma(Math.round(lap),grabando)}
             if(evento&&evento.tipo==='diario'){const antes=datoDiario().yo;vueltaDiario(lap,grabando.length>30);cartelVueltaD(lap,grabando.length>30,antes)}
             if(clasif&&clasif.fase==='vuelta')terminarClasif(lap);
           }
         }
-        if(c===me){grabando=[];grabT=0}
+        if(c===me){grabando=[];grabT=0;grabPrev=null}
         c.lapStart=now;
       }
       if(!c.frozen&&(c.slip>3||((c.brk||c.mano)&&Math.hypot(c.vx,c.vy)>6))&&!c.grass)marca(c);else c.l=c.r=null;
