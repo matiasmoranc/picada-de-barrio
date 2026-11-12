@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mw9xtq14"></script>
+<script src="room.js?v=mwdpgam4"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -638,6 +638,19 @@ html,body{background:#000;touch-action:manipulation}
 #bienvenida .logo.trax{font-size:min(17vw,24vh);letter-spacing:.04em}
 #bienvenida .logo{position:static;flex:none;flex-direction:row;justify-content:center;font-size:min(7.6vw,36px);transform:rotate(-2deg) skewX(-10deg)}
 #i-relleno{flex:1;min-height:0}
+#i-cuenta{display:flex;align-items:center;gap:8px;background:rgba(10,11,15,.72);border-radius:10px;padding:5px 5px 5px 10px;color:#fff;font-weight:600;font-size:.95rem}
+#i-cuenta[hidden],#cuenta-elegir[hidden]{display:none}
+#i-cuenta-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#i-google,#ce-google{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:#fff;color:#1f1f1f;font-weight:700;border:0;border-radius:8px;cursor:pointer}
+#i-google{flex:none;padding:6px 10px;min-height:32px;font-size:.92rem}
+#i-google svg,#ce-google svg{width:18px;height:18px;flex:none}
+#cuenta-elegir{position:absolute;inset:0;z-index:27;display:grid;place-items:center;padding:16px;background:rgba(8,9,12,.62)}
+.ce-carta{width:min(380px,100%);box-sizing:border-box;background:var(--carta,#1b1d27);color:#fff;border-radius:18px;padding:18px;display:grid;gap:10px;text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.ce-carta h2{margin:0;font:400 1.6rem/1.05 var(--display,inherit)}
+.ce-carta p{margin:0 0 4px;color:var(--suave,#aab);font-weight:600;line-height:1.3}
+.ce-carta small{color:var(--suave,#aab);line-height:1.3}
+#ce-google{min-height:52px;border-radius:12px;font-size:1.1rem}
+#ce-invitado{min-height:52px;border-radius:12px;border:0;background:rgba(255,255,255,.1);color:#fff;font:700 1.1rem var(--texto,inherit);cursor:pointer}
 #t-piloto{position:static;display:flex;align-items:center;gap:8px;background:none;padding:0}
 #t-piloto label{font:700 .95rem var(--texto);color:#fff;text-shadow:0 1px 3px #000}
 #bienvenida #nombre{flex:1;min-width:0;width:auto;background:rgba(10,11,15,.72);color:#fff;border-radius:10px;padding:7px 10px;min-height:38px}
@@ -1060,6 +1073,7 @@ html,body{background:#000;touch-action:manipulation}
   </div>
   <div id="bienvenida">
     <h1 class="logo trax" aria-label="TRAX"><span data-t="TRAX"><b>TRAX</b></span></h1>
+    <div id="i-cuenta" hidden><span id="i-cuenta-t"></span><button type="button" id="i-google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>Entrar con Google</button></div>
     <div id="t-piloto"><label for="nombre">Piloto</label><input id="nombre" maxlength="12" autocomplete="off" placeholder="Tu nombre"><button type="button" id="i-auto"></button></div>
     <div id="i-relleno"></div>
     <section id="i-carrera" aria-label="Próxima carrera">
@@ -1072,6 +1086,13 @@ html,body{background:#000;touch-action:manipulation}
     <button type="button" id="i-diario"><span><small>Desafío del día</small><b id="i-d-n"></b><em id="i-d-t"></em></span><i aria-hidden="true">›</i></button>
     <button type="button" id="i-mejora"><span><small>Próxima mejora</small><b id="i-m-n"></b><i class="prog"><u id="i-m-u"></u></i></span><em id="i-m-t"></em></button>
   </div>
+  <div id="cuenta-elegir" hidden><div class="ce-carta">
+    <h2>¿Cómo querés jugar?</h2>
+    <p>Con Google tu partida queda guardada y la seguís en cualquier teléfono.</p>
+    <button type="button" id="ce-google"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.6 5.4 2.7 13.3l7.8 6C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.8c4.3-4 6.9-9.9 6.9-17.2z"/><path fill="#FBBC05" d="M10.5 28.7c-.5-1.4-.8-3-.8-4.7s.3-3.3.8-4.7l-7.8-6C1 16.6 0 20.2 0 24s1 7.4 2.7 10.7l7.8-6z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.8c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.8 6C6.6 42.6 14.6 48 24 48z"/></svg>Entrar con Google</button>
+    <button type="button" id="ce-invitado">Jugar como invitado</button>
+    <small>Como invitado se guarda solo en este teléfono. Podés entrar con Google cuando quieras.</small>
+  </div></div>
   <div id="menu" hidden>
     <button class="atras" id="menu-atras"><i></i>Atrás</button>
     <h2 class="titulo-fr" id="menu-titulo"></h2>
@@ -3079,7 +3100,20 @@ if(typeof module!=='undefined')module.exports=Sim;
       }else if(c!=='auth/popup-closed-by-user'&&c!=='auth/cancelled-popup-request')toast('No se pudo entrar con Google');
     }
   }
+  // En el lobby: la primera vez se elige Google o invitado; después queda una fila con el estado
+  function cuentaLobby(){
+    const u=nube&&nube.user,anon=!u||u.isAnonymous,enLobby=actual==='titulo'&&!$('bienvenida').hidden;
+    $('i-cuenta').hidden=!nube||!u;
+    if(u)$('i-cuenta-t').textContent=anon?'Jugando como invitado':'✓ '+(u.email||'Cuenta de Google');
+    $('i-google').hidden=!anon;
+    $('cuenta-elegir').hidden=!(u&&anon&&enLobby&&!pref.cuentaElegida);
+  }
+  setInterval(()=>{if(nube)cuentaLobby()},800);
+  $('ce-invitado').onclick=()=>{pref.cuentaElegida=1;guardar(pref);cuentaLobby()};
+  $('ce-google').onclick=()=>{pref.cuentaElegida=1;guardar(pref);cuentaLobby();conGoogle()};
+  $('i-google').onclick=()=>conGoogle();
   function pintarCuenta(){
+    if(nube)cuentaLobby();
     const g=$('op-cuenta');if(!g)return;
     g.hidden=!nube;if(!nube)return;
     const u=nube.user,anon=!u||u.isAnonymous;
@@ -3161,7 +3195,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     box.append(lp);
   }
   // --- Repetición: se guardan los últimos segundos de todos los autos ---
-  const REPE={f:[],ult:0,ev:[],par:new Map()},REPE_MS=30000;let repe=null,podio=null;
+  const REPE={f:[],ult:0,ev:[],par:new Map()},REPE_MS=420000;let repe=null,podio=null;
   // Quién va delante de quién: si dos autos cercanos se cambian el orden, es un adelantamiento
   function mirarPases(now){
     const enCarrera=c=>!c.stale&&!c.frozen&&!(c.ghost>0)&&c.kind!=='ghost'&&(c.kind==='net'?c.f==null:c.finT==null);
@@ -3179,7 +3213,6 @@ if(typeof module!=='undefined')module.exports=Sim;
       REPE.ev.push({t:q.cruce,a:x,b:y,yo:x===me||y===me});
     }
     REPE.ev.sort((u,v)=>u.t-v.t);
-    while(REPE.ev.length&&now-REPE.ev[0].t>REPE_MS)REPE.ev.shift();
   }
   function grabarRepe(now){
     if(!gl||pref.liviano||!race||race.state!=='go'){if(!repe){REPE.f.length=0;REPE.ev.length=0;REPE.par.clear()}return}
@@ -3194,11 +3227,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(!lado){const l=(c.x-t.x[k])*t.nx[k]+(c.y-t.y[k])*t.ny[k];lado=l<0?-1:1}
     return {x:t.x[k]+t.nx[k]*L*lado,y:t.y[k]+t.ny[k]*L*lado,h:1.9+Sim.altDe(c)};
   }
-  // La última curva que hice: el punto más cerrado del último tramo con curva
-  function ultimaCurva(F){
+  // La última curva de un auto: el punto más cerrado del último tramo con curva antes de que llegara
+  function ultimaCurva(F,auto=me,hastaT=Infinity){
     const t=track,thr=.012;let mejor=null,ya=false;
     for(let i=F.length-1;i>=0;i--){
-      const e=F[i].c.find(z=>z[0]===me);if(!e)continue;
+      if(F[i].t>hastaT)continue;
+      const e=F[i].c.find(z=>z[0]===auto);if(!e)continue;
       const k=e[9]|0,v=Math.abs(t.curva[k]||0);
       if(!ya){if(v>thr)ya=true;else continue}
       if(v<thr*.6)break;
@@ -3206,33 +3240,42 @@ if(typeof module!=='undefined')module.exports=Sim;
     }
     return mejor;
   }
+  // El auto de cada puesto, en el orden de llegada (y los que siguen corriendo, por cómo van)
+  const autosPorPuesto=()=>racers().map(x=>x.yo?me:cars.find(c=>c!==me&&c.name===x.name)).filter(Boolean);
+  const fijaEn=(t,auto,lado)=>{const f=REPE.f.find(z=>z.t>=t),e=f&&f.c.find(z=>z[0]===auto);return e?camaraAl({x:e[1],y:e[2],idx:e[9]},lado):null};
   function programarRepe(now){
     if(!gl||pref.liviano||repe||!me||sinMovimiento())return;
-    const ev=REPE.ev.filter(e=>e.t<=now&&e.t>now-REPE_MS+3000);
-    const pase=[...ev].reverse().find(e=>e.yo)||ev[ev.length-1];
-    let te=now,foco=me,fija=null,titulo='REPETICIÓN',sub='';
+    const hasta=now+650,ini=REPE.f.length?REPE.f[0].t:now-6000,cl=p=>({...p,a:Math.max(p.a,ini),b:Math.min(p.b,hasta)});
+    const orden=autosPorPuesto(),ganador=orden[0]||me;
+    const ev=REPE.ev.filter(e=>e.t<=now&&e.t>=ini+1500);
+    // El último adelantamiento del ganador; si nunca pasó a nadie, el último de la carrera
+    const pase=[...ev].reverse().find(e=>e.a===ganador)||ev[ev.length-1];
+    let planos,titulo,sub='';
     if(pase){
-      te=pase.t;foco=pase.a;titulo='ÚLTIMO ADELANTAMIENTO';sub=pase.a.name+' pasa a '+pase.b.name;
-      const f=REPE.f.find(z=>z.t>=te),e=f&&f.c.find(z=>z[0]===foco);
-      if(e)fija=camaraAl({x:e[1],y:e[2],idx:e[9]});
+      const te=pase.t,foco=pase.a,fija=fijaEn(te,foco);
+      titulo=pase.a===ganador&&ganador!==me?'ASÍ GANÓ '+String(ganador.name).toUpperCase():pase.a===ganador?'ASÍ GANASTE':'ÚLTIMO ADELANTAMIENTO';
+      sub=pase.a.name+' pasa a '+pase.b.name;
+      planos=[
+        {cam:'persecucion',n:'Persecución',a:te-4500,b:te+1500,v:1},
+        {cam:'tv',n:'Cámara lenta',a:te-1400,b:te+1100,v:.4},
+        {cam:'heli',n:'Helicóptero',a:te-3200,b:te+1700,v:1},
+        {cam:'frente',n:'De frente',a:te-2200,b:te+1300,v:.7}
+      ].map(p=>cl({...p,foco,fija}));
     }else{
-      const cv=ultimaCurva(REPE.f);
-      if(cv&&now-cv.t>900){
-        te=cv.t;titulo='ÚLTIMA CURVA';
-        const f=REPE.f.find(z=>z.t>=te),e=f&&f.c.find(z=>z[0]===me);
-        if(e)fija=camaraAl({x:e[1],y:e[2],idx:e[9]},-Math.sign(track.curva[cv.k])||1);
+      // Nadie pasó a nadie: la última curva de cada uno, en el orden de llegada
+      titulo='ÚLTIMA CURVA';planos=[];
+      for(const c of orden.slice(0,4)){
+        const fin=c.kind!=='net'&&c.finT!=null&&race?race.t0+c.finT:Infinity;
+        const cv=ultimaCurva(REPE.f,c,fin);if(!cv)continue;
+        const fija=fijaEn(cv.t,c,-Math.sign(track.curva[cv.k])||1),quien=c===me?'Vos':c.name;
+        planos.push(cl({cam:'persecucion',n:'Persecución',sub:quien,foco:c,fija,a:cv.t-2600,b:cv.t+700,v:1}));
+        planos.push(cl({cam:'tv',n:'Cámara lenta',sub:quien,foco:c,fija,a:cv.t-1200,b:cv.t+1000,v:.45}));
       }
+      if(!planos.length)planos=[cl({cam:'persecucion',n:'Persecución',foco:me,a:now-4000,b:hasta,v:1})];
     }
-    // La misma jugada vista desde varias cámaras, una atrás de la otra
-    const hasta=now+650,ini=REPE.f.length?REPE.f[0].t:now-6000,lleg=te===now;
-    const planos=[
-      {cam:'persecucion',n:'Persecución',a:te-4500,b:te+(lleg?650:1500),v:1},
-      {cam:'tv',n:'Cámara lenta',a:te-1400,b:te+(lleg?650:1100),v:.4},
-      {cam:'heli',n:'Helicóptero',a:te-3200,b:te+(lleg?650:1700),v:1},
-      {cam:'frente',n:'De frente',a:te-2200,b:te+(lleg?650:1300),v:.7}
-    ].map(p=>({...p,a:Math.max(p.a,ini),b:Math.min(p.b,hasta)})).filter(p=>p.b-p.a>900);
+    planos=planos.filter(p=>p.b-p.a>900);
     if(!planos.length)return;
-    repe={cruce:now,te,foco,fija,titulo,sub,planos,desde:Math.min(...planos.map(p=>p.a)),hasta,empieza:now+800,on:false};
+    repe={cruce:now,te:planos[0].a,foco:planos[0].foco||me,fija:null,titulo,sub,planos,desde:Math.min(...planos.map(p=>p.a)),hasta:Math.max(...planos.map(p=>p.b)),empieza:now+800,on:false};
   }
   function iniciarRepe(){
     const q=repe;
@@ -3256,7 +3299,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const q=repe,F=q.frames;let pl=q.planos[q.ip];
     q.tr+=dt*1000*pl.v;
     if(q.tr>=pl.b){q.ip++;if(q.ip>=q.planos.length){terminarRepe();return}pl=q.planos[q.ip];q.tr=pl.a;rotuloRepe(q)}
-    let i=0;while(i<F.length-2&&F[i+1].t<=q.tr)i++;
+    let i=q.i||0;if(i>=F.length-1||F[i].t>q.tr)i=0;while(i<F.length-2&&F[i+1].t<=q.tr)i++;q.i=i;
     const a=F[i],b=F[i+1],u=clamp((q.tr-a.t)/((b.t-a.t)||1),0,1),vivos=new Set();
     for(const e of a.c){
       const c=e[0],n=b.c.find(z=>z[0]===c)||e;
@@ -3265,7 +3308,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       vivos.add(p);mover3D(auto3D(p),p,now,dt);
     }
     for(const [o,m] of v3.autos)m.g.visible=vivos.has(o)&&m.g.visible;
-    const yo=q.px.get(q.foco)||q.px.get(me);
+    const yo=q.px.get(pl.foco||q.foco)||q.px.get(me),fija=pl.fija||q.fija;
     if(yo){
       const cm=q.cam,t=track,asp=W/H;cm.aspect=asp;
       const fx=Math.cos(yo.a),fy=Math.sin(yo.a),al=Sim.altDe(yo);
@@ -3281,8 +3324,8 @@ if(typeof module!=='undefined')module.exports=Sim;
         // Adelante del auto mirando para atrás: el que viene pegado se ve encima
         cm.fov=asp<1?62:48;
         cm.position.set(yo.x+fx*7-fy*1.6,.85+al,yo.y+fy*7+fx*1.6);cm.lookAt(yo.x-fx*3,.6+al,yo.y-fy*3);
-      }else if(q.fija){
-        cm.fov=asp<1?52:38;cm.position.set(q.fija.x,q.fija.h,q.fija.y);cm.lookAt(yo.x,.9+Sim.altDe(yo),yo.y);
+      }else if(fija){
+        cm.fov=asp<1?52:38;cm.position.set(fija.x,fija.h,fija.y);cm.lookAt(yo.x,.9+Sim.altDe(yo),yo.y);
       }else{
         // Cámara fija al costado de la línea de llegada
         const L=HALF+2.5,s0=t.salida||1;cm.fov=asp<1?52:38;
@@ -3293,7 +3336,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     gl.render(v3.esc,q.cam);
     cuadroVideo(q);
   }
-  function rotuloRepe(q){const pl=q.planos[q.ip];$('repe-sub').textContent=(q.sub?q.sub+' · ':'')+pl.n}
+  function rotuloRepe(q){const pl=q.planos[q.ip],s=pl.sub||q.sub;$('repe-sub').textContent=(s?s+' · ':'')+pl.n}
   // --- Video de la repetición: se graba mientras se ve, con el título arriba ---
   function grabarVideo(q){
     REPE.video=null;
@@ -5011,7 +5054,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       avanceArranque();
     },undefined,e=>{console.warn('No se pudo cargar',A.url,e);avanceArranque()});
   }
-  let INTERIOR_GLB=null,PILOTO=null;
+  let INTERIOR_GLB=null,PISO_GLB=null,PILOTO=null;
   // Piloto del kart: casco del color del auto, visera oscura, buzo, brazos al volante y piernas hacia los pedales
   function pilotoKart(pint){
     if(!PILOTO){
@@ -5066,7 +5109,12 @@ if(typeof module!=='undefined')module.exports=Sim;
     const copia=o=>{const k=o.clone(true);k.traverse(q=>{if(q.isMesh)q.material=Array.isArray(q.material)?q.material.map(conv):conv(q.material)});return k};
     for(const n of ['carroceria','techo_solar','techo_solar_marco'])if(A.nodos[n])caja.add(copia(A.nodos[n]));
     if(A.nodos.carroceria){INTERIOR_GLB=INTERIOR_GLB||new THREE.MeshBasicMaterial({color:'#121315',side:THREE.BackSide});
-      const k=A.nodos.carroceria.clone(true);k.traverse(o=>{if(o.isMesh)o.material=INTERIOR_GLB});caja.add(k)}
+      const k=A.nodos.carroceria.clone(true);k.traverse(o=>{if(o.isMesh)o.material=INTERIOR_GLB});caja.add(k);
+      // Piso oscuro por dentro: por las ranuras de la chapa no se ve el suelo de abajo
+      if(!A.piso){k.updateMatrixWorld(true);const b=new THREE.Box3().setFromObject(k),sx=b.max.x-b.min.x,sz=b.max.z-b.min.z,larX=sx>=sz;
+        A.piso={x:(b.min.x+b.max.x)/2,z:(b.min.z+b.max.z)/2,y:b.min.y+Math.max(.04,(b.max.y-b.min.y)*.08),l:(larX?sx:sz)*.9,w:(larX?sz:sx)*.78,larX}}
+      PISO_GLB=PISO_GLB||{geo:new THREE.PlaneGeometry(1,1).rotateX(-Math.PI/2),mat:new THREE.MeshBasicMaterial({color:'#0b0c0e',side:THREE.DoubleSide})};
+      const pi=new THREE.Mesh(PISO_GLB.geo,PISO_GLB.mat),Q=A.piso;pi.position.set(Q.x,Q.y,Q.z);pi.scale.set(Q.larX?Q.l:Q.w,1,Q.larX?Q.w:Q.l);caja.add(pi)}
     const cajaA=new THREE.Group();cajaA.add(caja);g.add(cajaA);
     // Piezas del taller, ubicadas sobre la chapa del modelo
     {const pone=(geo,mat,x,y,z)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);caja.add(m);return m};
