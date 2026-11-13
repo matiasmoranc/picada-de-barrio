@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mwe75k51"></script>
+<script src="room.js?v=mwe895rt"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -3013,6 +3013,8 @@ if(typeof module!=='undefined')module.exports=Sim;
     modo='practica';evento={tipo:'diario',pista:q.p,noche:q.noche,v:q.v};vueltas=LAPS;
     autoDiario(q.v);me.frozen=false;
     setCircuito(q.p);
+    // En el Desafío todos largan del mismo lugar de la grilla (la pole), así nadie tiene ventaja
+    {const g=gridSpot(0);place(me,g.idx,g.off);resetRun(me);me.vx=me.vy=me.w=0}
     largadaD={x:me.x,y:me.y,a:me.a,idx:me.idx};$('vuelta-d').hidden=true;
     mostrarJuego(true);
     const d=datoDiario();
