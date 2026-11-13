@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="TRAX">
 <meta name="theme-color" content="#000000">
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-<script src="room.js?v=mwe895rt"></script>
+<script src="room.js?v=mwe8o0kv"></script>
 </head>
 <body>
 <title>TRAX</title>
@@ -998,6 +998,16 @@ html,body{background:#000;touch-action:manipulation}
 .camp-grilla button{position:relative}
 .camp-n{position:absolute;top:6px;left:6px;width:26px;height:26px;border-radius:50%;background:var(--oro);color:#14151a;font:400 1rem/26px var(--display);text-align:center;font-style:normal;box-shadow:0 2px 6px rgba(0,0,0,.4)}
 .sel-pista>.seg:first-of-type button{font-size:.9rem;padding-inline:2px}
+.camp-pasos{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.camp-paso{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);border-radius:12px;padding:5px 6px 5px 10px;font-weight:700;color:#fff}
+.camp-paso span{flex:1;font-size:.9rem}
+.camp-paso b{min-width:22px;text-align:center;font:400 1.15rem var(--display);color:var(--oro)}
+.camp-paso button{width:36px;height:36px;border-radius:10px;border:0;background:#2a2d38;color:#fff;font-size:1.3rem;font-weight:700;cursor:pointer;padding:0}
+.camp-paso button:disabled{opacity:.35}
+#camp-sala[hidden],#camp-sala-info[hidden]{display:none}
+#camp-sala-info{display:grid;gap:6px;background:var(--carta);border:1px solid var(--linea);border-radius:16px;padding:10px 12px;margin:8px 0}
+#camp-sala-info h3{margin:0;font:400 1.1rem var(--display);color:var(--oro)}
+#circuitos button{position:relative}
 /* Cartel de la primera vez */
 #ce-nom-l{display:grid;gap:6px;text-align:left;font-weight:700;color:var(--suave)}
 #ce-nom-l[hidden],#ce-p[hidden],#ce-google[hidden],#ce-invitado[hidden],#ce-s[hidden],#ce-listo[hidden]{display:none}
@@ -1104,6 +1114,8 @@ body #arranque-tip{min-height:2.6em;max-width:min(80vw,340px);text-align:center;
           <div id="bots-sala" class="paso"><span>Bots</span><button type="button" id="bot-menos" aria-label="Sacar bot">−</button><b id="bot-num">0</b><button type="button" id="bot-mas" aria-label="Agregar bot">+</button></div>
           <div id="vueltas-sala" class="paso"><span>Vueltas</span><button type="button" id="vuelta-menos" aria-label="Menos vueltas">−</button><b id="vuelta-num">2</b><button type="button" id="vuelta-mas" aria-label="Más vueltas">+</button></div>
         </div>
+        <div class="seg" id="camp-sala"><button type="button" id="camp-una">Una carrera</button><button type="button" id="camp-si">Campeonato</button></div>
+        <div id="camp-sala-info" hidden></div>
         <h3 class="titulo-sala">Pista</h3>
         <div class="titulo-eleccion" id="quien-pista"></div>
         <div class="seg" id="serie-sala"><button type="button" id="serie-f1">Fórmula 1</button><button type="button" id="serie-juego">Del juego</button></div>
@@ -2083,7 +2095,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     if(cars.some(c=>c.kind==='bot'))return;
     // Los rivales corren con la misma preparación que tu auto: así cualquier auto es competitivo
     const D=dificultad(),base=specDe(modelo);
-    const online=modo==='online',n=online?botsSala:3;
+    const online=modo==='online',n=online?botsSala:evento&&evento.camp&&pref.camp?clamp(pref.camp.b||3,1,9):3;
     // En la sala el nivel de cada uno se reparte al azar entre los bots, así el más rápido no es siempre el mismo
     const orden=[...Array(n).keys()];if(online)for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[orden[i],orden[j]]=[orden[j],orden[i]]}
     BOTS.slice(0,n).forEach(([name,col,v],i)=>{
@@ -2627,6 +2639,7 @@ if(typeof module!=='undefined')module.exports=Sim;
       const bs=cars.filter(c=>c.kind==='bot');
       patch.b=bs.length?bs.map((c,i)=>[i,c.name,c.color,c.v,Sim.snapshot(c),(c.gas?1:0)|(c.brk?2:0)|(c.ghost>0?4:0),Math.round(Sim.progressValue(c)*1000),c.finT==null?null:Math.round(c.finT)]):null;
       patch.x=cortada;
+      patch.cp=cpRed();
     }
     if(now-lastEcho>400){
       lastEcho=now;const e={};let n=0;
@@ -2816,7 +2829,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const r=room;room=null;codigo=null;
     if(r&&r.leave)r.leave().catch(()=>{});
     for(const k of [...enSala.keys()])dropRemote(k);
-    anfitrion=null;botsSala=0;salaNoche=false;removeBots();pintarCircuito();
+    anfitrion=null;botsSala=0;salaNoche=false;campSala=null;removeBots();pintarCircuito();
     {const v=pref.modelo??0;if(modelo!==v){modelo=visto=v;aplicarAuto()}}
     $('chip-partida').hidden=true;
     alMenu('online');
@@ -3587,7 +3600,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   const vueltasOnline=()=>vueltasSala||vueltasDe(trackIdx);
   function cambiarVueltas(d){
     if(race||anfitrion)return;
-    vueltasSala=clamp(vueltasOnline()+d,1,10);vueltas=vueltasSala;pintarCircuito();
+    vueltasSala=clamp(vueltasOnline()+d,1,20);vueltas=vueltasSala;pintarCircuito();
   }
   function pintarCircuito(){
     const libre=!anfitrion;
@@ -3595,7 +3608,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     for(const [i,b] of [...$('circuitos').children].entries()){b.setAttribute('aria-pressed',i===trackIdx);b.disabled=!libre;b.hidden=libre?!!TRACKS[i].juego!==serieSala:i!==trackIdx}
     $('serie-sala').hidden=$('bots-sala').hidden=$('ajustes-sala').hidden=!libre;
     $('hora-sala').hidden=!libre||TRACKS[trackIdx].tema==='noche';$('hora-dia').setAttribute('aria-pressed',!salaNoche);$('hora-noche').setAttribute('aria-pressed',salaNoche);$('circuitos').classList.toggle('sola',!libre);
-    {const n=vueltasOnline();$('vuelta-num').textContent=n;$('vuelta-menos').disabled=!libre||n<=1;$('vuelta-mas').disabled=!libre||n>=10;if(libre)$('ajustes-sala').removeAttribute('data-solo');else $('ajustes-sala').setAttribute('data-solo','')}$('bot-num').textContent=botsSala;$('serie-f1').setAttribute('aria-pressed',!serieSala);$('serie-juego').setAttribute('aria-pressed',serieSala);
+    {const n=vueltasOnline();$('vuelta-num').textContent=n;$('vuelta-menos').disabled=!libre||n<=1;$('vuelta-mas').disabled=!libre||n>=20;if(libre)$('ajustes-sala').removeAttribute('data-solo');else $('ajustes-sala').setAttribute('data-solo','')}$('bot-num').textContent=botsSala;$('serie-f1').setAttribute('aria-pressed',!serieSala);$('serie-juego').setAttribute('aria-pressed',serieSala);
     {const n=vueltasOnline();$('quien-pista').textContent=libre?'Elegí dónde se corre':TRACKS[trackIdx].name+(salaNoche&&TRACKS[trackIdx].tema!=='noche'?' de noche':'')+' · '+n+(n===1?' vuelta':' vueltas')+' · la eligió '+String(anfitrion.pr.n||'el anfitrión').slice(0,12)}
     salon();
   }
@@ -3636,9 +3649,73 @@ if(typeof module!=='undefined')module.exports=Sim;
   TRACKS.forEach((t,i)=>{
     if(t.ruta)return;
     const b=document.createElement('button'),e=document.createElement('span');b.type='button';e.textContent=t.name;
-    b.append(miniPista(i),e);b.onclick=()=>{if(i!==trackIdx&&!anfitrion&&!race)setCircuito(i)};
+    b.append(miniPista(i),e);b.onclick=()=>{
+      if(anfitrion||race)return;
+      const C=campSala;
+      if(C&&C.k===0&&!Object.keys(C.pts).length){
+        const k=C.p.indexOf(i);if(k>=0){if(C.p.length>1)C.p.splice(k,1)}else if(C.p.length<8)C.p.push(i);else{toast('Máximo 8 pistas');return}
+        if(C.p[0]!==trackIdx)setCircuito(C.p[0]);cpClave='';pintarCampSala();return;
+      }
+      if(i!==trackIdx)setCircuito(i);
+    };
     $('circuitos').append(b);
   });
+  // --- Campeonato en la sala: quien creó la partida elige las pistas; todos ven la tabla ---
+  let campSala=null;
+  const cpCrudo=()=>creador()?campSala:(anfitrion&&anfitrion.pr&&anfitrion.pr.cp)||null;
+  function vistaCp(){
+    const c=cpCrudo();if(!c||!Array.isArray(c.p))return null;
+    const p=c.p.filter(i=>Number.isInteger(i)&&TRACKS[i]&&!TRACKS[i].ruta).slice(0,8);if(!p.length)return null;
+    const t=(creador()?Object.entries(c.pts||{}):Array.isArray(c.t)?c.t:[]).filter(Array.isArray).map(r=>[textoNombre(String(r[0])).slice(0,12),r[1]|0]).sort((a,b)=>b[1]-a[1]).slice(0,20);
+    return {i:String(c.i||'').slice(0,12),p,k:clamp(c.k|0,0,p.length),t,f:!!c.f};
+  }
+  const cpRed=()=>campSala&&campSala.p.length?{i:campSala.i,p:campSala.p,k:campSala.k,t:Object.entries(campSala.pts),f:campSala.f?1:0}:null;
+  function tablaCpEl(v){
+    const ol=el('ol','camp-tabla');
+    v.t.forEach((r,i)=>{const li=el('li',me&&r[0]===me.name?'yo':null);li.append(el('span',null,(i+1)+'º'),el('span',null,r[0]),el('b',null,r[1]+' pts'));ol.append(li)});
+    return ol;
+  }
+  let cpClave='';
+  function pintarCampSala(){
+    const v=vistaCp(),box=$('camp-sala-info'),yo=creador();
+    $('camp-una').setAttribute('aria-pressed',!campSala);$('camp-si').setAttribute('aria-pressed',!!campSala);
+    $('camp-sala').hidden=!yo||!!race;
+    const clave=JSON.stringify(v)+yo+!!race+(me&&me.name);if(clave===cpClave)return;cpClave=clave;
+    box.textContent='';box.hidden=!v;
+    for(const [i,b] of [...$('circuitos').children].entries()){const old=b.querySelector('.camp-n');if(old)old.remove();const k=v?v.p.indexOf(i):-1;if(k>=0)b.append(el('i','camp-n',k+1))}
+    if(!v)return;
+    const armando=yo&&v.k===0&&!v.t.length;
+    box.append(el('h3',null,v.f?'🏆 Campeonato terminado':armando?'Campeonato: tocá las pistas en orden':'Campeonato · carrera '+Math.min(v.k+1,v.p.length)+' de '+v.p.length));
+    const ol=el('ol','camp-pistas');
+    v.p.forEach((p,i)=>{const li=el('li',i<v.k?'hecha':i===v.k&&!v.f?'prox':null);li.append(el('span',null,(i+1)+'. '+TRACKS[p].name),el('small',null,i<v.k?'Corrida':i===v.k&&!v.f?'Ahora':''));ol.append(li)});
+    box.append(ol);
+    if(v.t.length)box.append(tablaCpEl(v));
+    if(yo&&v.f){const b=el('button','camp-dejar','Armar otro campeonato');b.type='button';b.onclick=()=>{campSala={i:Date.now().toString(36),p:[trackIdx],k:0,pts:{},f:0};pintarCampSala()};box.append(b)}
+  }
+  $('camp-una').onclick=()=>{if(race)return;campSala=null;pintarCampSala()};
+  $('camp-si').onclick=()=>{if(race||campSala)return;campSala={i:Date.now().toString(36),p:[trackIdx],k:0,pts:{},f:0};pintarCampSala()};
+  // Al terminar una carrera de la sala, quien la creó suma los puntos de todos (personas y bots)
+  function sumarCampSala(lista){
+    const C=campSala;if(!C||C.f||C.p[C.k]!==trackIdx)return;
+    lista.forEach((x,i)=>{const n=textoNombre(String(x.name)).slice(0,12);C.pts[n]=(C.pts[n]||0)+(PUNTOS_CAMP[i]||0)});
+    C.k++;if(C.k>=C.p.length)C.f=1;
+    cpClave='';pintarCampSala();
+  }
+  // Cada uno cobra su premio cuando el campeonato de la sala termina
+  setInterval(()=>{
+    if(modo!=='online')return;
+    pintarCampSala();
+    const v=vistaCp();
+    // El creador pasa a la pista siguiente cuando termina la repetición y el podio
+    if(creador()&&campSala&&!campSala.f&&!race&&!repe&&!podio&&campSala.p[campSala.k]!==trackIdx&&campSala.t0)setCircuito(campSala.p[campSala.k]);
+    if(!$('final').hidden&&v&&v.t.length){const box=$('camp-final'),k='s'+JSON.stringify(v.t)+v.f;if(box.dataset.k!==k){box.dataset.k=k;box.textContent='';box.hidden=false;box.append(el('h3',null,v.f?(v.t[0]&&me&&v.t[0][0]===me.name?'🏆 ¡Sos el campeón!':'Campeonato terminado'):'Campeonato · carrera '+v.k+' de '+v.p.length),tablaCpEl(v))}}
+    if(v&&v.f&&v.i&&pref.campPago!==v.i&&me){
+      const pos=v.t.findIndex(r=>r[0]===me.name),g=pos>=0?premioCamp(pos,v.p.length):0;
+      pref.campPago=v.i;
+      if(g){pref.plata+=g;mov('Campeonato online',g);pintarPlata();toast((pos===0?'¡Campeón! ':'Campeonato: '+(pos+1)+'º · ')+'+'+pesos(g))}
+      guardar(pref);
+    }
+  },700);
   const cambiarBots=d=>{if(race)return;botsSala=clamp(botsSala+d,0,BOTS.length);removeBots();addBots();for(const c of cars)if(c.kind==='bot')c.ghost=1.5;pintarCircuito()};
   $('vuelta-menos').onclick=()=>cambiarVueltas(-1);$('vuelta-mas').onclick=()=>cambiarVueltas(1);
   $('bot-menos').onclick=()=>cambiarBots(-1);$('bot-mas').onclick=()=>cambiarBots(1);
@@ -3651,7 +3728,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const jefe=quienManda(now);
     if(jefe!==anfitrion){anfitrion=jefe;pintarCircuito()}
     if(!race&&jefe){const m=jefe.pr.m;if(Number.isInteger(m)&&m>=0&&m<TRACKS.length&&m!==trackIdx)setCircuito(m);const nc=jefe.pr.nc===1;if(nc!==salaNoche)ponerNoche(nc)}
-    if(jefe&&!(race&&race.state==='go')){const l=jefe.pr.l;if(Number.isInteger(l)&&l>=1&&l<=10&&(l!==vueltasSala||vueltas!==l)){vueltasSala=l;vueltas=l;pintarCircuito()}}
+    if(jefe&&!(race&&race.state==='go')){const l=jefe.pr.l;if(Number.isInteger(l)&&l>=1&&l<=20&&(l!==vueltasSala||vueltas!==l)){vueltasSala=l;vueltas=l;pintarCircuito()}}
     if(entered)for(const [k,r] of remotes){
       const q=r.pr&&r.pr.r;
       if(!Array.isArray(q)||typeof q[1]!=='number')continue;
@@ -3734,6 +3811,8 @@ if(typeof module!=='undefined')module.exports=Sim;
       if(porPuntos)filas.push(['Derrapes',signo(porPuntos)]);
     }else{titulo='No llegaste';filas.push(['Sin llegar a la meta no hay premio','$0'])}
     let campQ=null;
+    if(modo==='online'&&creador()&&campSala){sumarCampSala(lista);campSala.t0=1}
+    $('camp-final').dataset.k='';
     if(evento&&evento.camp&&pref.camp&&!deDerrape&&!conGente){
       campQ=sumarCamp(lista);
       if(campQ.fin){titulo=campQ.puesto===0?'¡Campeón!':'Campeonato: '+(campQ.puesto+1)+'º';if(campQ.premio){g+=campQ.premio;filas.push([campQ.puesto===0?'Premio de campeón':'Premio del campeonato ('+(campQ.puesto+1)+'º)',pesos(campQ.premio)])}}
@@ -3901,7 +3980,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     b.onclick=()=>{subirAlAuto();if(actual!==p)tab(p)};$('tabs').append(b);
   }
   const TITULO_EVENTO={circuito:'Circuito',campeonato:'Campeonato',derrape:'Derrape',practica:'Práctica'};
-  const DESC_EVENTO={campeonato:'Elegí las pistas y las vueltas. Corrés todas contra los mismos 3 rivales y sumás puntos: el campeón se lleva un premio grande.',circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
+  const DESC_EVENTO={campeonato:'Elegí las pistas, las vueltas y cuántos bots. Corrés todas contra los mismos rivales y sumás puntos: el campeón se lleva un premio grande. También se juega online desde una partida.',circuito:'Corré contra 3 rivales. Cuanto mejor llegues, más plata.',autopista:'Ruta con tráfico: esquivá autos y llegá primero contra 3 rivales.',derrape:'Una vuelta de costado. Sumá puntos y ganá medallas.',practica:'Solo vos y tu fantasma. No paga, pero mejorás tu tiempo.'};
   function pintarMenu(p){
     const c=$('menu-cuerpo'),t=$('menu-titulo'),y=c.scrollTop;c.textContent='';
     $('menu').hidden=false;$('menu').classList.toggle('sub',p==='opciones'||p==='ayuda'||p==='diario');
@@ -3969,11 +4048,11 @@ if(typeof module!=='undefined')module.exports=Sim;
     const ir=el('div','dock-ir');ir.append(pr,u);dock.append(ir);box.append(lista,dock);c.append(box);
   }
   // --- Campeonato: varias pistas seguidas contra los mismos rivales, con puntos ---
-  const PUNTOS_CAMP=[25,18,15,12,10,8];
+  const PUNTOS_CAMP=[25,18,15,12,10,8,6,4,2,1];
   const premioCamp=(pos,n)=>Math.round(([1500,750,400][pos]||0)*n*dificultad().paga*(1+bonoEstilo()/100));
   const nombreCamp=k=>k==='#yo'?(me?me.name:miNombre())+' (vos)':k;
   function tablaCamp(C){
-    const ks=new Set(['#yo',...BOTS.slice(0,3).map(b=>b[0]),...Object.keys(C.pts)]);
+    const ks=new Set(['#yo',...BOTS.slice(0,C.b||3).map(b=>b[0]),...Object.keys(C.pts)]);
     const mejor=k=>Math.min(9,...C.res.map(r=>{const i=r.indexOf(k);return i<0?9:i}));
     return [...ks].map(k=>({k,n:nombreCamp(k),pts:C.pts[k]||0,m:mejor(k)})).sort((a,b)=>b.pts-a.pts||a.m-b.m);
   }
@@ -3985,7 +4064,7 @@ if(typeof module!=='undefined')module.exports=Sim;
   let campProx=false;
   function empezarCamp(){
     const sel=(pref.campSel||[]).filter(i=>TRACKS[i]&&!TRACKS[i].ruta);if(sel.length<2)return;
-    pref.camp={p:sel.slice(0,6),v:pref.campV||2,k:0,pts:{},res:[]};guardar(pref);correrCamp();
+    pref.camp={p:sel.slice(0,6),v:pref.campV||2,b:pref.campB||3,k:0,pts:{},res:[]};guardar(pref);correrCamp();
   }
   function correrCamp(){
     const C=pref.camp;if(!C||C.k>=C.p.length)return;
@@ -4020,7 +4099,7 @@ if(typeof module!=='undefined')module.exports=Sim;
     const C=pref.camp;
     if(C){
       const card=el('div','camp-carta');
-      card.append(el('h3',null,'Carrera '+(C.k+1)+' de '+C.p.length+' · '+C.v+' vuelta'+(C.v>1?'s':'')));
+      card.append(el('h3',null,'Carrera '+(C.k+1)+' de '+C.p.length+' · '+C.v+' vuelta'+(C.v>1?'s':'')+' · '+(C.b||3)+' bot'+((C.b||3)>1?'s':'')));
       const ol=el('ol','camp-pistas');
       C.p.forEach((p,i)=>{const li=el('li',i<C.k?'hecha':i===C.k?'prox':null),g=i<C.k?C.res[i][0]:null;li.append(el('span',null,(i+1)+'. '+TRACKS[p].name),el('small',null,g?'Ganó '+nombreCamp(g).replace(' (vos)',' (vos)'):i===C.k?'Próxima':''));ol.append(li)});
       card.append(ol,el('h3',null,'Tabla'),tablaCampEl(C));
@@ -4040,10 +4119,13 @@ if(typeof module!=='undefined')module.exports=Sim;
       b.onclick=()=>{if(k>=0)sel.splice(k,1);else if(sel.length<6)sel.push(i);else toast('Máximo 6 pistas');rehacer()};lista.append(b);
     });
     const dock=el('div','dock'),info=el('div','dock-t'),n=sel.length;
-    info.append(el('h3',null,n?n+' pista'+(n>1?'s':''):'Elegí las pistas'),el('p',null,n<2?'Mínimo 2 pistas':'Mismos 3 rivales en todas · 25, 18, 15 y 12 puntos'));
+    info.append(el('h3',null,n?n+' pista'+(n>1?'s':''):'Elegí las pistas'),el('p',null,n<2?'Mínimo 2 pistas':'Los mismos rivales en todas · 25, 18, 15, 12… puntos'));
     dock.append(info);
     const ops=el('div','dock-op');
-    ops.append(seg([1,2,3,5].map(v=>[v+(v>1?' vueltas':' vuelta'),v]),pref.campV||2,v=>{pref.campV=v;rehacer()}));
+    const paso=(t,v,a,b,fn)=>{const q=el('div','camp-paso'),m=el('button',null,'−'),p=el('button',null,'+');m.type=p.type='button';m.disabled=v<=a;p.disabled=v>=b;m.onclick=()=>fn(v-1);p.onclick=()=>fn(v+1);q.append(el('span',null,t),m,el('b',null,v),p);return q};
+    const pasos=el('div','camp-pasos');
+    pasos.append(paso('Vueltas',pref.campV||2,1,20,v=>{pref.campV=v;rehacer()}),paso('Bots',pref.campB||3,1,9,v=>{pref.campB=v;rehacer()}));
+    ops.append(pasos);
     ops.append(seg(Object.keys(DIFICULTADES).map(k=>[DIFICULTADES[k].n,k]),pref.dif||'normal',v=>{pref.dif=v;rehacer()}));
     dock.append(ops);
     const pr=el('div','premios-p'),m=Math.max(n,2);
